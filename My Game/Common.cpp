@@ -16,3 +16,5 @@ bool CCommon::m_bGodMode = false;
 
 Vector2 CCommon::m_vWorldSize = Vector2::Zero;
 CPlayer* CCommon::m_pPlayer = nullptr;
+
+//this is a silly comment. Remove later
