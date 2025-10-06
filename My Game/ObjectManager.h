@@ -27,6 +27,10 @@ class CObjectManager:
 
     void FireGun(CObject*, eSprite); ///< Fire object's gun.
     const size_t GetNumTurrets() const; ///< Get number of turrets in object list.
+
+    void RegularSword(CObject*, eSprite); ///< Regular Sword Attack
+
+
 }; //CObjectManager
 
 #endif //__L4RC_GAME_OBJECTMANAGER_H__

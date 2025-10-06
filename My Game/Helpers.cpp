@@ -15,7 +15,12 @@
 /// \return Unit vector at angle theta counterclockwise from positive X.
 
 const Vector2 AngleToVector(const float theta){
-  return Vector2(cosf(theta), sinf(theta));
+
+	const float PI = 3.14;
+	const float corrected_theta = theta - (PI / 2.0f);
+
+
+  return Vector2(cosf(corrected_theta), sinf(corrected_theta));
 } //AngleToVector
 
 /// Compute the counterclockwise unit perpendicular to a vector.

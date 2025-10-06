@@ -37,7 +37,7 @@ class CTileManager:
     CTileManager(size_t); ///< Constructor.
     ~CTileManager(); ///< Destructor.
 
-    void LoadMapFromImageFile(char*);
+    void LoadMapFromImageFile(char*); ///< Load map.
     void LoadMap(char*); ///< Load a map.
     void Draw(eSprite); ///< Draw the map with a given tile.
     void DrawBoundingBoxes(eSprite); ///< Draw the bounding boxes.

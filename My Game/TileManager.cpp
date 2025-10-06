@@ -27,6 +27,52 @@ CTileManager::~CTileManager(){
 /// Make the AABBs for the walls. Care is taken to use the longest horizontal
 /// and vertical AABBs possible so that there aren't so many of them.
 
+void CTileManager::LoadMapFromImageFile(char* filename) {
+    m_vecTurrets.clear(); //clear turrets from previous level
+
+    if (m_chMap != nullptr) { //unload any previous maps
+        for (int i = 0; i < m_nHeight; i++)
+            delete[] m_chMap[i];
+        delete[] m_chMap;
+    } //if
+
+    //read map file into a byte buffer 
+
+    int channels = 0, w = 0, h = 0;
+    unsigned char* buffer = stbi_load(filename, &w, &h, &channels, 0);
+    m_nWidth = (size_t)w;
+    m_nHeight = (size_t)h;
+
+    //allocate space for the map 
+
+    m_chMap = new char* [m_nHeight];
+
+    for (int i = 0; i < m_nHeight; i++)
+        m_chMap[i] = new char[m_nWidth];
+
+    //load the map information from the buffer to the map
+
+    int index = 0;
+
+    for (int i = 0; i < m_nHeight; i++)
+        for (int j = 0; j < m_nWidth; j++) {
+            m_chMap[i][j] =
+                (buffer[index] == 0 && buffer[index + 1] == 0 && buffer[index + 2] == 0) ? 'W' : 'F'; //load character into map
+            if (buffer[index] == 0 && buffer[index + 1] == 255 && buffer[index + 2] == 0)
+                m_vecTurrets.push_back(Vector2((float)j, m_nHeight - (float)i) * m_fTileSize);
+            index += channels;
+        } //for
+
+      //finish up
+
+    m_vWorldSize = Vector2((float)m_nWidth, (float)m_nHeight) * m_fTileSize;
+    MakeBoundingBoxes();
+
+    stbi_image_free(buffer);
+} //LoadMapFromImageFile
+
+
+
 void CTileManager::MakeBoundingBoxes(){
   m_vecWalls.clear(); //no walls yet
 
@@ -137,53 +183,6 @@ void CTileManager::MakeBoundingBoxes(){
     pos.y -= t; //next row
   } //for
 } //MakeBoundingBoxes
-
-void CTileManager::LoadMapFromImageFile(char* filename) {
-    m_vecTurrets.clear(); //clear turrets from previous level
-
-    if (m_chMap != nullptr) { //unload any previous maps
-        for (int i = 0; i < m_nHeight; i++)
-            delete[] m_chMap[i];
-        delete[] m_chMap;
-    } //if
-
-    //read map file into a byte buffer 
-
-    int channels = 0, w = 0, h = 0;
-    unsigned char* buffer = stbi_load(filename, &w, &h, &channels, 0);
-    m_nWidth = (size_t)w;
-    m_nHeight = (size_t)h;
-
-    //allocate space for the map 
-
-    m_chMap = new char* [m_nHeight];
-
-    for (int i = 0; i < m_nHeight; i++)
-        m_chMap[i] = new char[m_nWidth];
-
-    //load the map information from the buffer to the map
-
-    int index = 0;
-
-    for (int i = 0; i < m_nHeight; i++)
-        for (int j = 0; j < m_nWidth; j++) {
-            m_chMap[i][j] =
-                (buffer[index] == 0 && buffer[index + 1] == 0 && buffer[index + 2] == 0) ? 'W' : 'F'; //load character into map
-            if (buffer[index] == 0 && buffer[index + 1] == 255 && buffer[index + 2] == 0)
-                m_vecTurrets.push_back(Vector2((float)j, m_nHeight - (float)i) * m_fTileSize);
-            index += channels;
-        } //for
-
-      //finish up
-
-    m_vWorldSize = Vector2((float)m_nWidth, (float)m_nHeight) * m_fTileSize;
-    MakeBoundingBoxes();
-
-    stbi_image_free(buffer);
-} //LoadMapFromImageFile
-
-
-
 
 /// Delete the old map (if any), allocate the right sized chunk of memory for
 /// the new map, and read it from a text file.

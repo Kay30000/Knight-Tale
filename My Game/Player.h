@@ -35,6 +35,7 @@ class CPlayer: public CObject{
     void StrafeRight(); ///< Strafe right.
     void StrafeBack(); ///< Strafe back.
     
+    
     const Vector2& GetPos() const; ///< Get position.
 }; //CPlayer
 
