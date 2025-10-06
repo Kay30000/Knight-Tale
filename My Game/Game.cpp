@@ -16,9 +16,11 @@
 
 CGame::~CGame(){
   delete m_pParticleEngine;
-  delete m_pObjectManager;
+  delete m_pObjectManager;   
   delete m_pTileManager;
 } //destructor
+
+//Changing a line in game cpp to make sure commits work
 
 /// Initialize the renderer, the tile manager and the object manager, load 
 /// images and sounds, and begin the game.
