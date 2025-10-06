@@ -105,8 +105,7 @@ void CGame::BeginGame(){
     case 0: m_pTileManager->LoadMap("Media\\Maps\\tiny.txt"); break;
     case 1: m_pTileManager->LoadMap("Media\\Maps\\small.txt"); break;
     case 2: m_pTileManager->LoadMap("Media\\Maps\\map.txt"); break;
-    case 3: m_pTileManager->LoadMapFromImageFile("Media\\Maps\\maze.png"); break;
-      break;
+    case 3: m_pTileManager->LoadMapFromImageFile("Media\\Maps\\maze.png");break;
   } //switch
 
   m_pObjectManager->clear(); //clear old objects
@@ -121,12 +120,12 @@ void CGame::BeginGame(){
 
 void CGame::KeyboardHandler(){
   m_pKeyboard->GetState(); //get current keyboard state
-  
   if (m_pKeyboard->TriggerDown(VK_RETURN)) {
       m_nNextLevel = (m_nNextLevel + 1) % 4;
       BeginGame();
   } //if
 
+  
   if(m_pKeyboard->TriggerDown(VK_F1)) //help
     ShellExecute(0, 0, "https://larc.unt.edu/code/topdown/", 0, 0, SW_SHOW);
   
@@ -138,45 +137,52 @@ void CGame::KeyboardHandler(){
 
   if (m_pKeyboard->TriggerDown(VK_F4)) // move to next level
   {
-      m_nNextLevel = (m_nNextLevel + 1) % 3;
+      m_nNextLevel = (m_nNextLevel + 1) % 4;
       BeginGame();
   }
   if(m_pKeyboard->TriggerDown(VK_BACK)) //start game
     BeginGame();
 
-  if(m_pPlayer){ //safety
-    if(m_pKeyboard->TriggerDown(VK_UP)) //move forwards
-      m_pPlayer->SetSpeed(100.0f);
 
-    if(m_pKeyboard->TriggerUp(VK_UP)) //stop
+  // MOVEMENT
+
+  if(m_pPlayer){ //safety
+    if(m_pKeyboard->TriggerDown('D')) //move right
+      m_pPlayer->SetSpeed(200.0f);
+
+    if(m_pKeyboard->TriggerUp('D')) //stop
       m_pPlayer->SetSpeed(0.0f);
 
-    if(m_pKeyboard->Down(VK_DOWN)) //strafe back
-      m_pPlayer->StrafeBack();
-  
-    if(m_pKeyboard->TriggerDown(VK_RIGHT)) //rotate clockwise
-      m_pPlayer->SetRotSpeed(-1.0f);
 
-    if(m_pKeyboard->TriggerUp(VK_RIGHT)) //stop rotating clockwise
-      m_pPlayer->SetRotSpeed(0.0f);
-  
-    if(m_pKeyboard->TriggerDown(VK_LEFT)) //rotate counterclockwise
-      m_pPlayer->SetRotSpeed(1.0f);
 
-    if(m_pKeyboard->TriggerUp(VK_LEFT)) //stop rotating counterclockwise
-      m_pPlayer->SetRotSpeed(0.0f);
+
+    if (m_pKeyboard->TriggerDown('A')) //move left
+        m_pPlayer->SetSpeed(-200.0f);
+
+
+
+
+    if (m_pKeyboard->TriggerUp('A')) //stop
+        m_pPlayer->SetSpeed(0.0f);
+
+
+    if(m_pKeyboard->Down('W')) //moves up FIX THIS LATER***************
+      m_pPlayer->StrafeRight();
+  
+    if(m_pKeyboard->Down('S')) //moves down FIX THIS LATER****************
+      m_pPlayer->StrafeLeft();
+
+
+   
+
 
     if(m_pKeyboard->TriggerDown(VK_SPACE)) //fire gun
       m_pObjectManager->FireGun(m_pPlayer, eSprite::Bullet);
 
-    if(m_pKeyboard->Down('D')) //strafe right
-      m_pPlayer->StrafeRight();
-  
-    if(m_pKeyboard->Down('A')) //strafe left
-      m_pPlayer->StrafeLeft();
-
     if(m_pKeyboard->TriggerDown('G')) //toggle god mode
       m_bGodMode = !m_bGodMode;
+
+    
   } //if
 } //KeyboardHandler
 
@@ -302,7 +308,7 @@ void CGame::ProcessGameState(){
     case eGameState::Waiting:
       if(m_pTimer->GetTime() - t > 3.0f){ //3 seconds has elapsed since level end
         if(m_pObjectManager->GetNumTurrets() == 0) //player won
-            m_nNextLevel = (m_nNextLevel + 1) % 4; //advance next level
+            m_nNextLevel = (m_nNextLevel + 1) % 4; //note: 4 instead of 3
         BeginGame(); //restart game
       } //if
       break;

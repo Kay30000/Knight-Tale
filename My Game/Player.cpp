@@ -13,6 +13,9 @@
 CPlayer::CPlayer(const Vector2& p): CObject(eSprite::Player, p){ 
   m_bIsTarget = true;
   m_bStatic = false;
+
+
+  
 } //constructor
 
 /// Move and rotate in response to device input. The amount of motion and
@@ -28,7 +31,7 @@ void CPlayer::move(){
   //strafe
     
   const Vector2 norm = VectorNormalCC(view); //normal to view vector
-  const float delta = 40.0f*t; //change in position for strafing
+  const float delta = 200.0f*t; //change in position for strafing
 
   if(m_bStrafeRight)m_vPos += delta*norm; //strafe right
   else if(m_bStrafeLeft)m_vPos -= delta*norm; //strafe left

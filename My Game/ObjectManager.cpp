@@ -106,7 +106,7 @@ void CObjectManager::FireGun(CObject* pObj, eSprite bullet){
   const float m = 2.0f*m_pRandom->randf() - 1.0f; //random deflection magnitude
   const Vector2 deflection = 0.01f*m*norm; //random deflection
 
-  pBullet->m_vVelocity = pObj->m_vVelocity + 500.0f*(view + deflection);
+  pBullet->m_vVelocity = pObj->m_vVelocity + 400.0f*(view + deflection);
   pBullet->m_fRoll = pObj->m_fRoll; 
 
   //particle effect for gun fire
