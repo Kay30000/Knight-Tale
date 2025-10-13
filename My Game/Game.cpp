@@ -37,20 +37,14 @@ void CGame::Initialize(){
   m_pParticleEngine = new LParticleEngine2D(m_pRenderer);
 
   BeginGame();
-} //Initialize
-
-/// Load the specific images needed for this game. This is where `eSprite`
-/// values from `GameDefines.h` get tied to the names of sprite tags in
-/// `gamesettings.xml`. Those sprite tags contain the name of the corresponding
-/// image file. If the image tag or the image file are missing, then the game
-/// should abort from deeper in the Engine code leaving you with an error
-/// message in a dialog box.
+}
 
 void CGame::LoadImages(){  
   m_pRenderer->BeginResourceUpload();
 
   m_pRenderer->Load(eSprite::Tile,    "tile"); 
   m_pRenderer->Load(eSprite::Player,  "player");
+  m_pRenderer->Load(eSprite::PlayerLeft, "playerleft");
   m_pRenderer->Load(eSprite::Bullet,  "bullet");
   m_pRenderer->Load(eSprite::Bullet2, "bullet2");
   m_pRenderer->Load(eSprite::Smoke,   "smoke");
@@ -59,9 +53,7 @@ void CGame::LoadImages(){
   m_pRenderer->Load(eSprite::Line,    "greenline"); 
 
   m_pRenderer->EndResourceUpload();
-} //LoadImages
-
-/// Initialize the audio player and load game sounds.
+} 
 
 void CGame::LoadSounds(){
   m_pAudio->Initialize(eSound::Size);
@@ -72,7 +64,7 @@ void CGame::LoadSounds(){
   m_pAudio->Load(eSound::Ricochet, "ricochet");
   m_pAudio->Load(eSound::Start, "start");
   m_pAudio->Load(eSound::Boom, "boom");
-} //LoadSounds
+}
 
 /// Release all of the DirectX12 objects by deleting the renderer.
 
@@ -126,7 +118,6 @@ void CGame::KeyboardHandler(){
       m_nNextLevel = (m_nNextLevel + 1) % 4;
       BeginGame();
   } //if
-
   
   if(m_pKeyboard->TriggerDown(VK_F1)) //help
     ShellExecute(0, 0, "https://larc.unt.edu/code/topdown/", 0, 0, SW_SHOW);
@@ -145,28 +136,19 @@ void CGame::KeyboardHandler(){
   if(m_pKeyboard->TriggerDown(VK_BACK)) //start game
     BeginGame();
 
-
   // MOVEMENT
-
-  if(m_pPlayer){ //safety
+  if(m_pPlayer){ 
     if(m_pKeyboard->TriggerDown('D')) //move right
       m_pPlayer->SetSpeed(200.0f);
 
     if(m_pKeyboard->TriggerUp('D')) //stop
       m_pPlayer->SetSpeed(0.0f);
 
-
-
-
     if (m_pKeyboard->TriggerDown('A')) //move left
         m_pPlayer->SetSpeed(-200.0f);
 
-
-
-
     if (m_pKeyboard->TriggerUp('A')) //stop
         m_pPlayer->SetSpeed(0.0f);
-
 
     if(m_pKeyboard->Down('W')) //moves up FIX THIS LATER***************
       m_pPlayer->StrafeRight();
@@ -175,7 +157,17 @@ void CGame::KeyboardHandler(){
       m_pPlayer->StrafeLeft();
 
 
-   
+
+
+
+
+
+
+
+
+
+
+
 
 
     if(m_pKeyboard->TriggerDown(VK_SPACE)) //fire gun
@@ -183,12 +175,8 @@ void CGame::KeyboardHandler(){
 
     if(m_pKeyboard->TriggerDown('G')) //toggle god mode
       m_bGodMode = !m_bGodMode;
-
-    
-  } //if
-} //KeyboardHandler
-
-/// Poll the XBox controller state and respond to the controls there.
+  } 
+} 
 
 void CGame::ControllerHandler(){
   if(!m_pController->IsConnected())return;
@@ -210,8 +198,8 @@ void CGame::ControllerHandler(){
 
     if(m_pController->GetDPadDown()) //strafe back
       m_pPlayer->StrafeBack();
-  } //if
-} //ControllerHandler
+  } 
+} 
 
 /// Draw the current frame rate to a hard-coded position in the window.
 /// The frame rate will be drawn in a hard-coded position using the font

@@ -23,8 +23,11 @@ class CPlayer: public CObject{
     virtual void CollisionResponse(const Vector2&, float, CObject* = nullptr); ///< Collision response.
     virtual void DeathFX(); ///< Death special effects.
 
+    bool m_bFacingLeft = false;
+    const Vector2 GetViewVector() const override;
+
   public:
-    CPlayer(const Vector2& p); ///< Constructor.
+    CPlayer(eSprite t, const Vector2& p); ///< Constructor.
 
     virtual void move(); ///< Move player object.
 
@@ -34,6 +37,7 @@ class CPlayer: public CObject{
     void StrafeLeft(); ///< Strafe left.
     void StrafeRight(); ///< Strafe right.
     void StrafeBack(); ///< Strafe back.
+    void SetFacingLeft(bool facingLeft);
     
     
     const Vector2& GetPos() const; ///< Get position.

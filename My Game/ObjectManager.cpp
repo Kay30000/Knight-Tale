@@ -22,7 +22,7 @@ CObject* CObjectManager::create(eSprite t, const Vector2& pos){
   CObject* pObj = nullptr;
 
   switch(t){ //create object of type t
-    case eSprite::Player:  pObj = new CPlayer(pos); break;
+    case eSprite::Player:  pObj = new CPlayer(t, pos); break;
     case eSprite::Turret:  pObj = new CTurret(pos); break;
     case eSprite::Bullet:  pObj = new CBullet(eSprite::Bullet,  pos); break;
     case eSprite::Bullet2: pObj = new CBullet(eSprite::Bullet2, pos); break;
@@ -92,6 +92,9 @@ void CObjectManager::NarrowPhase(CObject* p0, CObject* p1){
 
 void CObjectManager::FireGun(CObject* pObj, eSprite bullet){
   m_pAudio->play(eSound::Gun);
+
+  
+
 
   const Vector2 view = pObj->GetViewVector(); //firing object view vector
   const float w0 = 0.5f*m_pRenderer->GetWidth(pObj->m_nSpriteIndex); //firing object width

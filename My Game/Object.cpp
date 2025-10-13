@@ -77,6 +77,13 @@ void CObject::DeathFX(){
  //stub
 } //DeathFX
 
+
+void CObject::SetSprite(eSprite t) {
+    m_nSpriteIndex = (UINT)t;
+}
+
+
+
 /// Compute the view vector from the object orientation.
 /// \return The view vector.
 

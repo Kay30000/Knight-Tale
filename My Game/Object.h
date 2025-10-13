@@ -42,7 +42,9 @@ class CObject:
       CObject* = nullptr); ///< Collision response.
     virtual void DeathFX(); ///< Death special effects.
 
-    const Vector2 GetViewVector() const; ///< Compute view vector.
+    virtual const Vector2 GetViewVector() const; ///< Compute view vector.
+
+    virtual float GetRollForFire() const { return m_fRoll; }
 
   public:
     CObject(eSprite, const Vector2&); ///< Constructor.
@@ -50,6 +52,8 @@ class CObject:
 
     void move(); ///< Move object.
     void draw(); ///< Draw object.
+
+    void SetSprite(eSprite t);
 
     const bool isBullet() const; ///< Is a bullet.
 }; //CObject

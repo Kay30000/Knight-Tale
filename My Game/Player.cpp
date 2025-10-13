@@ -1,6 +1,3 @@
-/// \file Player.cpp
-/// \brief Code for the player object class CPlayer.
-
 #include "Player.h"
 #include "ComponentIncludes.h"
 #include "Helpers.h"
@@ -10,26 +7,31 @@
 /// Create and initialize an player object given its initial position.
 /// \param p Initial position of player.
 
-CPlayer::CPlayer(const Vector2& p): CObject(eSprite::Player, p){ 
+CPlayer::CPlayer(eSprite t, const Vector2& p): CObject(eSprite::Player, p){ 
   m_bIsTarget = true;
   m_bStatic = false;
 
 
   
-} //constructor
-
-/// Move and rotate in response to device input. The amount of motion and
-/// rotation speed is proportional to the frame time.
+} 
 
 void CPlayer::move(){
+
+    if (m_fSpeed < 0.0f) {
+        SetSprite(eSprite::PlayerLeft);
+        m_bFacingLeft = true;
+    }
+    else if (m_fSpeed > 0.0f) {
+        SetSprite(eSprite::Player);
+        m_bFacingLeft = false;
+
+    }
+
   const float t = m_pTimer->GetFrameTime(); //time
   const Vector2 view = GetViewVector(); //view vector
   m_vPos += m_fSpeed*t*view; //move forwards
   m_fRoll += m_fRotSpeed*t; //rotate
-  NormalizeAngle(m_fRoll); //normalize to [-pi, pi] for accuracy
-
-  //strafe
-    
+  NormalizeAngle(m_fRoll); //normalize to [-pi, pi] for accuracy    
   const Vector2 norm = VectorNormalCC(view); //normal to view vector
   const float delta = 200.0f*t; //change in position for strafing
 
@@ -38,7 +40,21 @@ void CPlayer::move(){
   else if(m_bStrafeBack)m_vPos -= delta*view; //strafe back
 
   m_bStrafeLeft = m_bStrafeRight = m_bStrafeBack = false; //reset strafe flags
-} //move
+}
+
+const Vector2 CPlayer::GetViewVector()const {
+    if (m_bFacingLeft) {
+        return Vector2(-1.0f, 0.0f);
+    }
+    else {
+        return Vector2(1.0f, 0.0f);
+
+    }
+}
+
+void CPlayer::SetFacingLeft(bool facingLeft) {
+    m_bFacingLeft = facingLeft;
+}
 
 /// Response to collision. If the object being collided with is a bullet, then
 /// play a sound, otherwise call `CObject::CollisionResponse` for the default
