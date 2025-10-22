@@ -322,6 +322,7 @@ void CTileManager::Draw(eSprite t){
       switch(m_chMap[i][j]){ //select which frame of the tile sprite is to be drawn
         case 'F': desc.m_nCurrentFrame = 0; break; //floor
         case 'W': desc.m_nCurrentFrame = 1; break; //wall
+        case 'D': desc.m_nCurrentFrame = 3; break; //One instance of Furniture
         default:  desc.m_nCurrentFrame = 2; break; //error tile
       } //switch
 
