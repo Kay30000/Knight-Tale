@@ -10,7 +10,6 @@
 #include "Component.h"
 #include "SpriteDesc.h"
 #include "BaseObject.h"
-#include "EventTimer.h"
 
 /// \brief The game object. 
 ///
@@ -26,36 +25,17 @@ class CObject:
 {
   friend class CObjectManager; ///< Object manager needs access so it can manage.
 
-  protected:
-    float m_fRadius = 0; ///< Bounding circle radius.
-
-    float m_fSpeed = 0; ///< Speed.
-    float m_fRotSpeed = 0; ///< Rotational speed.
-    Vector2 m_vVelocity; ///< Velocity.
-    bool m_bStatic = true; ///< Is static (does not move).
-    bool m_bIsTarget = true; ///< Is a target.
-    bool m_bIsBullet = false; ///< Is a bullet.
-
-    LEventTimer* m_pGunFireEvent = nullptr; ///< Gun fire event.
-    
-    virtual void CollisionResponse(const Vector2&, float,
-      CObject* = nullptr); ///< Collision response.
-    virtual void DeathFX(); ///< Death special effects.
-
-    virtual const Vector2 GetViewVector() const; ///< Compute view vector.
-
-    virtual float GetRollForFire() const { return m_fRoll; }
-
   public:
     CObject(eSprite, const Vector2&); ///< Constructor.
-    virtual ~CObject(); ///< Destructor.
+    ~CObject(); ///< Destructor.
 
     void move(); ///< Move object.
     void draw(); ///< Draw object.
 
-    void SetSprite(eSprite t);
+  
 
-    const bool isBullet() const; ///< Is a bullet.
 }; //CObject
 
 #endif //__L4RC_GAME_OBJECT_H__
+
+//LAB 5 

@@ -8,7 +8,6 @@
 #include "Common.h"
 #include "ObjectManager.h"
 #include "Settings.h"
-#include "Player.h"
 
 /// \brief The game class.
 ///
@@ -26,20 +25,14 @@ class CGame:
 
   private:
     bool m_bDrawFrameRate = false; ///< Draw the frame rate.
-    eGameState m_eGameState = eGameState::Playing; ///< Game state.
-    int m_nNextLevel = 0; ///< Current level number.
     
     void LoadImages(); ///< Load images.
     void LoadSounds(); ///< Load sounds.
     void BeginGame(); ///< Begin playing the game.
+    void CreateObjects(); ///< Create game objects.
     void KeyboardHandler(); ///< The keyboard handler.
-    void ControllerHandler(); ///< The controller handler.
     void RenderFrame(); ///< Render an animation frame.
     void DrawFrameRateText(); ///< Draw frame rate text to screen.
-    void DrawGodModeText(); ///< Draw god mode text if in god mode.
-    void CreateObjects(); ///< Create game objects.
-    void FollowCamera(); ///< Make camera follow player character.
-    void ProcessGameState(); ///< Process game state.
 
   public:
     ~CGame(); ///< Destructor.

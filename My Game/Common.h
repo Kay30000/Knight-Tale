@@ -4,16 +4,11 @@
 #ifndef __L4RC_GAME_COMMON_H__
 #define __L4RC_GAME_COMMON_H__
 
-#include "Defines.h"
-
 //forward declarations to make the compiler less stroppy
 
 class CObjectManager; 
 class LSpriteRenderer;
-class LParticleEngine2D;
-class CTileManager;
 class CPlayer;
-
 /// \brief The common variables class.
 ///
 /// CCommon is a singleton class that encapsulates things that are common to
@@ -24,16 +19,9 @@ class CPlayer;
 
 class CCommon{
   protected:  
+    static CPlayer* m_pPlayer; ///< Pointer to player character.
     static LSpriteRenderer* m_pRenderer; ///< Pointer to renderer.
     static CObjectManager* m_pObjectManager; ///< Pointer to object manager.
-    static LParticleEngine2D* m_pParticleEngine; ///< Pointer to particle engine.
-    static CTileManager* m_pTileManager; ///< Pointer to tile manager. 
-
-    static bool m_bDrawAABBs; ///< Draw AABB flag.
-    static bool m_bGodMode; ///< God mode flag.
-
-    static Vector2 m_vWorldSize; ///< World height and width.
-    static CPlayer* m_pPlayer; ///< Pointer to player character.
 }; //CCommon
 
 #endif //__L4RC_GAME_COMMON_H__
