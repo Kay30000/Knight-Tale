@@ -1,0 +1,14 @@
+x64/
+*.log
+*.obj
+*.pdb
+*.txt
+*.res
+*.tlog
+*.iobj
+*.recipe
+*.exe
+*.ilk
+*.idb
+*.db
+.vs*
