@@ -11,7 +11,7 @@
   <!-- sprites -->
    
   <sprites path="Media\Images">
-    <sprite name="tile" file="tile" ext ="png" frames="4"/>
+    <sprite name="tile" file="tile" ext ="png" frames="5"/>
     <sprite name="player" file="player.png"/>
 	  <sprite name="playerleft" file="playerleft.png"/>
     <sprite name="turret" file="turret.png"/>

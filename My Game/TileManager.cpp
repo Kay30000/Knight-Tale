@@ -302,6 +302,8 @@ void CTileManager::Draw(eSprite t){
   LSpriteDesc2D desc; //sprite descriptor for tile
   desc.m_nSpriteIndex = (UINT)t; //sprite index for tile
 
+  
+
   const int w = (int)ceil(m_nWinWidth/m_fTileSize) + 2; //width of window in tiles, with 2 extra
   const int h = (int)ceil(m_nWinHeight/m_fTileSize) + 2; //height of window in tiles, with 2 extra
 
@@ -320,10 +322,10 @@ void CTileManager::Draw(eSprite t){
       desc.m_vPos.y = (m_nHeight - 1 - i + 0.5f)*m_fTileSize; //vertical component of tile position
 
       switch(m_chMap[i][j]){ //select which frame of the tile sprite is to be drawn
-        case 'F': desc.m_nCurrentFrame = 0; break; //floor
-        case 'W': desc.m_nCurrentFrame = 1; break; //wall
-        case 'D': desc.m_nCurrentFrame = 3; break; //One instance of Furniture
-        default:  desc.m_nCurrentFrame = 2; break; //error tile
+	  case 'F': desc.m_nCurrentFrame = 4;  break; // floor
+      case 'W': desc.m_nCurrentFrame = 1;  break; //wall
+        case 'D': desc.m_nCurrentFrame = 3;  break; //One instance of Furniture
+        default:  desc.m_nCurrentFrame = 2;  break; //error tile
       } //switch
 
       m_pRenderer->Draw(&desc); //finally we can draw a tile
