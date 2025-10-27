@@ -28,7 +28,9 @@ class CTileManager:
     char** m_chMap = nullptr; ///< The level map.
 
     std::vector<BoundingBox> m_vecWalls; ///< AABBs for the walls.
-    std::vector<Vector2> m_vecTurrets; ///< Turret positions.
+    std::vector<Vector2> m_vecTurrets;///< Turret positions.
+    std::vector<Vector2> m_vecFurniture;
+
     Vector2 m_vPlayer; ///< Player location.
 
     void MakeBoundingBoxes(); ///< Make bounding boxes for walls.
@@ -41,7 +43,7 @@ class CTileManager:
     void LoadMap(char*); ///< Load a map.
     void Draw(eSprite); ///< Draw the map with a given tile.
     void DrawBoundingBoxes(eSprite); ///< Draw the bounding boxes.
-    void GetObjects(std::vector<Vector2>&, Vector2&); ///< Get objects.
+    void GetObjects(std::vector<Vector2>&, std::vector<Vector2>&, Vector2&); ///< Get objects.
     
     const bool Visible(const Vector2&, const Vector2&, float) const; ///< Check visibility.
     const bool CollideWithWall(BoundingSphere, Vector2&, float&) const; ///< Object-wall collision test.

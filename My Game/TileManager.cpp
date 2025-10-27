@@ -197,6 +197,7 @@ void CTileManager::LoadMap(char* filename){
   } //if
 
   m_vecTurrets.clear(); //clear out the turret list
+  m_vecFurniture.clear(); //clear out furniture list
 
   FILE *input; //input file handle
 
@@ -256,7 +257,13 @@ void CTileManager::LoadMap(char* filename){
         const Vector2 pos = m_fTileSize*Vector2(j + 0.5f, m_nHeight - i - 0.5f);
         m_vecTurrets.push_back(pos);
       } //if
-
+      
+      else if (c == 'E') {
+          m_chMap[i][j] = 'F'; //floor tile
+          const Vector2 pos = m_fTileSize * Vector2(j + 0.5f, m_nHeight - i - 0.5f);
+          m_vecFurniture.push_back(pos);
+      } //else if
+      
       else if(c == 'P'){
         m_chMap[i][j] = 'F'; //floor tile
         m_vPlayer = m_fTileSize*Vector2(j + 0.5f, m_nHeight - i - 0.5f);
@@ -280,9 +287,10 @@ void CTileManager::LoadMap(char* filename){
 /// \param turrets [out] Vector of turret positions
 /// \param player [out] Player position.
 
-void CTileManager::GetObjects(std::vector<Vector2>& turrets, Vector2& player){
+void CTileManager::GetObjects(std::vector<Vector2>& turrets, std::vector<Vector2>& furniture, Vector2& player){
   turrets = m_vecTurrets;
   player = m_vPlayer;
+  furniture = m_vecFurniture;
 } //GetObjects
 
 /// This is for debug purposes so that you can verify that
@@ -324,8 +332,8 @@ void CTileManager::Draw(eSprite t){
       switch(m_chMap[i][j]){ //select which frame of the tile sprite is to be drawn
 	  case 'F': desc.m_nCurrentFrame = 4;  break; // floor
       case 'W': desc.m_nCurrentFrame = 1;  break; //wall
-        case 'D': desc.m_nCurrentFrame = 3;  break; //One instance of Furniture
-        default:  desc.m_nCurrentFrame = 2;  break; //error tile
+      case 'D': desc.m_nCurrentFrame = 3;  break; //One instance of Furniture
+      default:  desc.m_nCurrentFrame = 2;  break; //error tile
       } //switch
 
       m_pRenderer->Draw(&desc); //finally we can draw a tile
