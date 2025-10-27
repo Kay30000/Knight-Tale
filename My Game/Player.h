@@ -5,7 +5,6 @@
 #define __L4RC_GAME_PLAYER_H__
 
 #include "Object.h"
-#include "EventTimer.h"
 
 /// \brief The player object. 
 ///
@@ -14,22 +13,34 @@
 
 class CPlayer: public CObject{
   protected:  
-    LEventTimer* m_pFrameEvent = nullptr; ///< Frame event timer.
+    const UINT m_nMaxHealth = 12; ///< Maximum health.
+    UINT m_nHealth = m_nMaxHealth; ///< Current health.
+
+    bool m_bStrafeLeft = false; ///< Strafe left.
+    bool m_bStrafeRight = false; ///< Strafe right.
+    bool m_bStrafeBack = false; ///< Strafe back.
     
-    void UpdateFramenumber(); ///< Update frame number.
+    virtual void CollisionResponse(const Vector2&, float, CObject* = nullptr); ///< Collision response.
+    virtual void DeathFX(); ///< Death special effects.
+
+    bool m_bFacingLeft = false;
+    const Vector2 GetViewVector() const override;
 
   public:
     CPlayer(eSprite t, const Vector2& p); ///< Constructor.
-    virtual ~CPlayer(); ///< Destructor.
 
     virtual void move(); ///< Move player object.
+
+    void SetSpeed(const float speed); ///< Set speed.
+    void SetRotSpeed(const float speed); ///< Set rotational velocity.
     
-    void WalkLeft(); ///< Start walking left.
-    void WalkRight(); ///< Start walking right.
-	void WalkUp(); ///< Start walking up.
-	void WalkDown(); ///< Start walking down.
-    void Stop(); ///< Stop walking.
+    void StrafeLeft(); ///< Strafe left.
+    void StrafeRight(); ///< Strafe right.
+    void StrafeBack(); ///< Strafe back.
+    void SetFacingLeft(bool facingLeft);
+    
+    
+    const Vector2& GetPos() const; ///< Get position.
 }; //CPlayer
 
 #endif //__L4RC_GAME_PLAYER_H__
-

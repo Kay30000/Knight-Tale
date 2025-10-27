@@ -1,95 +1,157 @@
-/// \file Player.cpp
-/// \brief Code for the player object class CPlayer.
-
 #include "Player.h"
 #include "ComponentIncludes.h"
+#include "Helpers.h"
+#include "Particle.h"
+#include "ParticleEngine.h"
 
 /// Create and initialize an player object given its initial position.
-/// \param t Sprite type.
 /// \param p Initial position of player.
 
-CPlayer::CPlayer(eSprite t, const Vector2& p): CObject(t, p){ 
-  m_pFrameEvent = new LEventTimer(0.12f);
-} //constructor
+CPlayer::CPlayer(eSprite t, const Vector2& p): CObject(eSprite::Player, p){ 
+  m_bIsTarget = true;
+  m_bStatic = false;
 
-/// Destructor.
 
-CPlayer::~CPlayer(){
-  delete m_pFrameEvent;
-} //destructor
-
-/// Move in response to device input. The amount of motion is proportional to
-/// the frame time.
+  
+} 
 
 void CPlayer::move(){
-  const float delta = 200.0f*m_pTimer->GetFrameTime(); //change in position
 
-  if(m_nSpriteIndex == (UINT)eSprite::PlayerWalkRight)
-    m_vPos += delta*Vector2::UnitX; 
+    if (m_fSpeed < 0.0f) {
+        SetSprite(eSprite::PlayerLeft);
+        m_bFacingLeft = true;
+    }
+    else if (m_fSpeed > 0.0f) {
+        SetSprite(eSprite::Player);
+        m_bFacingLeft = false;
 
-  else if(m_nSpriteIndex == (UINT)eSprite::PlayerWalkLeft)
-    m_vPos -= delta*Vector2::UnitX;
+    }
 
-  else if(m_nSpriteIndex == (UINT)eSprite::PlayerWalkUp)
-    m_vPos += delta * Vector2::UnitY;
+  const float t = m_pTimer->GetFrameTime(); //time
+  const Vector2 view = GetViewVector(); //view vector
+  m_vPos += m_fSpeed*t*view; //move forwards
+  m_fRoll += m_fRotSpeed*t; //rotate
+  NormalizeAngle(m_fRoll); //normalize to [-pi, pi] for accuracy    
+  const Vector2 norm = VectorNormalCC(view); //normal to view vector
+  const float delta = 200.0f*t; //change in position for strafing
 
-  else if(m_nSpriteIndex == (UINT)eSprite::PlayerWalkDown)
-    m_vPos -= delta * Vector2::UnitY;
+  if(m_bStrafeRight)m_vPos += delta*norm; //strafe right
+  else if(m_bStrafeLeft)m_vPos -= delta*norm; //strafe left
+  else if(m_bStrafeBack)m_vPos -= delta*view; //strafe back
 
-  
-  UpdateFramenumber(); //choose current frame
-} //move
-
-/// Update the frame number in the animation sequence.
-
-void CPlayer::UpdateFramenumber(){
-  const UINT n = (UINT)m_pRenderer->GetNumFrames(m_nSpriteIndex); //number of frames
-
-  if(n > 1 && m_pFrameEvent && m_pFrameEvent->Triggered())
-    m_nCurrentFrame = (m_nCurrentFrame + 1)%n; 
-} //UpdateFramenumber
-
-/// Change the sprite to the walking left sprite. This function will be called
-/// in response to device inputs.
-
-void CPlayer::WalkLeft(){
-  if(m_nSpriteIndex != (UINT)eSprite::PlayerWalkLeft)
-    m_nSpriteIndex = (UINT)eSprite::PlayerWalkLeft;
-} //WalkLeft
-
-/// Change the sprite to the walking right sprite. This function will be called
-/// in response to device inputs.
-
-void CPlayer::WalkRight(){
-  if(m_nSpriteIndex != (UINT)eSprite::PlayerWalkRight)
-    m_nSpriteIndex = (UINT)eSprite::PlayerWalkRight;
-} //WalkRight
-
-/// Change the sprite to a standing sprite, depending on which direction the
-/// player is walking.
-
-void CPlayer::WalkUp() {
-  if (m_nSpriteIndex != (UINT)eSprite::PlayerWalkUp)
-      m_nSpriteIndex = (UINT)eSprite::PlayerWalkUp;
+  m_bStrafeLeft = m_bStrafeRight = m_bStrafeBack = false; //reset strafe flags
 }
 
-void CPlayer::WalkDown() {
-  if (m_nSpriteIndex != (UINT)eSprite::PlayerWalkDown)
-      m_nSpriteIndex = (UINT)eSprite::PlayerWalkDown;
+const Vector2 CPlayer::GetViewVector()const {
+    if (m_bFacingLeft) {
+        return Vector2(-1.0f, 0.0f);
+    }
+    else {
+        return Vector2(1.0f, 0.0f);
+
+    }
 }
 
-void CPlayer::Stop(){
-  if(m_nSpriteIndex == (UINT)eSprite::PlayerWalkRight)
-    m_nSpriteIndex = (UINT)eSprite::PlayerStandRight;
-  
-  else if(m_nSpriteIndex == (UINT)eSprite::PlayerWalkLeft)
-    m_nSpriteIndex = (UINT)eSprite::PlayerStandLeft;
+void CPlayer::SetFacingLeft(bool facingLeft) {
+    m_bFacingLeft = facingLeft;
+}
 
-  else if (m_nSpriteIndex == (UINT)eSprite::PlayerWalkUp)
-      m_nSpriteIndex = (UINT)eSprite::PlayerStandUp;
+/// Response to collision. If the object being collided with is a bullet, then
+/// play a sound, otherwise call `CObject::CollisionResponse` for the default
+/// collision response.
+/// \param norm Collision normal.
+/// \param d Overlap distance.
+/// \param pObj Pointer to object being collided with (defaults to `nullptr`,
+/// which means collision with a wall).
 
-  else if (m_nSpriteIndex == (UINT)eSprite::PlayerWalkDown)
-      m_nSpriteIndex = (UINT)eSprite::PlayerStandDown;
+void CPlayer::CollisionResponse(const Vector2& norm, float d, CObject* pObj){
+  if(m_bDead)return; //already dead, bail out 
 
-  m_nCurrentFrame = 0;
-} //Stop
+  if(pObj && pObj->isBullet()){ //collision with bullet
+    if(m_bGodMode) //god mode, does no damage
+      m_pAudio->play(eSound::Grunt); //impact sound
+
+    else if(--m_nHealth == 0){ //health decrements to zero means death 
+      m_pAudio->play(eSound::Boom); //explosion
+      m_bDead = true; //flag for deletion from object list
+      DeathFX(); //particle effects
+      m_pPlayer = nullptr; //clear common player pointer
+    } //if
+
+    else{ //not a death blow
+      m_pAudio->play(eSound::Grunt); //impact sound
+      const float f = 0.5f + 0.5f*(float)m_nHealth/m_nMaxHealth; //health fraction
+      m_f4Tint = XMFLOAT4(1.0f, f, f, 0); //redden the health indicator
+    } //else
+  } //if
+
+  CObject::CollisionResponse(norm, d, pObj); //default collision response
+} //CollisionResponse
+
+/// Perform a particle effect to mark the death of the player.
+
+void CPlayer::DeathFX(){
+  LParticleDesc2D d; //particle descriptor
+  d.m_vPos = m_vPos; //center particle at player center
+
+  d.m_nSpriteIndex = (UINT)eSprite::Smoke;
+  d.m_fLifeSpan = 2.0f;
+  d.m_fMaxScale = 4.0f;
+  d.m_fScaleInFrac = 0.5f;
+  d.m_fFadeOutFrac = 0.8f;
+  d.m_fScaleOutFrac = 0;
+  m_pParticleEngine->create(d);
+
+  d.m_nSpriteIndex = (UINT)eSprite::Spark;
+  d.m_fLifeSpan = 0.5f;
+  d.m_fMaxScale = 1.5f;
+  d.m_fScaleInFrac = 0.4f;
+  d.m_fScaleOutFrac = 0.3f;
+  d.m_fFadeOutFrac = 0.5f;
+  d.m_f4Tint = XMFLOAT4(Colors::OrangeRed);
+  m_pParticleEngine->create(d);
+} //DeathFX
+
+/// Set the strafe left flag. This function will be called in response to
+/// device inputs.
+
+void CPlayer::StrafeLeft(){
+  m_bStrafeLeft = true;
+} //StrafeLeft
+
+/// Set the strafe right flag. This function will be called in response to
+/// device inputs.
+
+void CPlayer::StrafeRight(){
+  m_bStrafeRight = true;
+} //StrafeRight
+
+/// Set the strafe back flag. This function will be called in response to
+/// device inputs.
+
+void CPlayer::StrafeBack(){
+  m_bStrafeBack = true;
+} //StrafeBack
+
+/// Set the object's speed, assuming that the object moves in the direction of
+/// its view vector. This function will be called in response to device inputs.
+/// \param speed Speed.
+
+void CPlayer::SetSpeed(const float speed){
+  m_fSpeed = speed;
+} //SetSpeed
+
+/// Set the object's rotational speed in revolutions per second. This function
+/// will be called in response to device inputs.
+/// \param speed Rotational speed in RPS.
+
+void CPlayer::SetRotSpeed(const float speed){
+  m_fRotSpeed = speed;
+} //SetRotSpeed
+
+/// Reader function for position.
+/// \return Position.
+
+const Vector2& CPlayer::GetPos() const{
+  return m_vPos;
+} //GetPos

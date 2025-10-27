@@ -6,68 +6,65 @@
 #include "GameDefines.h"
 #include "SpriteRenderer.h"
 #include "ComponentIncludes.h"
+#include "ParticleEngine.h"
+#include "TileManager.h"
 
 #include "shellapi.h"
-#include "Player.h"
 
-
-/// Delete the object manager. The renderer needs to be deleted before this
-/// destructor runs so it will be done elsewhere.
+/// Delete the renderer, the object manager, and the tile manager. The renderer
+/// needs to be deleted before this destructor runs so it will be done elsewhere.
 
 CGame::~CGame(){
-  delete m_pObjectManager;
+  delete m_pParticleEngine;
+  delete m_pObjectManager;   
+  delete m_pTileManager;
 } //destructor
 
-/// Create the renderer and the object manager, load images and sounds, and
-/// begin the game.
+//Changing a line in game cpp to make sure commits work
+
+/// Initialize the renderer, the tile manager and the object manager, load 
+/// images and sounds, and begin the game.
 
 void CGame::Initialize(){
   m_pRenderer = new LSpriteRenderer(eSpriteMode::Batched2D); 
   m_pRenderer->Initialize(eSprite::Size); 
   LoadImages(); //load images from xml file list
-
+  
+  m_pTileManager = new CTileManager((size_t)m_pRenderer->GetWidth(eSprite::Tile));
   m_pObjectManager = new CObjectManager; //set up the object manager 
   LoadSounds(); //load the sounds for this game
 
-  BeginGame();
-} //Initialize
+  m_pParticleEngine = new LParticleEngine2D(m_pRenderer);
 
-/// Load the specific images needed for this game. This is where `eSprite`
-/// values from `GameDefines.h` get tied to the names of sprite tags in
-/// `gamesettings.xml`. Those sprite tags contain the name of the corresponding
-/// image file. If the image tag or the image file are missing, then the game
-/// should abort from deeper in the Engine code leaving you with an error
-/// message in a dialog box.
+  BeginGame();
+}
 
 void CGame::LoadImages(){  
   m_pRenderer->BeginResourceUpload();
 
-  m_pRenderer->Load(eSprite::Background, "background"); 
-  m_pRenderer->Load(eSprite::TextWheel,  "textwheel"); 
-  
-  m_pRenderer->Load(eSprite::PlayerStandRight, "standright");
-  m_pRenderer->Load(eSprite::PlayerStandLeft, "standleft");
-  m_pRenderer->Load(eSprite::PlayerStandUp, "standup");
-  m_pRenderer->Load(eSprite::PlayerStandDown, "standdown");
-  m_pRenderer->Load(eSprite::PlayerWalkRightSpriteSheet, "walkrightsheet");
-  m_pRenderer->Load(eSprite::PlayerWalkRight, "walkright");
-  m_pRenderer->Load(eSprite::PlayerWalkLeftSpriteSheet, "walkleftsheet");
-  m_pRenderer->Load(eSprite::PlayerWalkLeft, "walkleft");
-  m_pRenderer->Load(eSprite::PlayerWalkUpSpriteSheet, "walkupsheet");
-  m_pRenderer->Load(eSprite::PlayerWalkUp, "walkup");
-  m_pRenderer->Load(eSprite::PlayerWalkDownSpriteSheet, "walkdownsheet");
-  m_pRenderer->Load(eSprite::PlayerWalkDown, "walkdown");
+  m_pRenderer->Load(eSprite::Tile,    "tile"); 
+  m_pRenderer->Load(eSprite::Player,  "player");
+  m_pRenderer->Load(eSprite::PlayerLeft, "playerleft");
+  m_pRenderer->Load(eSprite::Bullet,  "bullet");
+  m_pRenderer->Load(eSprite::Bullet2, "bullet2");
+  m_pRenderer->Load(eSprite::Smoke,   "smoke");
+  m_pRenderer->Load(eSprite::Spark,   "spark");
+  m_pRenderer->Load(eSprite::Turret,  "turret");
+  m_pRenderer->Load(eSprite::Line,    "greenline"); 
 
   m_pRenderer->EndResourceUpload();
-} //LoadImages
-
-/// Initialize the audio player and load game sounds.
+} 
 
 void CGame::LoadSounds(){
   m_pAudio->Initialize(eSound::Size);
+
   m_pAudio->Load(eSound::Grunt, "grunt");
   m_pAudio->Load(eSound::Clang, "clang");
-} //LoadSounds
+  m_pAudio->Load(eSound::Gun, "gun");
+  m_pAudio->Load(eSound::Ricochet, "ricochet");
+  m_pAudio->Load(eSound::Start, "start");
+  m_pAudio->Load(eSound::Boom, "boom");
+}
 
 /// Release all of the DirectX12 objects by deleting the renderer.
 
@@ -76,76 +73,137 @@ void CGame::Release(){
   m_pRenderer = nullptr; //for safety
 } //Release
 
-/// Ask the object manager to create the game objects. There's only one in this
-/// game, the rotating wheel o' text centered at the center of the window.
+/// Ask the object manager to create a player object and turrets specified by
+/// the tile manager.
 
 void CGame::CreateObjects(){
-  m_pObjectManager->create(eSprite::TextWheel, m_vWinCenter);
-  const float h = m_pRenderer->GetHeight(eSprite::PlayerStandRight);
-  m_pPlayer = (CPlayer*)m_pObjectManager->create(eSprite::PlayerStandRight,
-      Vector2(100.0f, h / 2.0f));
+  std::vector<Vector2> turretpos; //vector of turret positions
+  Vector2 playerpos; //player positions
+  m_pTileManager->GetObjects(turretpos, playerpos); //get positions
+  
+  m_pPlayer = (CPlayer*)m_pObjectManager->create(eSprite::Player, playerpos);
 
+  for(const Vector2& pos: turretpos)
+    m_pObjectManager->create(eSprite::Turret, pos);
 } //CreateObjects
 
 /// Call this function to start a new game. This should be re-entrant so that
 /// you can restart a new game without having to shut down and restart the
-/// program. All we need to do is delete any old objects out of the object
-/// manager and create some new ones.
+/// program. Clear the particle engine to get rid of any existing particles,
+/// delete any old objects out of the object manager and create some new ones.
 
 void CGame::BeginGame(){  
+  m_pParticleEngine->clear(); //clear old particles
+  
+  switch(m_nNextLevel){
+    case 0: m_pTileManager->LoadMap("Media\\Maps\\tiny.txt"); break;
+    case 1: m_pTileManager->LoadMap("Media\\Maps\\small.txt"); break;
+    case 2: m_pTileManager->LoadMap("Media\\Maps\\map.txt"); break;
+    case 3: m_pTileManager->LoadMapFromImageFile("Media\\Maps\\maze.png");break;
+  } //switch
+
   m_pObjectManager->clear(); //clear old objects
-  CreateObjects(); //create new objects 
+  CreateObjects(); //create new objects (must be after map is loaded) 
+  m_pAudio->stop(); //stop all  currently playing sounds
+  m_pAudio->play(eSound::Start); //play start-of-game sound
+  m_eGameState = eGameState::Playing; //now playing
 } //BeginGame
 
 /// Poll the keyboard state and respond to the key presses that happened since
 /// the last frame.
 
 void CGame::KeyboardHandler(){
-  m_pKeyboard->GetState(); //get current keyboard state 
+  m_pKeyboard->GetState(); //get current keyboard state
+  if (m_pKeyboard->TriggerDown(VK_RETURN)) {
+      m_nNextLevel = (m_nNextLevel + 1) % 4;
+      BeginGame();
+  } //if
   
   if(m_pKeyboard->TriggerDown(VK_F1)) //help
-    ShellExecute(0, 0, "https://larc.unt.edu/code/blank/", 0, 0, SW_SHOW);
+    ShellExecute(0, 0, "https://larc.unt.edu/code/topdown/", 0, 0, SW_SHOW);
   
-  if(m_pKeyboard->TriggerDown(VK_F2)) //toggle frame rate 
+  if(m_pKeyboard->TriggerDown(VK_F2)) //toggle frame rate
     m_bDrawFrameRate = !m_bDrawFrameRate;
   
-  if(m_pKeyboard->TriggerDown(VK_SPACE)) //play sound
-    m_pAudio->play(eSound::Clang);
+  if(m_pKeyboard->TriggerDown(VK_F3)) //toggle AABB drawing
+    m_bDrawAABBs = !m_bDrawAABBs; 
 
-  if(m_pKeyboard->TriggerUp(VK_SPACE)) //play sound
-    m_pAudio->play(eSound::Grunt);
+  if (m_pKeyboard->TriggerDown(VK_F4)) // move to next level
+  {
+      m_nNextLevel = (m_nNextLevel + 1) % 4;
+      BeginGame();
+  }
+  if(m_pKeyboard->TriggerDown(VK_BACK)) //start game
+    BeginGame();
+
+  // MOVEMENT
+  if(m_pPlayer){ 
+    if(m_pKeyboard->TriggerDown('D')) //move right
+      m_pPlayer->SetSpeed(200.0f);
+
+    if(m_pKeyboard->TriggerUp('D')) //stop
+      m_pPlayer->SetSpeed(0.0f);
+
+    if (m_pKeyboard->TriggerDown('A')) //move left
+        m_pPlayer->SetSpeed(-200.0f);
+
+    if (m_pKeyboard->TriggerUp('A')) //stop
+        m_pPlayer->SetSpeed(0.0f);
+
+    if(m_pKeyboard->Down('W')) //moves up FIX THIS LATER***************
+      m_pPlayer->StrafeRight();
   
-  if(m_pKeyboard->TriggerDown(VK_BACK)) //restart game
-    BeginGame(); 
+    if(m_pKeyboard->Down('S')) //moves down FIX THIS LATER****************
+      m_pPlayer->StrafeLeft();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    if(m_pKeyboard->TriggerDown(VK_SPACE)) //fire gun
+      m_pObjectManager->FireGun(m_pPlayer, eSprite::Bullet);
+
+    if(m_pKeyboard->TriggerDown('G')) //toggle god mode
+      m_bGodMode = !m_bGodMode;
+  } 
+} 
+
+void CGame::ControllerHandler(){
+  if(!m_pController->IsConnected())return;
+
+  m_pController->GetState(); //get state of controller's controls 
   
-  // --- Horizontal movement ---
-  if (m_pKeyboard->TriggerDown('D') && !m_pKeyboard->Down('A'))
-      m_pPlayer->WalkRight();
-  else if (m_pKeyboard->TriggerUp('D'))
-      m_pPlayer->Stop();
+  if(m_pPlayer){ //safety
+    m_pPlayer->SetSpeed(100*m_pController->GetRTrigger());
+    m_pPlayer->SetRotSpeed(-2.0f*m_pController->GetRThumb().x);
 
-  else if (m_pKeyboard->TriggerDown('A') && !m_pKeyboard->Down('D'))
-      m_pPlayer->WalkLeft();
-  else if (m_pKeyboard->TriggerUp('A'))
-      m_pPlayer->Stop();
+    if(m_pController->GetButtonRSToggle()) //fire gun
+      m_pObjectManager->FireGun(m_pPlayer, eSprite::Bullet);
 
-  // --- Vertical movement ---
-  else if (m_pKeyboard->TriggerDown('W') && !m_pKeyboard->Down('S'))
-      m_pPlayer->WalkUp();
-  else if (m_pKeyboard->TriggerUp('W'))
-      m_pPlayer->Stop();
+    if(m_pController->GetDPadRight()) //strafe right
+      m_pPlayer->StrafeRight();
+  
+    if(m_pController->GetDPadLeft()) //strafe left
+      m_pPlayer->StrafeLeft();
 
-  else if (m_pKeyboard->TriggerDown('S') && !m_pKeyboard->Down('W'))
-      m_pPlayer->WalkDown();
-  else if (m_pKeyboard->TriggerUp('S'))
-      m_pPlayer->Stop();
-
-  //restart game
-} //KeyboardHandler
+    if(m_pController->GetDPadDown()) //strafe back
+      m_pPlayer->StrafeBack();
+  } 
+} 
 
 /// Draw the current frame rate to a hard-coded position in the window.
 /// The frame rate will be drawn in a hard-coded position using the font
-/// specified in gamesettings.xml.
+/// specified in `gamesettings.xml`.
 
 void CGame::DrawFrameRateText(){
   const std::string s = std::to_string(m_pTimer->GetFPS()) + " fps"; //frame rate
@@ -153,33 +211,96 @@ void CGame::DrawFrameRateText(){
   m_pRenderer->DrawScreenText(s.c_str(), pos); //draw to screen
 } //DrawFrameRateText
 
-/// Ask the object manager to draw the game objects. The renderer is notified
-/// of the start and end of the frame so that it can let Direct3D do its
+/// Draw the god mode text to a hard-coded position in the window using the
+/// font specified in `gamesettings.xml`.
+
+void CGame::DrawGodModeText(){
+  const Vector2 pos(64.0f, 30.0f); //hard-coded position
+  m_pRenderer->DrawScreenText("God Mode", pos); //draw to screen
+} //DrawGodModeText
+
+/// Ask the object manager to draw the game objects. The renderer is notified of
+/// the start and end of the frame so that it can let Direct3D do its
 /// pipelining jiggery-pokery.
 
 void CGame::RenderFrame(){
   m_pRenderer->BeginFrame(); //required before rendering
 
-  m_pRenderer->Draw(eSprite::Background, m_vWinCenter); //draw background
   m_pObjectManager->draw(); //draw objects
+  m_pParticleEngine->Draw(); //draw particles
   if(m_bDrawFrameRate)DrawFrameRateText(); //draw frame rate, if required
+  if(m_bGodMode)DrawGodModeText(); //draw god mode text, if required
 
   m_pRenderer->EndFrame(); //required after rendering
 } //RenderFrame
 
+/// Make the camera follow the player, but don't let it get too close to the
+/// edge unless the world is smaller than the window, in which case we just
+/// center everything.
+
+void CGame::FollowCamera(){
+  if(m_pPlayer == nullptr)return; //safety
+
+  Vector3 vCameraPos(m_pPlayer->GetPos()); //player position
+
+  if(m_vWorldSize.x > m_nWinWidth){ //world wider than screen
+    vCameraPos.x = std::max(vCameraPos.x, m_nWinWidth/2.0f); //stay away from the left edge
+    vCameraPos.x = std::min(vCameraPos.x, m_vWorldSize.x - m_nWinWidth/2.0f);  //stay away from the right edge
+  } //if
+  else vCameraPos.x = m_vWorldSize.x/2.0f; //center horizontally.
+  
+  if(m_vWorldSize.y > m_nWinHeight){ //world higher than screen
+    vCameraPos.y = std::max(vCameraPos.y, m_nWinHeight/2.0f);  //stay away from the bottom edge
+    vCameraPos.y = std::min(vCameraPos.y, m_vWorldSize.y - m_nWinHeight/2.0f); //stay away from the top edge
+  } //if
+  else vCameraPos.y = m_vWorldSize.y/2.0f; //center vertically
+
+  m_pRenderer->SetCameraPos(vCameraPos); //camera to player
+} //FollowCamera
+
 /// This function will be called regularly to process and render a frame
 /// of animation, which involves the following. Handle keyboard input.
-/// Notify the  audio player at the start of each frame so that it can prevent
+/// Notify the audio player at the start of each frame so that it can prevent
 /// multiple copies of a sound from starting on the same frame.  
-/// Move the game objects. Render a frame of animation.
+/// Move the game objects. Render a frame of animation. 
 
 void CGame::ProcessFrame(){
   KeyboardHandler(); //handle keyboard input
+  ControllerHandler(); //handle controller input
   m_pAudio->BeginFrame(); //notify audio player that frame has begun
-
+  
   m_pTimer->Tick([&](){ //all time-dependent function calls should go here
     m_pObjectManager->move(); //move all objects
+    FollowCamera(); //make camera follow player
+    m_pParticleEngine->step(); //advance particle animation
   });
 
   RenderFrame(); //render a frame of animation
+  ProcessGameState(); //check for end of game
 } //ProcessFrame
+
+/// Take action appropriate to the current game state. If the game is currently
+/// playing, then if the player has been killed or all turrets have been
+/// killed, then enter the wait state. If the game has been in the wait
+/// state for longer than 3 seconds, then restart the game.
+
+void CGame::ProcessGameState(){
+  static float t = 0; //time at start of game
+
+  switch(m_eGameState){
+    case eGameState::Playing:
+      if(m_pPlayer == nullptr || m_pObjectManager->GetNumTurrets() == 0){
+        m_eGameState = eGameState::Waiting; //now waiting
+        t = m_pTimer->GetTime(); //start wait timer
+      } //if
+      break;
+
+    case eGameState::Waiting:
+      if(m_pTimer->GetTime() - t > 3.0f){ //3 seconds has elapsed since level end
+        if(m_pObjectManager->GetNumTurrets() == 0) //player won
+            m_nNextLevel = (m_nNextLevel + 1) % 4; //note: 4 instead of 3
+        BeginGame(); //restart game
+      } //if
+      break;
+  } //switch
+} //CheckForEndOfGame

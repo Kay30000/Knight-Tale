@@ -5,7 +5,6 @@
 #define __L4RC_GAME_GAMEDEFINES_H__
 
 #include "Defines.h"
-#include "Sound.h"
 
 /// \brief Sprite enumerated type.
 ///
@@ -14,12 +13,7 @@
 /// memory. `Size` must be last.
 
 enum class eSprite: UINT{
-  Background, TextWheel, PlayerWalkLeftSpriteSheet, PlayerWalkRightSpriteSheet,
-  PlayerStandLeftSpriteSheet, PlayerStandRightSpriteSheet,
-  PlayerWalkLeft, PlayerWalkRight, PlayerStandLeft, PlayerStandRight, PlayerWalkUpSpriteSheet, PlayerWalkDownSpriteSheet,
-  PlayerStandUpSpriteSheet, PlayerStandDownSpriteSheet,
-  PlayerWalkUp, PlayerWalkDown, PlayerStandUp, PlayerStandDown,
-
+  Background, Bullet, Bullet2, Player, PlayerLeft, Turret, Smoke, Spark, Tile, Line,
   Size  //MUST BE LAST
 }; //eSprite
 
@@ -30,8 +24,18 @@ enum class eSprite: UINT{
 /// be last.
 
 enum class eSound: UINT{
-  Clang, Grunt,
+  Start, Boom, Clang, Grunt, Gun, Ricochet,
   Size  //MUST BE LAST
 }; //eSound
+
+/// \brief Game state enumerated type.
+///
+/// An enumerated type for the game state, which can be either playing or
+/// waiting a short interval for the level to end after winning or losing to
+/// let sounds and particle effects play to the end without being cut short.
+
+enum class eGameState{
+  Playing, Waiting
+}; //eGameState
 
 #endif //__L4RC_GAME_GAMEDEFINES_H__
