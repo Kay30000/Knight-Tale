@@ -51,6 +51,7 @@ void CGame::LoadImages(){
   m_pRenderer->Load(eSprite::Spark,   "spark");
   m_pRenderer->Load(eSprite::Turret,  "turret");
   m_pRenderer->Load(eSprite::Line,    "greenline"); 
+  m_pRenderer->Load(eSprite::fireball, "fireball");
 
   m_pRenderer->EndResourceUpload();
 } 
@@ -156,22 +157,21 @@ void CGame::KeyboardHandler(){
     if(m_pKeyboard->Down('S')) //moves down FIX THIS LATER****************
       m_pPlayer->StrafeLeft();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     if(m_pKeyboard->TriggerDown(VK_SPACE)) //fire gun
       m_pObjectManager->FireGun(m_pPlayer, eSprite::Bullet);
+
+    if (m_pKeyboard->TriggerDown('E'))
+        m_pPlayer->SwingSword();
+
+    if (m_pKeyboard->TriggerDown('Q'))
+        m_pPlayer->SwingDagger();
+
+    if (m_pKeyboard->TriggerDown('R'))
+        m_pPlayer->SwingGreatSword();
+
+    if (m_pKeyboard->TriggerDown('F'))
+        m_pObjectManager->FireGun(m_pPlayer, eSprite::fireball);
+
 
     if(m_pKeyboard->TriggerDown('G')) //toggle god mode
       m_bGodMode = !m_bGodMode;

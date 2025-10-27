@@ -18,6 +18,17 @@ CObject::CObject(eSprite t, const Vector2& p):
   m_fRoll = XM_PIDIV2; //facing upwards
   m_bIsTarget = false; //not a target
 
+
+  if (t == eSprite::Bullet || t == eSprite::fireball) {
+      m_bIsBullet = true;
+      m_bStatic = false;
+  }
+  else {
+      m_bIsBullet = false;
+  }
+
+
+
   const float w = m_pRenderer->GetWidth(t); //sprite width
   const float h = m_pRenderer->GetHeight(t); //sprite height
   m_fRadius = std::max(w, h)/2; //bounding circle radius
@@ -82,6 +93,9 @@ void CObject::SetSprite(eSprite t) {
     m_nSpriteIndex = (UINT)t;
 }
 
+void CObject::TakeDamage(int damage) {
+
+}
 
 
 /// Compute the view vector from the object orientation.

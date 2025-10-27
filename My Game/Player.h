@@ -19,6 +19,19 @@ class CPlayer: public CObject{
     bool m_bStrafeLeft = false; ///< Strafe left.
     bool m_bStrafeRight = false; ///< Strafe right.
     bool m_bStrafeBack = false; ///< Strafe back.
+
+    //Sword
+    float m_fSwingTimer = 0.0f;
+    bool m_bSwordAttacked = false;
+
+    //Dagger
+    float m_fDaggerTimer = 0.0f;
+    bool m_bDaggerAttacked = false;
+
+    //GreatSword
+    float m_fGreatSwordTimer = 0.0f;
+    bool m_bGreatSwordAttacked = false;
+
     
     virtual void CollisionResponse(const Vector2&, float, CObject* = nullptr); ///< Collision response.
     virtual void DeathFX(); ///< Death special effects.
@@ -38,7 +51,9 @@ class CPlayer: public CObject{
     void StrafeRight(); ///< Strafe right.
     void StrafeBack(); ///< Strafe back.
     void SetFacingLeft(bool facingLeft);
-    
+    void SwingSword();
+    void SwingDagger();
+    void SwingGreatSword();
     
     const Vector2& GetPos() const; ///< Get position.
 }; //CPlayer

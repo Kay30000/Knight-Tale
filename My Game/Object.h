@@ -56,6 +56,10 @@ class CObject:
     void SetSprite(eSprite t);
 
     const bool isBullet() const; ///< Is a bullet.
+
+    virtual void TakeDamage(int damage);
+
+    void SetDead() { m_bDead = true; }
 }; //CObject
 
 #endif //__L4RC_GAME_OBJECT_H__

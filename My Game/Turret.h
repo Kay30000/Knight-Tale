@@ -22,6 +22,8 @@ class CTurret: public CObject{
   public:
     CTurret(const Vector2& p); ///< Constructor.
     virtual void move(); ///< Move turret.
+    virtual void TakeDamage(int damage) override;
+
 }; //CBullet
 
 #endif //__L4RC_GAME_TURRET_H__

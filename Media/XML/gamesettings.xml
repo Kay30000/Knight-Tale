@@ -20,6 +20,7 @@
     <sprite name="smoke" file="graysmoke.png"/>
     <sprite name="spark" file="spark.png"/>
      <sprite name="greenline" file="greenline.png"/>
+	  <sprite name="fireball" file="fireball.png"/>
   </sprites>
 
   <!-- sound -->

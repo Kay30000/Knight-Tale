@@ -93,13 +93,18 @@ void CObjectManager::NarrowPhase(CObject* p0, CObject* p1){
 void CObjectManager::FireGun(CObject* pObj, eSprite bullet){
   m_pAudio->play(eSound::Gun);
 
-  
-
-
   const Vector2 view = pObj->GetViewVector(); //firing object view vector
   const float w0 = 0.5f*m_pRenderer->GetWidth(pObj->m_nSpriteIndex); //firing object width
   const float w1 = m_pRenderer->GetWidth(bullet); //bullet width
   const Vector2 pos = pObj->m_vPos + (w0 + w1)*view; //bullet initial position
+
+  float fSpeed = 400.0f;
+  int nDamage = 0;
+
+  if (bullet == eSprite::fireball) {
+      fSpeed = FIREBALL_SPEED;
+      nDamage = FIREBALL_DAMAGE;
+  }
 
   //create bullet object
 
@@ -126,7 +131,28 @@ void CObjectManager::FireGun(CObject* pObj, eSprite bullet){
   d.m_f4Tint = XMFLOAT4(Colors::Yellow);
   
   m_pParticleEngine->create(d);
+
+
+  // Fireball
+  if (bullet == eSprite::fireball) {
+      d.m_nSpriteIndex = (UINT)eSprite::Smoke;
+      d.m_vPos = pos;
+      d.m_vVel = pObj->m_fSpeed * view  * 0.5f;
+      d.m_fLifeSpan = 0.5f;
+      d.m_fScaleInFrac = 0.4f;
+      d.m_fFadeOutFrac = 0.5f;
+      d.m_fMaxScale = 1.0f;
+      d.m_f4Tint = XMFLOAT4(Colors::Red);
+      m_pParticleEngine->create(d);
+
+  }
+
+
 } //FireGun
+
+
+
+
 
 /// Reader function for the number of turrets. 
 /// \return Number of turrets in the object list.
@@ -140,3 +166,21 @@ const size_t CObjectManager::GetNumTurrets() const{
 
   return n;
 } //GetNumTurrets
+
+
+bool CObjectManager::CheckSwordHit(const Vector2& hitPos, int damage) {
+    bool hitSomething = false;
+
+    for (CObject* pObj : m_stdObjectList) {
+        if (pObj->m_bIsTarget && pObj != m_pPlayer && !pObj->m_bDead) {
+            const float distSq = (pObj->m_vPos - hitPos).LengthSquared();
+            const float radiusSq = pObj->m_fRadius * pObj->m_fRadius;
+
+            if (distSq < radiusSq) {
+                pObj->TakeDamage(damage);
+                hitSomething = true;
+            }
+        }
+    }
+    return hitSomething;
+}

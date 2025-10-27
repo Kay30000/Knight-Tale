@@ -3,6 +3,7 @@
 #include "Helpers.h"
 #include "Particle.h"
 #include "ParticleEngine.h"
+#include "ObjectManager.h"
 
 /// Create and initialize an player object given its initial position.
 /// \param p Initial position of player.
@@ -11,7 +12,17 @@ CPlayer::CPlayer(eSprite t, const Vector2& p): CObject(eSprite::Player, p){
   m_bIsTarget = true;
   m_bStatic = false;
 
+  //Sword
+  m_fSwingTimer = 0.0f;
+  m_bSwordAttacked = false;
 
+  //Dagger
+  m_fDaggerTimer = 0.0f;
+  m_bDaggerAttacked = false;
+
+  //GreatSword
+  m_fGreatSwordTimer = 0.0f;
+  m_bGreatSwordAttacked = false;
   
 } 
 
@@ -40,6 +51,119 @@ void CPlayer::move(){
   else if(m_bStrafeBack)m_vPos -= delta*view; //strafe back
 
   m_bStrafeLeft = m_bStrafeRight = m_bStrafeBack = false; //reset strafe flags
+
+  //Sword
+  if (m_fSwingTimer > 0.0f) {
+      m_fSwingTimer -= t;
+
+      if (!m_bSwordAttacked && m_fSwingTimer > SWORD_SWING_DURATION - t) {
+          const Vector2 view = GetViewVector();
+          const Vector2 swordPos = m_vPos + view * SWORD_RANGE;
+
+          if (m_pObjectManager->CheckSwordHit(swordPos, SWORD_DAMAGE)) {
+              m_bSwordAttacked = true;
+              m_pAudio->play(eSound::Clang);
+          }
+      }
+
+      else if (m_fSwingTimer <= 0.0f) {
+          m_fSwingTimer = 0.0f;
+          m_bSwordAttacked = false;
+      }
+  }
+
+  //Dagger
+  if (m_fDaggerTimer > 0.0f) {
+      m_fDaggerTimer -= t;
+
+      if (!m_bDaggerAttacked && m_fDaggerTimer > DAGGER_SWING_DURATION - t) {
+          const Vector2 view = GetViewVector();
+          
+          const Vector2 point_near = m_vPos + view * (DAGGER_RANGE * 0.25f);
+          const Vector2 point_mid = m_vPos + view * (DAGGER_RANGE * 0.5f);
+          const Vector2 point_tip = m_vPos + view * DAGGER_RANGE;
+
+          bool hit_enemy = false;
+
+          if (m_pObjectManager->CheckSwordHit(point_near, DAGGER_DAMAGE)) {
+              hit_enemy = true;
+          }
+          if (m_pObjectManager->CheckSwordHit(point_mid, DAGGER_DAMAGE)) {
+              hit_enemy = true;
+          }
+          if (m_pObjectManager->CheckSwordHit(point_tip, DAGGER_DAMAGE)) {
+              hit_enemy = true;
+          }
+          if (hit_enemy) {
+              m_bDaggerAttacked = true;
+              m_pAudio->play(eSound::Clang);
+          }
+      }
+
+      else if (m_fDaggerTimer <= 0.0f) {
+          m_fDaggerTimer = 0.0f;
+          m_bDaggerAttacked = false;
+      }
+  }
+
+  //GreatSword
+  if (m_fGreatSwordTimer > 0.0f) {
+      m_fGreatSwordTimer -= t;
+
+      if (!m_bGreatSwordAttacked && m_fGreatSwordTimer > GREATSWORD_SWING_DURATION - t) {
+          const Vector2 view = GetViewVector();
+
+          const Vector2 point_near = m_vPos + view * (GREATSWORD_RANGE * 0.25f);
+          const Vector2 point_mid = m_vPos + view * (GREATSWORD_RANGE * 0.5f);
+          const Vector2 point_tip = m_vPos + view * GREATSWORD_RANGE;
+
+          bool hit_enemy = false;
+
+          if (m_pObjectManager->CheckSwordHit(point_near, GREATSWORD_DAMAGE)) {
+              hit_enemy = true;
+          }
+          if (m_pObjectManager->CheckSwordHit(point_mid, GREATSWORD_DAMAGE)) {
+              hit_enemy = true;
+          }
+          if (m_pObjectManager->CheckSwordHit(point_tip, GREATSWORD_DAMAGE)) {
+              hit_enemy = true;
+          }
+          if (hit_enemy) {
+              m_bGreatSwordAttacked = true;
+              m_pAudio->play(eSound::Clang);
+          }
+      }
+
+      else if (m_fGreatSwordTimer <= 0.0f) {
+          m_fGreatSwordTimer = 0.0f;
+          m_bGreatSwordAttacked = false;
+      }
+  }
+
+}
+
+void CPlayer::SwingSword() {
+    if (m_fSwingTimer <= 0.0f) {
+        m_fSwingTimer = SWORD_SWING_DURATION;
+        m_bSwordAttacked = false;
+        m_pAudio->play(eSound::Gun);
+    }
+}
+
+void CPlayer::SwingDagger() {
+    if (m_fDaggerTimer <= 0.0f && m_fSwingTimer <= 0.0f) {
+        m_fDaggerTimer = DAGGER_SWING_DURATION;
+        m_bDaggerAttacked = false;
+        m_pAudio->play(eSound::Gun);
+    }
+}
+
+void CPlayer::SwingGreatSword() {
+    if (m_fGreatSwordTimer <= 0.0f && m_fSwingTimer <= 0.0f && m_fDaggerTimer <= 0.0f) {
+        m_fGreatSwordTimer = GREATSWORD_SWING_DURATION;
+        m_bGreatSwordAttacked = false;
+        m_pAudio->play(eSound::Gun);
+    }
 }
 
 const Vector2 CPlayer::GetViewVector()const {

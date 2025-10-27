@@ -9,6 +9,7 @@
 #include "Helpers.h"
 #include "Particle.h"
 #include "ParticleEngine.h"
+#include "Object.h"
 
 /// Create and initialize a turret object given its position.
 /// \param p Position of turret.
@@ -65,22 +66,50 @@ void CTurret::RotateTowards(const Vector2& pos){
 /// which means collision with a wall).
 
 void CTurret::CollisionResponse(const Vector2& norm, float d, CObject* pObj){
-  if(m_bDead)return; //already dead, bail out 
+  if(m_bDead)return; 
 
-  if(pObj && pObj->isBullet()){ //collision with bullet
-    if(--m_nHealth == 0){ //health decrements to zero means death 
-      m_pAudio->play(eSound::Boom); //explosion
-      m_bDead = true; //flag for deletion from object list
-      DeathFX(); //particle effects
-    } //if
+  
+  if(pObj && pObj->isBullet()){ 
+    
+      int damageToTake = 1;
 
-    else{ //not a death blow
-      m_pAudio->play(eSound::Clang); //impact sound
-      const float f = 0.5f + 0.5f*(float)m_nHealth/m_nMaxHealth; //health fraction
-      m_f4Tint = XMFLOAT4(1.0f, f, f, 0); //redden the sprite to indicate damage
-    } //else
-  } //if
-} //CollisionResponse
+      if (pObj->m_nSpriteIndex == (UINT)eSprite::fireball) {
+          damageToTake = FIREBALL_DAMAGE;
+      }
+
+      pObj->SetDead();
+
+      this->TakeDamage(damageToTake);
+
+  } 
+} 
+
+
+void CTurret::TakeDamage(int damage) {
+    if (m_bDead) return;
+    m_nHealth -= damage;
+
+    if (m_nHealth > damage) {
+        m_nHealth -= damage;
+    }
+    else {
+        m_nHealth = 0;
+    }
+
+
+
+
+    if (m_nHealth <= 0) {
+        m_pAudio->play(eSound::Boom);
+        m_bDead = true;
+        DeathFX();
+    }
+    else {
+        m_pAudio->play(eSound::Clang);
+        const float f = 0.5f + 0.5f * (float)m_nHealth / m_nMaxHealth;
+        m_f4Tint = XMFLOAT4(1.0f, f, f, 0);
+    }
+}
 
 /// Perform a particle effect to mark the death of the turret.
 

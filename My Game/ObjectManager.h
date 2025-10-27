@@ -29,7 +29,7 @@ class CObjectManager:
     const size_t GetNumTurrets() const; ///< Get number of turrets in object list.
 
     void RegularSword(CObject*, eSprite); ///< Regular Sword Attack
-
+    bool CheckSwordHit(const Vector2& hitPos, int damage);
 
 }; //CObjectManager
 

@@ -13,7 +13,7 @@
 /// memory. `Size` must be last.
 
 enum class eSprite: UINT{
-  Background, Bullet, Bullet2, Player, PlayerLeft, Turret, Smoke, Spark, Tile, Line,
+  Background, Bullet, Bullet2, Player, PlayerLeft, Turret, Smoke, Spark, Tile, Line, fireball,
   Size  //MUST BE LAST
 }; //eSprite
 
@@ -37,5 +37,27 @@ enum class eSound: UINT{
 enum class eGameState{
   Playing, Waiting
 }; //eGameState
+
+
+// Sword
+const float SWORD_SWING_DURATION = 0.2f;
+const float SWORD_RANGE = 100.0f;
+const int SWORD_DAMAGE = 3;
+
+//Dagger
+const float DAGGER_SWING_DURATION = 0.1f;
+const float DAGGER_RANGE = 50.0f;
+const int DAGGER_DAMAGE = 1;
+
+//Great Sword
+const float GREATSWORD_SWING_DURATION = 0.3f;
+const float GREATSWORD_RANGE = 150.0f;
+const int GREATSWORD_DAMAGE = 5;
+
+//FireBall
+const int FIREBALL_DAMAGE = 5;
+const float FIREBALL_SPEED = 500.0f;
+
+
 
 #endif //__L4RC_GAME_GAMEDEFINES_H__
