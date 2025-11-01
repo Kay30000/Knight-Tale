@@ -24,42 +24,36 @@ class CObject:
   public CCommon,
   public LBaseObject
 {
-  friend class CObjectManager; ///< Object manager needs access so it can manage.
+  friend class CObjectManager; 
 
   protected:
-    float m_fRadius = 0; ///< Bounding circle radius.
+    float m_fRadius = 0;
 
-    float m_fSpeed = 0; ///< Speed.
-    float m_fRotSpeed = 0; ///< Rotational speed.
-    Vector2 m_vVelocity; ///< Velocity.
-    bool m_bStatic = true; ///< Is static (does not move).
-    bool m_bIsTarget = true; ///< Is a target.
-    bool m_bIsBullet = false; ///< Is a bullet.
+    float m_fSpeed = 0; 
+    float m_fRotSpeed = 0;
+    Vector2 m_vVelocity; 
+    bool m_bStatic = true; 
+    bool m_bIsTarget = true; 
+    bool m_bIsBullet = false; 
 
-    LEventTimer* m_pGunFireEvent = nullptr; ///< Gun fire event.
+    LEventTimer* m_pGunFireEvent = nullptr; 
     
     virtual void CollisionResponse(const Vector2&, float,
-      CObject* = nullptr); ///< Collision response.
-    virtual void DeathFX(); ///< Death special effects.
+      CObject* = nullptr);
+    virtual void DeathFX(); 
 
-    virtual const Vector2 GetViewVector() const; ///< Compute view vector.
-
-    virtual float GetRollForFire() const { return m_fRoll; }
+    const Vector2 GetViewVector() const;
 
   public:
-    CObject(eSprite, const Vector2&); ///< Constructor.
-    virtual ~CObject(); ///< Destructor.
+    CObject(eSprite, const Vector2&); 
+    virtual ~CObject(); 
 
-    void move(); ///< Move object.
-    void draw(); ///< Draw object.
+    void move();
+    void draw();
 
-    void SetSprite(eSprite t);
-
-    const bool isBullet() const; ///< Is a bullet.
-
-    virtual void TakeDamage(int damage);
+    const bool isBullet() const; 
 
     void SetDead() { m_bDead = true; }
-}; //CObject
+}; 
 
-#endif //__L4RC_GAME_OBJECT_H__
+#endif 

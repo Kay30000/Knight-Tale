@@ -16,11 +16,9 @@
 
 CGame::~CGame(){
   delete m_pParticleEngine;
-  delete m_pObjectManager;   
+  delete m_pObjectManager;
   delete m_pTileManager;
 } //destructor
-
-//Changing a line in game cpp to make sure commits work
 
 /// Initialize the renderer, the tile manager and the object manager, load 
 /// images and sounds, and begin the game.
@@ -37,24 +35,43 @@ void CGame::Initialize(){
   m_pParticleEngine = new LParticleEngine2D(m_pRenderer);
 
   BeginGame();
-}
+} //Initialize
+
+/// Load the specific images needed for this game. This is where `eSprite`
+/// values from `GameDefines.h` get tied to the names of sprite tags in
+/// `gamesettings.xml`. Those sprite tags contain the name of the corresponding
+/// image file. If the image tag or the image file are missing, then the game
+/// should abort from deeper in the Engine code leaving you with an error
+/// message in a dialog box.
 
 void CGame::LoadImages(){  
   m_pRenderer->BeginResourceUpload();
 
   m_pRenderer->Load(eSprite::Tile,    "tile"); 
-  m_pRenderer->Load(eSprite::Player,  "player");
-  m_pRenderer->Load(eSprite::PlayerLeft, "playerleft");
   m_pRenderer->Load(eSprite::Bullet,  "bullet");
   m_pRenderer->Load(eSprite::Bullet2, "bullet2");
   m_pRenderer->Load(eSprite::Smoke,   "smoke");
   m_pRenderer->Load(eSprite::Spark,   "spark");
   m_pRenderer->Load(eSprite::Turret,  "turret");
   m_pRenderer->Load(eSprite::Line,    "greenline"); 
-  m_pRenderer->Load(eSprite::fireball, "fireball");
+  m_pRenderer->Load(eSprite::Fireball, "fireball");
+  m_pRenderer->Load(eSprite::PlayerStandRight, "standright");
+  m_pRenderer->Load(eSprite::PlayerStandLeft, "standleft");
+  m_pRenderer->Load(eSprite::PlayerStandUp, "standup");
+  m_pRenderer->Load(eSprite::PlayerStandDown, "standdown");
+  m_pRenderer->Load(eSprite::PlayerWalkRightSpriteSheet, "walkrightsheet");
+  m_pRenderer->Load(eSprite::PlayerWalkRight, "walkright");
+  m_pRenderer->Load(eSprite::PlayerWalkLeftSpriteSheet, "walkleftsheet");
+  m_pRenderer->Load(eSprite::PlayerWalkLeft, "walkleft");
+  m_pRenderer->Load(eSprite::PlayerWalkUpSpriteSheet, "walkupsheet");
+  m_pRenderer->Load(eSprite::PlayerWalkUp, "walkup");
+  m_pRenderer->Load(eSprite::PlayerWalkDownSpriteSheet, "walkdownsheet");
+  m_pRenderer->Load(eSprite::PlayerWalkDown, "walkdown");
 
   m_pRenderer->EndResourceUpload();
-} 
+} //LoadImages
+
+/// Initialize the audio player and load game sounds.
 
 void CGame::LoadSounds(){
   m_pAudio->Initialize(eSound::Size);
@@ -65,7 +82,7 @@ void CGame::LoadSounds(){
   m_pAudio->Load(eSound::Ricochet, "ricochet");
   m_pAudio->Load(eSound::Start, "start");
   m_pAudio->Load(eSound::Boom, "boom");
-}
+} //LoadSounds
 
 /// Release all of the DirectX12 objects by deleting the renderer.
 
@@ -82,7 +99,11 @@ void CGame::CreateObjects(){
   Vector2 playerpos; //player positions
   m_pTileManager->GetObjects(turretpos, playerpos); //get positions
   
-  m_pPlayer = (CPlayer*)m_pObjectManager->create(eSprite::Player, playerpos);
+  m_pPlayer = (CPlayer*)m_pObjectManager->create(eSprite::PlayerStandDown, playerpos);
+
+  if (m_pPlayer) {
+      m_pPlayer->Stop(); 
+  }
 
   for(const Vector2& pos: turretpos)
     m_pObjectManager->create(eSprite::Turret, pos);
@@ -114,11 +135,12 @@ void CGame::BeginGame(){
 /// the last frame.
 
 void CGame::KeyboardHandler(){
-  m_pKeyboard->GetState(); //get current keyboard state
+  m_pKeyboard->GetState();
   if (m_pKeyboard->TriggerDown(VK_RETURN)) {
       m_nNextLevel = (m_nNextLevel + 1) % 4;
       BeginGame();
-  } //if
+  } 
+
   
   if(m_pKeyboard->TriggerDown(VK_F1)) //help
     ShellExecute(0, 0, "https://larc.unt.edu/code/topdown/", 0, 0, SW_SHOW);
@@ -137,46 +159,61 @@ void CGame::KeyboardHandler(){
   if(m_pKeyboard->TriggerDown(VK_BACK)) //start game
     BeginGame();
 
-  // MOVEMENT
-  if(m_pPlayer){ 
-    if(m_pKeyboard->TriggerDown('D')) //move right
-      m_pPlayer->SetSpeed(200.0f);
+  if (m_pPlayer) { 
+      m_pPlayer->SetRotSpeed(0.0f);
 
-    if(m_pKeyboard->TriggerUp('D')) //stop
+      bool bMovingVertically = m_pKeyboard->Down('W') || m_pKeyboard->Down('S');
+      bool bMovingHorizontally = m_pKeyboard->Down('A') || m_pKeyboard->Down('D');
+
       m_pPlayer->SetSpeed(0.0f);
 
-    if (m_pKeyboard->TriggerDown('A')) //move left
-        m_pPlayer->SetSpeed(-200.0f);
+      // Vertical Movement
+      if (m_pKeyboard->Down('W') && !m_pKeyboard->Down('S')) {
+          m_pPlayer->SetSpeed(100.0f); 
+          m_pPlayer->WalkUp();
+      }
+      else if (m_pKeyboard->Down('S') && !m_pKeyboard->Down('W')) {
+          m_pPlayer->StrafeBack();
+          m_pPlayer->WalkDown(); 
+      }
 
-    if (m_pKeyboard->TriggerUp('A')) //stop
-        m_pPlayer->SetSpeed(0.0f);
+      // Horizontal Movement 
+      else if (!bMovingVertically) {
+          if (m_pKeyboard->Down('D') && !m_pKeyboard->Down('A')) {
+              m_pPlayer->StrafeRight();
+              m_pPlayer->WalkRight(); 
+          }
+          else if (m_pKeyboard->Down('A') && !m_pKeyboard->Down('D')) {
+              m_pPlayer->StrafeLeft(); 
+              m_pPlayer->WalkLeft(); 
+          }
+      }
 
-    if(m_pKeyboard->Down('W')) //moves up FIX THIS LATER***************
-      m_pPlayer->StrafeRight();
-  
-    if(m_pKeyboard->Down('S')) //moves down FIX THIS LATER****************
-      m_pPlayer->StrafeLeft();
+      if (!m_pKeyboard->Down('W') && !m_pKeyboard->Down('S') &&
+          !m_pKeyboard->Down('A') && !m_pKeyboard->Down('D')) {
 
-    if(m_pKeyboard->TriggerDown(VK_SPACE)) //fire gun
-      m_pObjectManager->FireGun(m_pPlayer, eSprite::Bullet);
+          m_pPlayer->Stop(); 
+      }
 
-    if (m_pKeyboard->TriggerDown('E'))
-        m_pPlayer->SwingSword();
+      if (m_pKeyboard->TriggerDown(VK_SPACE)) { 
+          
+          Vector2 vDir = m_pPlayer->GetDirectionVector();
+          m_pObjectManager->FireGun(m_pPlayer, eSprite::Bullet, vDir);
+      }
 
-    if (m_pKeyboard->TriggerDown('Q'))
-        m_pPlayer->SwingDagger();
+      if (m_pKeyboard->TriggerDown('Q')) {
+          Vector2 vDir = m_pPlayer->GetDirectionVector();
+          m_pObjectManager->FireGun(m_pPlayer, eSprite::Fireball, vDir); 
+      }
 
-    if (m_pKeyboard->TriggerDown('R'))
-        m_pPlayer->SwingGreatSword();
-
-    if (m_pKeyboard->TriggerDown('F'))
-        m_pObjectManager->FireGun(m_pPlayer, eSprite::fireball);
 
 
     if(m_pKeyboard->TriggerDown('G')) //toggle god mode
       m_bGodMode = !m_bGodMode;
   } 
 } 
+
+/// Poll the XBox controller state and respond to the controls there.
 
 void CGame::ControllerHandler(){
   if(!m_pController->IsConnected())return;
@@ -187,8 +224,8 @@ void CGame::ControllerHandler(){
     m_pPlayer->SetSpeed(100*m_pController->GetRTrigger());
     m_pPlayer->SetRotSpeed(-2.0f*m_pController->GetRThumb().x);
 
-    if(m_pController->GetButtonRSToggle()) //fire gun
-      m_pObjectManager->FireGun(m_pPlayer, eSprite::Bullet);
+    //if(m_pController->GetButtonRSToggle()) //fire gun
+     //   m_pObjectManager->FireGun(m_pPlayer, eSprite::Bullet, vDir); // Pass vDir
 
     if(m_pController->GetDPadRight()) //strafe right
       m_pPlayer->StrafeRight();
@@ -198,8 +235,8 @@ void CGame::ControllerHandler(){
 
     if(m_pController->GetDPadDown()) //strafe back
       m_pPlayer->StrafeBack();
-  } 
-} 
+  } //if
+} //ControllerHandler
 
 /// Draw the current frame rate to a hard-coded position in the window.
 /// The frame rate will be drawn in a hard-coded position using the font

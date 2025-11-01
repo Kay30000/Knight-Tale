@@ -14,10 +14,9 @@
 /// \param theta Angle in radians.
 /// \return Unit vector at angle theta counterclockwise from positive X.
 
-const Vector2 AngleToVector(const float theta)
-{
+const Vector2 AngleToVector(const float theta){
   return Vector2(cosf(theta), sinf(theta));
-} 
+} //AngleToVector
 
 /// Compute the counterclockwise unit perpendicular to a vector.
 /// If \f$\vec{v} = [v_x, v_y]\f$, then both dot products 

@@ -8,10 +8,6 @@
 #include "Object.h"
 #include "Common.h"
 
-/// \brief The object manager.
-///
-/// A collection of all of the game objects.
-
 class CObjectManager: 
   public LBaseObjectManager<CObject>,
   public CCommon
@@ -25,12 +21,8 @@ class CObjectManager:
     
     virtual void draw(); ///< Draw all objects.
 
-    void FireGun(CObject*, eSprite); ///< Fire object's gun.
-    const size_t GetNumTurrets() const; ///< Get number of turrets in object list.
-
-    void RegularSword(CObject*, eSprite); ///< Regular Sword Attack
-    bool CheckSwordHit(const Vector2& hitPos, int damage);
-
+    void FireGun(CPlayer*, eSprite, const Vector2& vDir);
+    const size_t GetNumTurrets() const; 
 }; //CObjectManager
 
 #endif //__L4RC_GAME_OBJECTMANAGER_H__

@@ -18,20 +18,31 @@
 /// \param pos Initial position.
 /// \return Pointer to the object created.
 
-CObject* CObjectManager::create(eSprite t, const Vector2& pos){
-  CObject* pObj = nullptr;
+CObject* CObjectManager::create(eSprite t, const Vector2& pos) {
+    CObject* pObj = nullptr;
 
-  switch(t){ //create object of type t
-    case eSprite::Player:  pObj = new CPlayer(t, pos); break;
-    case eSprite::Turret:  pObj = new CTurret(pos); break;
-    case eSprite::Bullet:  pObj = new CBullet(eSprite::Bullet,  pos); break;
-    case eSprite::Bullet2: pObj = new CBullet(eSprite::Bullet2, pos); break;
-    default: pObj = new CObject(t, pos);
-  } //switch
-  
-  m_stdObjectList.push_back(pObj); //push pointer onto object list
-  return pObj; //return pointer to created object
-} //create
+    if (
+        t == eSprite::PlayerStandDown || t == eSprite::PlayerStandUp ||
+        t == eSprite::PlayerStandLeft || t == eSprite::PlayerStandRight ||
+        t == eSprite::PlayerWalkDown || t == eSprite::PlayerWalkUp ||
+        t == eSprite::PlayerWalkLeft || t == eSprite::PlayerWalkRight
+        ) {
+        
+        pObj = new CPlayer(t, pos); 
+    }
+    else { 
+        switch (t) { 
+        case eSprite::Turret:  pObj = new CTurret(pos); break;
+        case eSprite::Bullet:  pObj = new CBullet(eSprite::Bullet, pos); break;
+        case eSprite::Bullet2: pObj = new CBullet(eSprite::Bullet2, pos); break;
+        case eSprite::Fireball: pObj = new CBullet(eSprite::Fireball, pos); break;
+        default: pObj = new CObject(t, pos);
+        } 
+    }
+
+    m_stdObjectList.push_back(pObj); 
+    return pObj;
+} 
 
 /// Draw the tiled background and the objects in the object list.
 
@@ -90,97 +101,65 @@ void CObjectManager::NarrowPhase(CObject* p0, CObject* p1){
 /// \param pObj Pointer to an object.
 /// \param bullet Sprite type of bullet.
 
-void CObjectManager::FireGun(CObject* pObj, eSprite bullet){
-  m_pAudio->play(eSound::Gun);
+void CObjectManager::FireGun(CPlayer* pPlayer, eSprite t, const Vector2& vDir) {
+    m_pAudio->play(eSound::Gun);
 
-  const Vector2 view = pObj->GetViewVector(); //firing object view vector
-  const float w0 = 0.5f*m_pRenderer->GetWidth(pObj->m_nSpriteIndex); //firing object width
-  const float w1 = m_pRenderer->GetWidth(bullet); //bullet width
-  const Vector2 pos = pObj->m_vPos + (w0 + w1)*view; //bullet initial position
+    float fSpeed = 500.0f; 
 
-  float fSpeed = 400.0f;
-  int nDamage = 0;
+    if (t == eSprite::Fireball) {
+        fSpeed = FIREBALL_SPEED;
+    }
+    const float w0 = 0.5f * m_pRenderer->GetWidth(pPlayer->m_nSpriteIndex);
+    const float w1 = m_pRenderer->GetWidth(t);
+    const Vector2 pos = pPlayer->m_vPos + (w0 + w1) * vDir; 
 
-  if (bullet == eSprite::fireball) {
-      fSpeed = FIREBALL_SPEED;
-      nDamage = FIREBALL_DAMAGE;
-  }
+   
+    CObject* pBullet = create(t, pos); 
 
-  //create bullet object
+    const Vector2 norm = VectorNormalCC(vDir); 
+    const float m = 2.0f * m_pRandom->randf() - 1.0f;
+    const Vector2 deflection = 0.01f * m * norm; 
 
-  CObject* pBullet = create(bullet, pos); //create bullet
-  
-  const Vector2 norm = VectorNormalCC(view); //normal to view direction
-  const float m = 2.0f*m_pRandom->randf() - 1.0f; //random deflection magnitude
-  const Vector2 deflection = 0.01f*m*norm; //random deflection
-
-  pBullet->m_vVelocity = pObj->m_vVelocity + 400.0f*(view + deflection);
-  pBullet->m_fRoll = pObj->m_fRoll; 
-
-  //particle effect for gun fire
-  
-  LParticleDesc2D d;
-
-  d.m_nSpriteIndex = (UINT)eSprite::Spark;
-  d.m_vPos = pos;
-  d.m_vVel = pObj->m_fSpeed*view;
-  d.m_fLifeSpan = 0.25f;
-  d.m_fScaleInFrac = 0.4f;
-  d.m_fFadeOutFrac = 0.5f;
-  d.m_fMaxScale = 0.5f;
-  d.m_f4Tint = XMFLOAT4(Colors::Yellow);
-  
-  m_pParticleEngine->create(d);
+    pBullet->m_vVelocity = pPlayer->m_vVelocity + fSpeed * (vDir + deflection);
+    pBullet->m_fRoll = pPlayer->m_fRoll;
 
 
-  // Fireball
-  if (bullet == eSprite::fireball) {
-      d.m_nSpriteIndex = (UINT)eSprite::Smoke;
-      d.m_vPos = pos;
-      d.m_vVel = pObj->m_fSpeed * view  * 0.5f;
-      d.m_fLifeSpan = 0.5f;
-      d.m_fScaleInFrac = 0.4f;
-      d.m_fFadeOutFrac = 0.5f;
-      d.m_fMaxScale = 1.0f;
-      d.m_f4Tint = XMFLOAT4(Colors::Red);
-      m_pParticleEngine->create(d);
+    LParticleDesc2D d;
 
-  }
+    d.m_nSpriteIndex = (UINT)eSprite::Spark;
+    d.m_vPos = pos;
+    d.m_vVel = pPlayer->m_fSpeed * vDir;
+    d.m_fLifeSpan = 0.25f;
+    d.m_fScaleInFrac = 0.4f;
+    d.m_fFadeOutFrac = 0.5f;
+    d.m_fMaxScale = 0.5f;
+    d.m_f4Tint = XMFLOAT4(Colors::Yellow);
 
+    m_pParticleEngine->create(d);
 
-} //FireGun
+    if (t == eSprite::Fireball) {
+        d.m_nSpriteIndex = (UINT)eSprite::Smoke;
+        d.m_vPos = pos;
+        d.m_vVel = pPlayer->m_fSpeed * vDir * 0.5f;
+        d.m_fLifeSpan = 0.5f;
+        d.m_fScaleInFrac = 0.4f;
+        d.m_fFadeOutFrac = 0.5f;
+        d.m_fMaxScale = 1.0f;
+        d.m_f4Tint = XMFLOAT4(Colors::Red);
+        m_pParticleEngine->create(d);
 
-
-
-
+    }
+}
 
 /// Reader function for the number of turrets. 
 /// \return Number of turrets in the object list.
 
 const size_t CObjectManager::GetNumTurrets() const{
-  size_t n = 0; //number of turrets
+  size_t n = 0; 
   
-  for(CObject* pObj: m_stdObjectList) //for each object
+  for(CObject* pObj: m_stdObjectList) 
     if(pObj->m_nSpriteIndex == (UINT)eSprite::Turret)
       n++;
 
   return n;
 } //GetNumTurrets
-
-
-bool CObjectManager::CheckSwordHit(const Vector2& hitPos, int damage) {
-    bool hitSomething = false;
-
-    for (CObject* pObj : m_stdObjectList) {
-        if (pObj->m_bIsTarget && pObj != m_pPlayer && !pObj->m_bDead) {
-            const float distSq = (pObj->m_vPos - hitPos).LengthSquared();
-            const float radiusSq = pObj->m_fRadius * pObj->m_fRadius;
-
-            if (distSq < radiusSq) {
-                pObj->TakeDamage(damage);
-                hitSomething = true;
-            }
-        }
-    }
-    return hitSomething;
-}

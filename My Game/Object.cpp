@@ -15,11 +15,11 @@
 CObject::CObject(eSprite t, const Vector2& p):
   LBaseObject(t, p)
 { 
-  m_fRoll = XM_PIDIV2; //facing upwards
-  m_bIsTarget = false; //not a target
+  m_fRoll = XM_PIDIV2; 
+  m_bIsTarget = false;
 
 
-  if (t == eSprite::Bullet || t == eSprite::fireball) {
+  if (t == eSprite::Bullet || t == eSprite::Fireball) {
       m_bIsBullet = true;
       m_bStatic = false;
   }
@@ -27,22 +27,18 @@ CObject::CObject(eSprite t, const Vector2& p):
       m_bIsBullet = false;
   }
 
+  const float w = m_pRenderer->GetWidth(t); 
+  const float h = m_pRenderer->GetHeight(t);
+  m_fRadius = std::max(w, h)/2; 
 
+  m_pGunFireEvent = new LEventTimer(1.0f); 
+} 
 
-  const float w = m_pRenderer->GetWidth(t); //sprite width
-  const float h = m_pRenderer->GetHeight(t); //sprite height
-  m_fRadius = std::max(w, h)/2; //bounding circle radius
-
-  m_pGunFireEvent = new LEventTimer(1.0f); //timer for firing gun
-} //constructor
-
-/// Destructor.
 
 CObject::~CObject(){
   delete m_pGunFireEvent;
-} //destructor
+}
 
-/// Move object an amount that depends on its velocity and the frame time.
 
 void CObject::move(){
   if(!m_bDead && !m_bStatic)
@@ -68,46 +64,29 @@ void CObject::draw(){
 /// which means collision with a wall).
 
 void CObject::CollisionResponse(const Vector2& norm, float d, CObject* pObj){
-  if(m_bDead)return; //dead, bail out
+  if(m_bDead)return;
 
-  const Vector2 vOverlap = d*norm; //overlap in direction of this
-  const bool bStatic = !pObj || pObj->m_bStatic; //whether other object is static
+  const Vector2 vOverlap = d*norm; 
+  const bool bStatic = !pObj || pObj->m_bStatic; 
 
-  if(!m_bStatic && !bStatic) //both objects are dynamic
-    m_vPos += vOverlap/2; //back off this object by half
+  if(!m_bStatic && !bStatic) 
+    m_vPos += vOverlap/2; 
 
-  else if(!m_bStatic && bStatic) //only this object is dynamic
-    m_vPos += vOverlap; //back off this object
-} //CollisionResponse
+  else if(!m_bStatic && bStatic) 
+    m_vPos += vOverlap; 
+} 
 
 /// Create a particle effect to mark the death of the object.
 /// This function is a stub intended to be overridden by various object classes
 /// derived from this class.
 
 void CObject::DeathFX(){
- //stub
-} //DeathFX
-
-
-void CObject::SetSprite(eSprite t) {
-    m_nSpriteIndex = (UINT)t;
-}
-
-void CObject::TakeDamage(int damage) {
-
-}
-
-
-/// Compute the view vector from the object orientation.
-/// \return The view vector.
+} 
 
 const Vector2 CObject::GetViewVector() const{
   return AngleToVector(m_fRoll);
-} //ViewVector
-
-/// Reader function for bullet flag.
-/// \return true if a bullet.
+} 
 
 const bool CObject::isBullet() const{
   return m_bIsBullet;
-} //isBullet
+} 
