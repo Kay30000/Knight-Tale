@@ -14,11 +14,12 @@
 
 enum class eSprite: UINT{
   Background, Bullet, Bullet2, Turret, Smoke, Spark, Tile, Line, Fireball, PlayerWalkLeftSpriteSheet, PlayerWalkRightSpriteSheet,
-  PlayerStandLeftSpriteSheet, PlayerStandRightSpriteSheet,
-  PlayerWalkLeft, PlayerWalkRight, PlayerStandLeft, PlayerStandRight, PlayerWalkUpSpriteSheet, PlayerWalkDownSpriteSheet,
-  PlayerStandUpSpriteSheet, PlayerStandDownSpriteSheet,
-  PlayerWalkUp, PlayerWalkDown, PlayerStandUp, PlayerStandDown,
-  Size  //MUST BE LAST
+PlayerStandLeftSpriteSheet, PlayerStandRightSpriteSheet,
+PlayerWalkLeft, PlayerWalkRight, PlayerStandLeft, PlayerStandRight, PlayerWalkUpSpriteSheet, PlayerWalkDownSpriteSheet,
+PlayerStandUpSpriteSheet, PlayerStandDownSpriteSheet,
+PlayerWalkUp, PlayerWalkDown, PlayerStandUp, PlayerStandDown, PlayerAttackLeft, 
+PlayerAttackRight, PlayerAttackUp, PlayerAttackDown,
+Size  //MUST BE LAST
 }; //eSprite
 
 /// \brief Sound enumerated type.
