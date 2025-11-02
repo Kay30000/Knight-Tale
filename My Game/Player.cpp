@@ -59,14 +59,24 @@ void CPlayer::UpdateFramenumber() {
 
 	if (n > 1 && m_pFrameEvent && m_pFrameEvent->Triggered())
 		m_nCurrentFrame = (m_nCurrentFrame + 1) % n;
+
+	if ((m_nSpriteIndex == (UINT)eSprite::PlayerAttackUp ||
+     m_nSpriteIndex == (UINT)eSprite::PlayerAttackDown ||
+     m_nSpriteIndex == (UINT)eSprite::PlayerAttackLeft ||
+     m_nSpriteIndex == (UINT)eSprite::PlayerAttackRight) &&
+    m_nCurrentFrame == m_pRenderer->GetNumFrames(m_nSpriteIndex) - 1)
+{
+    Stop(); // returns to the proper standing sprite
 }
 
+}
+//Walk
 void CPlayer::WalkLeft() {
 	if (m_nSpriteIndex != (UINT)eSprite::PlayerWalkLeft)
 		m_nSpriteIndex = (UINT)eSprite::PlayerWalkLeft;
 	m_nCurrentFrame = 0;
 } 
- 
+
 void CPlayer::WalkRight() {
 	if (m_nSpriteIndex != (UINT)eSprite::PlayerWalkRight)
 		m_nSpriteIndex = (UINT)eSprite::PlayerWalkRight;
@@ -84,6 +94,30 @@ void CPlayer::WalkDown() {
 		m_nSpriteIndex = (UINT)eSprite::PlayerWalkDown;
 	m_nCurrentFrame = 0;
 } 
+//Attack
+void CPlayer::AttackLeft() {
+    if (m_nSpriteIndex != (UINT)eSprite::PlayerAttackLeft)
+        m_nSpriteIndex = (UINT)eSprite::PlayerAttackLeft;
+    m_nCurrentFrame = 0;
+}
+
+void CPlayer::AttackRight() {
+    if (m_nSpriteIndex != (UINT)eSprite::PlayerAttackRight)
+        m_nSpriteIndex = (UINT)eSprite::PlayerAttackRight;
+    m_nCurrentFrame = 0;
+}
+
+void CPlayer::AttackUp() {
+    if (m_nSpriteIndex != (UINT)eSprite::PlayerAttackUp)
+        m_nSpriteIndex = (UINT)eSprite::PlayerAttackUp;
+    m_nCurrentFrame = 0;
+}
+
+void CPlayer::AttackDown() {
+    if (m_nSpriteIndex != (UINT)eSprite::PlayerAttackDown)
+        m_nSpriteIndex = (UINT)eSprite::PlayerAttackDown;
+    m_nCurrentFrame = 0;
+}
 
 void CPlayer::Stop() {
 	if (m_nSpriteIndex == (UINT)eSprite::PlayerWalkRight)

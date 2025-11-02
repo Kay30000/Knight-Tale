@@ -206,6 +206,23 @@ void CGame::KeyboardHandler(){
           m_pObjectManager->FireGun(m_pPlayer, eSprite::Fireball, vDir); 
       }
 
+      // Trigger attack animation based on facing direction
+      if (m_pKeyboard->TriggerDown('J')) {
+        Vector2 vDir = m_pPlayer->GetDirectionVector();
+
+        if (vDir.y > 0) {
+        m_pPlayer->AttackUp();
+        }
+        else if (vDir.y < 0) {
+        m_pPlayer->AttackDown();
+        }
+        else if (vDir.x > 0) {
+        m_pPlayer->AttackRight();
+        }
+        else if (vDir.x < 0) {
+        m_pPlayer->AttackLeft();
+        }
+    
 
 
     if(m_pKeyboard->TriggerDown('G')) //toggle god mode
