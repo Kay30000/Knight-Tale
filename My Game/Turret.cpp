@@ -17,25 +17,18 @@ CTurret::CTurret(const Vector2& p): CObject(eSprite::Turret, p){
   m_bStatic = true; //turrets are static
 } //constructor
 
-/// Rotate the turret and fire the gun at at the closest available target if
-/// there is one, and rotate the turret at a constant speed otherwise.
-
 void CTurret::move(){
   if(m_pPlayer){ //safety
-    const float r = ((CTurret*)m_pPlayer)->m_fRadius; //player radius
+    const float r = ((CTurret*)m_pPlayer)->m_fRadius;
 
-    if(m_pTileManager->Visible(m_vPos, m_pPlayer->m_vPos, r)) //player visible
+    if(m_pTileManager->Visible(m_vPos, m_pPlayer->m_vPos, r)) 
       RotateTowards(m_pPlayer->m_vPos);
-    //else m_fRotSpeed = 0.4f; //no target visible, so scan
-  } //if
+    
+  } 
 
-  m_fRoll += 0.2f*m_fRotSpeed*XM_2PI*m_pTimer->GetFrameTime(); //rotate
-  NormalizeAngle(m_fRoll); //normalize to [-pi, pi] for accuracy
-} //move
-
-/// Rotate the turret towards a point and file the gun if it is facing
-/// sufficiently close to it.
-/// \param pos Target point.
+  m_fRoll += 0.2f*m_fRotSpeed*XM_2PI*m_pTimer->GetFrameTime(); 
+  NormalizeAngle(m_fRoll); 
+} 
 
 void CTurret::RotateTowards(const Vector2& pos){
   const Vector2 v = pos - m_vPos; //vector from target to turret
@@ -52,11 +45,8 @@ void CTurret::RotateTowards(const Vector2& pos){
   else if(diff < -fAngleDelta)m_fRotSpeed = fTrackingSpeed; //counterclockwise
   else m_fRotSpeed = 0; //stop rotating
 
-  //fire gun if pointing approximately towards target
-
-  if(fabsf(diff) < fAngleDelta && m_pGunFireEvent->Triggered())
-    m_pObjectManager->FireGun(this, eSprite::Bullet2);
-} //RotateTowards
+  
+} 
 
 /// Response to collision. 
 /// \param norm Collision normal.
@@ -64,44 +54,64 @@ void CTurret::RotateTowards(const Vector2& pos){
 /// \param pObj Pointer to object being collided with (defaults to `nullptr`,
 /// which means collision with a wall).
 
-void CTurret::CollisionResponse(const Vector2& norm, float d, CObject* pObj){
-  if(m_bDead)return; //already dead, bail out 
+void CTurret::CollisionResponse(const Vector2& norm, float d, CObject* pObj) {
+    if (m_bDead)return;
 
-  if(pObj && pObj->isBullet()){ //collision with bullet
-    if(--m_nHealth == 0){ //health decrements to zero means death 
-      m_pAudio->play(eSound::Boom); //explosion
-      m_bDead = true; //flag for deletion from object list
-      DeathFX(); //particle effects
-    } //if
+    if (pObj && pObj->isBullet()) {
 
-    else{ //not a death blow
-      m_pAudio->play(eSound::Clang); //impact sound
-      const float f = 0.5f + 0.5f*(float)m_nHealth/m_nMaxHealth; //health fraction
-      m_f4Tint = XMFLOAT4(1.0f, f, f, 0); //redden the sprite to indicate damage
-    } //else
-  } //if
-} //CollisionResponse
+        int damageToTake = 1;
 
-/// Perform a particle effect to mark the death of the turret.
+        if (pObj->m_nSpriteIndex == (UINT)eSprite::Fireball) {
+            damageToTake = FIREBALL_DAMAGE;
+        }
+        pObj->SetDead();
 
-void CTurret::DeathFX(){
-  LParticleDesc2D d; //particle descriptor
-  d.m_vPos = m_vPos; //center particle at turret center
+        this->TakeDamage(damageToTake);
+    }
+}
 
-  d.m_nSpriteIndex = (UINT)eSprite::Smoke;
-  d.m_fLifeSpan = 2.0f;
-  d.m_fMaxScale = 4.0f;
-  d.m_fScaleInFrac = 0.5f;
-  d.m_fFadeOutFrac = 0.8f;
-  d.m_fScaleOutFrac = 0;
-  m_pParticleEngine->create(d);
 
-  d.m_nSpriteIndex = (UINT)eSprite::Spark;
-  d.m_fLifeSpan = 0.5f;
-  d.m_fMaxScale = 1.5f;
-  d.m_fScaleInFrac = 0.4f;
-  d.m_fScaleOutFrac = 0.3f;
-  d.m_fFadeOutFrac = 0.5f;
-  d.m_f4Tint = XMFLOAT4(Colors::Orange);
-  m_pParticleEngine->create(d);
-} //DeathFX
+
+void CTurret::TakeDamage(int damage) {
+    if (m_bDead) return;
+  
+    if (m_nHealth > (UINT)damage) {
+        m_nHealth -= damage;
+    }
+    else {
+        m_nHealth = 0;
+    }
+
+    if (m_nHealth <= 0) {
+        m_pAudio->play(eSound::Boom);
+        m_bDead = true;
+        DeathFX();
+    }
+    else {
+        m_pAudio->play(eSound::Clang);
+        const float f = 0.5f + 0.5f * (float)m_nHealth / m_nMaxHealth;
+        m_f4Tint = XMFLOAT4(1.0f, f, f, 0); 
+    }
+}
+
+void CTurret::DeathFX() {
+    LParticleDesc2D d;
+    d.m_vPos = m_vPos;
+
+    d.m_nSpriteIndex = (UINT)eSprite::Smoke;
+    d.m_fLifeSpan = 2.0f;
+    d.m_fMaxScale = 4.0f;
+    d.m_fScaleInFrac = 0.5f;
+    d.m_fFadeOutFrac = 0.8f;
+    d.m_fScaleOutFrac = 0;
+    m_pParticleEngine->create(d);
+
+    d.m_nSpriteIndex = (UINT)eSprite::Spark;
+    d.m_fLifeSpan = 0.5f;
+    d.m_fMaxScale = 1.5f;
+    d.m_fScaleInFrac = 0.4f;
+    d.m_fScaleOutFrac = 0.3f;
+    d.m_fFadeOutFrac = 0.5f;
+    d.m_f4Tint = XMFLOAT4(Colors::Orange);
+    m_pParticleEngine->create(d);
+} 

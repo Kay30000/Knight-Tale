@@ -5,42 +5,46 @@
 #define __L4RC_GAME_PLAYER_H__
 
 #include "Object.h"
+#include "EventTimer.h"
 
-/// \brief The player object. 
-///
-/// The abstract representation of the player object. The player differs from
-/// the other objects in the game in that it moves in respond to device inputs.
+class CPlayer : public CObject {
+protected:
+    const UINT m_nMaxHealth = 12;
+    UINT m_nHealth = m_nMaxHealth;
 
-class CPlayer: public CObject{
-  protected:  
-    const UINT m_nMaxHealth = 12; ///< Maximum health.
-    UINT m_nHealth = m_nMaxHealth; ///< Current health.
+    bool m_bStrafeLeft = false;
+    bool m_bStrafeRight = false;
+    bool m_bStrafeBack = false;
 
-    bool m_bStrafeLeft = false; ///< Strafe left.
-    bool m_bStrafeRight = false; ///< Strafe right.
-    bool m_bStrafeBack = false; ///< Strafe back.
-    
-    virtual void CollisionResponse(const Vector2&, float, CObject* = nullptr); ///< Collision response.
-    virtual void DeathFX(); ///< Death special effects.
+    LEventTimer* m_pFrameEvent = nullptr;
 
-    bool m_bFacingLeft = false;
-    const Vector2 GetViewVector() const override;
+    virtual void CollisionResponse(const Vector2&, float, CObject* = nullptr);
+    virtual void DeathFX();
 
-  public:
-    CPlayer(eSprite t, const Vector2& p); ///< Constructor.
+    void UpdateFramenumber(); 
 
-    virtual void move(); ///< Move player object.
+public:
+    CPlayer(eSprite t, const Vector2& p);
+    virtual ~CPlayer(); 
 
-    void SetSpeed(const float speed); ///< Set speed.
-    void SetRotSpeed(const float speed); ///< Set rotational velocity.
-    
-    void StrafeLeft(); ///< Strafe left.
-    void StrafeRight(); ///< Strafe right.
-    void StrafeBack(); ///< Strafe back.
-    void SetFacingLeft(bool facingLeft);
-    
-    
-    const Vector2& GetPos() const; ///< Get position.
-}; //CPlayer
+    virtual void move(); 
 
-#endif //__L4RC_GAME_PLAYER_H__
+    void WalkLeft();
+    void WalkRight();
+    void WalkUp();
+    void WalkDown();
+    void Stop(); 
+
+    void SetSpeed(const float speed);
+    void SetRotSpeed(const float speed);
+
+    void StrafeLeft();
+    void StrafeRight();
+    void StrafeBack();
+
+    const Vector2& GetPos() const;
+
+    Vector2 GetDirectionVector();
+}; 
+
+#endif 
