@@ -68,7 +68,7 @@ void CGame::LoadImages(){
   m_pRenderer->Load(eSprite::PlayerWalkUp, "walkup");
   m_pRenderer->Load(eSprite::PlayerWalkDownSpriteSheet, "walkdownsheet");
   m_pRenderer->Load(eSprite::PlayerWalkDown, "walkdown");
-
+  
 
   m_pRenderer->EndResourceUpload();
 } //LoadImages
@@ -118,7 +118,7 @@ void CGame::CreateObjects(){
       m_pObjectManager->createFurniture(eSprite::Furniture, pos, furn.type);
   }
 
-  m_pPlayer = (CPlayer*)m_pObjectManager->create(eSprite::Player, playerpos);
+  m_pPlayer = (CPlayer*)m_pObjectManager->create(eSprite::PlayerWalkUp, playerpos);
   
   
 } //CreateObjects
