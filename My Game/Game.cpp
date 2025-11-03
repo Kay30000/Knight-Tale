@@ -104,11 +104,7 @@ void CGame::CreateObjects(){
   m_pTileManager->GetObjects(turretpos, furniturepos, playerpos); //get positions
 
   
-  m_pPlayer = (CPlayer*)m_pObjectManager->create(eSprite::PlayerStandDown, playerpos);
-
-  if (m_pPlayer) {
-      m_pPlayer->Stop(); 
-  }
+  
 
   for(const Vector2& pos: turretpos)
     m_pObjectManager->create(eSprite::Turret, pos);
@@ -118,7 +114,11 @@ void CGame::CreateObjects(){
       m_pObjectManager->createFurniture(eSprite::Furniture, pos, furn.type);
   }
 
-  m_pPlayer = (CPlayer*)m_pObjectManager->create(eSprite::PlayerWalkUp, playerpos);
+  m_pPlayer = (CPlayer*)m_pObjectManager->create(eSprite::PlayerStandDown, playerpos);
+
+  if (m_pPlayer) {
+      m_pPlayer->Stop();
+  }
   
   
 } //CreateObjects
