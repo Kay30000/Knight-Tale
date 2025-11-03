@@ -58,6 +58,7 @@ void CObject::draw(){
 
 void CObject::CollisionResponse(const Vector2& norm, float d, CObject* pObj){
   if(m_bDead)return; //dead, bail out
+  
 
   const Vector2 vOverlap = d*norm; //overlap in direction of this
   const bool bStatic = !pObj || pObj->m_bStatic; //whether other object is static
@@ -82,7 +83,10 @@ void CObject::SetSprite(eSprite t) {
     m_nSpriteIndex = (UINT)t;
 }
 
-
+void CObject::SetFrame(eSprite t, char c) {
+    
+    m_nCurrentFrame = c - '0';
+}
 
 /// Compute the view vector from the object orientation.
 /// \return The view vector.

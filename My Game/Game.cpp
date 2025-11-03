@@ -51,7 +51,7 @@ void CGame::LoadImages(){
   m_pRenderer->Load(eSprite::Spark,   "spark");
   m_pRenderer->Load(eSprite::Turret,  "turret");
   m_pRenderer->Load(eSprite::Line,    "greenline");
-  m_pRenderer->Load(eSprite::Cowskull, "cowskull");
+  m_pRenderer->Load(eSprite::Furniture, "furniture");
 
   m_pRenderer->EndResourceUpload();
 } 
@@ -79,16 +79,19 @@ void CGame::Release(){
 
 void CGame::CreateObjects(){
   std::vector<Vector2> turretpos; //vector of turret positions
-  std::vector<Vector2> furniturepos; //vector of furniture positions
+  std::vector<CTileManager::furniture> furniturepos; //vector of furniture positions
   Vector2 playerpos; //player positions
   m_pTileManager->GetObjects(turretpos, furniturepos, playerpos); //get positions
-  
-  m_pPlayer = (CPlayer*)m_pObjectManager->create(eSprite::Player, playerpos);
 
   for(const Vector2& pos: turretpos)
     m_pObjectManager->create(eSprite::Turret, pos);
-  for (const Vector2& pos : furniturepos)
-      m_pObjectManager->create(eSprite::Cowskull, pos);
+  for (CTileManager::furniture furn : furniturepos)
+  {
+	  Vector2 pos = furn.location;
+      m_pObjectManager->createFurniture(eSprite::Furniture, pos, furn.type);
+  }
+
+  m_pPlayer = (CPlayer*)m_pObjectManager->create(eSprite::Player, playerpos);
   
   
 } //CreateObjects

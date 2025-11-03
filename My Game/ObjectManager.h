@@ -22,6 +22,7 @@ class CObjectManager:
 
   public:
     CObject* create(eSprite, const Vector2&); ///< Create new object.
+	CObject* createFurniture(eSprite, const Vector2&, char); ///< Create new furniture object.
     
     virtual void draw(); ///< Draw all objects.
 

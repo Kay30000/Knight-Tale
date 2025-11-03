@@ -11,7 +11,8 @@
 
 
 
-CFurniture::CFurniture(const Vector2& p):CObject(eSprite::Cowskull,p)
+CFurniture::CFurniture(const Vector2& p):CObject(eSprite::Furniture,p)
 {
+	isFurniture = true;
 	m_bStatic = true;
 }

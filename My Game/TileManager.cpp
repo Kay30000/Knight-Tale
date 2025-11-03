@@ -29,6 +29,7 @@ CTileManager::~CTileManager(){
 
 void CTileManager::LoadMapFromImageFile(char* filename) {
     m_vecTurrets.clear(); //clear turrets from previous level
+	m_vecFurniture.clear(); //clear furniture from previous level
 
     if (m_chMap != nullptr) { //unload any previous maps
         for (int i = 0; i < m_nHeight; i++)
@@ -258,10 +259,13 @@ void CTileManager::LoadMap(char* filename){
         m_vecTurrets.push_back(pos);
       } //if
       
-      else if (c == 'E') {
+      else if (isdigit(c)) { //furniture
           m_chMap[i][j] = 'F'; //floor tile
           const Vector2 pos = m_fTileSize * Vector2(j + 0.5f, m_nHeight - i - 0.5f);
-          m_vecFurniture.push_back(pos);
+          furniture furn;
+		  furn.location = pos;
+		  furn.type = c;
+          m_vecFurniture.push_back(furn);
       } //else if
       
       else if(c == 'P'){
@@ -287,7 +291,7 @@ void CTileManager::LoadMap(char* filename){
 /// \param turrets [out] Vector of turret positions
 /// \param player [out] Player position.
 
-void CTileManager::GetObjects(std::vector<Vector2>& turrets, std::vector<Vector2>& furniture, Vector2& player){
+void CTileManager::GetObjects(std::vector<Vector2>& turrets, std::vector<furniture>& furniture, Vector2& player){
   turrets = m_vecTurrets;
   player = m_vPlayer;
   furniture = m_vecFurniture;

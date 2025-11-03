@@ -27,13 +27,27 @@ CObject* CObjectManager::create(eSprite t, const Vector2& pos){
     case eSprite::Turret:  pObj = new CTurret(pos); break;
     case eSprite::Bullet:  pObj = new CBullet(eSprite::Bullet,  pos); break;
     case eSprite::Bullet2: pObj = new CBullet(eSprite::Bullet2, pos); break;
-    case eSprite::Cowskull: pObj = new CFurniture(pos); break;
     default: pObj = new CObject(t, pos);
   } //switch
   
   m_stdObjectList.push_back(pObj); //push pointer onto object list
   return pObj; //return pointer to created object
 } //create
+
+CObject* CObjectManager::createFurniture(eSprite t, const Vector2& pos, char type) {
+    CObject* pObj = nullptr;
+
+
+
+    pObj = new CFurniture(pos);
+    pObj->SetSprite(t);
+	pObj->SetFrame(t, type);
+
+    m_stdObjectList.push_back(pObj); //push pointer onto object list
+    return pObj; //return pointer to created object
+} //create furniture
+
+
 
 /// Draw the tiled background and the objects in the object list.
 
@@ -77,6 +91,11 @@ void CObjectManager::BroadPhase(){
 void CObjectManager::NarrowPhase(CObject* p0, CObject* p1){
   Vector2 vSep = p0->m_vPos - p1->m_vPos; //vector from *p1 to *p0
   const float d = p0->m_fRadius + p1->m_fRadius - vSep.Length(); //overlap
+
+  if (p0->isFurniture || p1->isFurniture)
+  {
+	  return; // Furniture does not collide
+  }
 
   if(d > 0.0f){ //bounding circles overlap
     vSep.Normalize(); //vSep is now the collision normal

@@ -19,6 +19,8 @@ class CTileManager:
   public CCommon, 
   public LSettings
 {
+    
+
   private:
     size_t m_nWidth = 0; ///< Number of tiles wide.
     size_t m_nHeight = 0; ///< Number of tiles high.
@@ -29,8 +31,8 @@ class CTileManager:
 
     std::vector<BoundingBox> m_vecWalls; ///< AABBs for the walls.
     std::vector<Vector2> m_vecTurrets;///< Turret positions.
-    std::vector<Vector2> m_vecFurniture;
-
+    
+ 
     Vector2 m_vPlayer; ///< Player location.
 
     void MakeBoundingBoxes(); ///< Make bounding boxes for walls.
@@ -39,11 +41,17 @@ class CTileManager:
     CTileManager(size_t); ///< Constructor.
     ~CTileManager(); ///< Destructor.
 
+    struct furniture {
+        Vector2 location;
+        char type;
+    };
+    std::vector<furniture> m_vecFurniture;
+
     void LoadMapFromImageFile(char*); ///< Load map.
     void LoadMap(char*); ///< Load a map.
     void Draw(eSprite); ///< Draw the map with a given tile.
     void DrawBoundingBoxes(eSprite); ///< Draw the bounding boxes.
-    void GetObjects(std::vector<Vector2>&, std::vector<Vector2>&, Vector2&); ///< Get objects.
+    void GetObjects(std::vector<Vector2>&, std::vector<furniture>&, Vector2&); ///< Get objects.
     
     const bool Visible(const Vector2&, const Vector2&, float) const; ///< Check visibility.
     const bool CollideWithWall(BoundingSphere, Vector2&, float&) const; ///< Object-wall collision test.

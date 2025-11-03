@@ -20,7 +20,7 @@
     <sprite name="smoke" file="graysmoke.png"/>
     <sprite name="spark" file="spark.png"/>
      <sprite name="greenline" file="greenline.png"/>
-	 <sprite name = "cowskull" file ="cowskull" ext="png" frames ="1"/>
+	 <sprite name = "furniture" file ="furniture" ext="png" frames ="2"/>
   </sprites>
 
   <!-- sound -->

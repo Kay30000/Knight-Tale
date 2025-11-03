@@ -32,6 +32,7 @@ class CObject:
     float m_fSpeed = 0; ///< Speed.
     float m_fRotSpeed = 0; ///< Rotational speed.
     Vector2 m_vVelocity; ///< Velocity.
+	
     bool m_bStatic = true; ///< Is static (does not move).
     bool m_bIsTarget = true; ///< Is a target.
     bool m_bIsBullet = false; ///< Is a bullet.
@@ -47,6 +48,7 @@ class CObject:
     virtual float GetRollForFire() const { return m_fRoll; }
 
   public:
+    bool isFurniture = false; ///< Is furniture
     CObject(eSprite, const Vector2&); ///< Constructor.
     virtual ~CObject(); ///< Destructor.
 
@@ -54,6 +56,7 @@ class CObject:
     void draw(); ///< Draw object.
 
     void SetSprite(eSprite t);
+    void SetFrame(eSprite t, char c);
 
     const bool isBullet() const; ///< Is a bullet.
 }; //CObject
