@@ -7,6 +7,7 @@
 #include "Object.h"
 #include "EventTimer.h"
 
+
 class CPlayer : public CObject {
 protected:
     const UINT m_nMaxHealth = 12;
@@ -28,6 +29,8 @@ public:
     virtual ~CPlayer(); 
 
     virtual void move(); 
+
+	
 
     void WalkLeft();
     void WalkRight();

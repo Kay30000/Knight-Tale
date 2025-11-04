@@ -8,8 +8,7 @@
 #include "ParticleEngine.h"
 
 CPlayer::CPlayer(eSprite t, const Vector2& p) : CObject(t, p) {
-	m_bIsTarget = true;
-	m_bStatic = false;
+	
 
 	m_fSpeed = 0.0f; 
 	m_bStrafeLeft = false;
@@ -21,6 +20,7 @@ CPlayer::CPlayer(eSprite t, const Vector2& p) : CObject(t, p) {
 
 CPlayer::~CPlayer() {
 	delete m_pFrameEvent; 
+	
 } 
 
 void CPlayer::move() {
@@ -34,21 +34,25 @@ void CPlayer::move() {
 	// W Forward/Up movement 
 	if (m_fSpeed > 0.0f) {
 		m_vPos.y += delta;
+		
 	}
 
 	// S Backward/Down movement 
 	else if (m_bStrafeBack) {
 		m_vPos.y -= delta;
+		
 	}
 
 	// D Right movement
 	if (m_bStrafeRight) {
 		m_vPos.x += delta;
+		
 	}
 
 	// A Left movement
 	else if (m_bStrafeLeft) {
 		m_vPos.x -= delta;
+		
 	}
 
 	m_bStrafeLeft = m_bStrafeRight = m_bStrafeBack = false;
@@ -107,6 +111,7 @@ void CPlayer::CollisionResponse(const Vector2& norm, float d, CObject* pObj) {
 			m_pAudio->play(eSound::Grunt);
 
 		else if (--m_nHealth == 0) {
+
 			m_pAudio->play(eSound::Boom);
 			m_bDead = true;
 			DeathFX();
@@ -114,6 +119,7 @@ void CPlayer::CollisionResponse(const Vector2& norm, float d, CObject* pObj) {
 		}
 
 		else {
+
 			m_pAudio->play(eSound::Grunt);
 			const float f = 0.5f + 0.5f * (float)m_nHealth / m_nMaxHealth;
 			m_f4Tint = XMFLOAT4(1.0f, f, f, 0);
