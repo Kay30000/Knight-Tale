@@ -17,6 +17,8 @@ CPlayer::CPlayer(eSprite t, const Vector2& p) : CObject(t, p) {
 	m_bStrafeBack = false; 
 
 	m_pFrameEvent = new LEventTimer(0.12f);
+	
+	m_fRadius = 16.0f; // player collision radius
 } 
 
 CPlayer::~CPlayer() {
