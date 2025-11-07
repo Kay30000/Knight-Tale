@@ -19,10 +19,22 @@ CPlayer::CPlayer(eSprite t, const Vector2& p) : CObject(t, p) {
 	m_pFrameEvent = new LEventTimer(0.12f);
 	
 	m_fRadius = 16.0f; // player collision radius
+
+	m_pBulletCooldown = new LEventTimer(COOLDOWN_BULLET);
+	m_pFireballCooldown = new LEventTimer(COOLDOWN_FIREBALL);
+	m_pSwordCooldown = new LEventTimer(COOLDOWN_SWORD);
+	m_pGreatswordCooldown = new LEventTimer(COOLDOWN_GREATSWORD);
+	m_pDaggerCooldown = new LEventTimer(COOLDOWN_DAGGER);
 } 
 
 CPlayer::~CPlayer() {
 	delete m_pFrameEvent; 
+	delete m_pFrameEvent;
+	delete m_pBulletCooldown;
+	delete m_pFireballCooldown;
+	delete m_pSwordCooldown;
+	delete m_pGreatswordCooldown;
+	delete m_pDaggerCooldown;
 } 
 
 void CPlayer::move() {

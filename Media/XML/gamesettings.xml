@@ -23,6 +23,9 @@
 	<sprite name = "furniture" file ="furniture" ext="png" frames ="2"/>
     <sprite name="greenline" file="greenline.png"/>
 	<sprite name="fireball" file="fireball.png"/>
+	  <sprite name="sword" file="sword.png"/>
+	  <sprite name="greatsword" file="greatsword.png"/>
+	  <sprite name="dagger" file="dagger.png"/>
 	  <!-- stand -->
 	  <sprite name="standleft" file="standleft.png"/>
 	  <sprite name="standright" file="standright.png"/>

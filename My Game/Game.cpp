@@ -56,6 +56,9 @@ void CGame::LoadImages(){
   m_pRenderer->Load(eSprite::Line,    "greenline");
   m_pRenderer->Load(eSprite::Furniture, "furniture");
   m_pRenderer->Load(eSprite::Fireball, "fireball");
+  m_pRenderer->Load(eSprite::sword, "sword");
+  m_pRenderer->Load(eSprite::greatsword, "greatsword");
+  m_pRenderer->Load(eSprite::dagger, "dagger");
   m_pRenderer->Load(eSprite::PlayerStandRight, "standright");
   m_pRenderer->Load(eSprite::PlayerStandLeft, "standleft");
   m_pRenderer->Load(eSprite::PlayerStandUp, "standup");
@@ -170,6 +173,9 @@ void CGame::KeyboardHandler(){
       m_nNextLevel = (m_nNextLevel + 1) % 4;
       BeginGame();
   }
+
+
+
   if(m_pKeyboard->TriggerDown(VK_BACK)) //start game
     BeginGame();
 
@@ -209,15 +215,39 @@ void CGame::KeyboardHandler(){
           m_pPlayer->Stop(); 
       }
 
-      if (m_pKeyboard->TriggerDown(VK_SPACE)) { 
-          
-          Vector2 vDir = m_pPlayer->GetDirectionVector();
-          m_pObjectManager->FireGun(m_pPlayer, eSprite::Bullet, vDir);
+      if (m_pKeyboard->TriggerDown(VK_SPACE)) {
+          if (m_pPlayer->m_pBulletCooldown->Triggered()) {
+              Vector2 vDir = m_pPlayer->GetDirectionVector();
+              m_pObjectManager->FireGun(m_pPlayer, eSprite::Bullet, vDir);
+          }
       }
 
       if (m_pKeyboard->TriggerDown('Q')) {
-          Vector2 vDir = m_pPlayer->GetDirectionVector();
-          m_pObjectManager->FireGun(m_pPlayer, eSprite::Fireball, vDir); 
+          if (m_pPlayer->m_pFireballCooldown->Triggered()) {
+              Vector2 vDir = m_pPlayer->GetDirectionVector();
+              m_pObjectManager->FireGun(m_pPlayer, eSprite::Fireball, vDir);
+          }
+      }
+
+      if (m_pKeyboard->TriggerDown('E')) {
+          if (m_pPlayer->m_pSwordCooldown->Triggered()) {
+              Vector2 vDir = m_pPlayer->GetDirectionVector();
+              m_pObjectManager->FireGun(m_pPlayer, eSprite::sword, vDir);
+          }
+      }
+
+      if (m_pKeyboard->TriggerDown('R')) {
+          if (m_pPlayer->m_pGreatswordCooldown->Triggered()) {
+              Vector2 vDir = m_pPlayer->GetDirectionVector();
+              m_pObjectManager->FireGun(m_pPlayer, eSprite::greatsword, vDir);
+          }
+      }
+
+      if (m_pKeyboard->TriggerDown('T')) {
+          if (m_pPlayer->m_pDaggerCooldown->Triggered()) {
+              Vector2 vDir = m_pPlayer->GetDirectionVector();
+              m_pObjectManager->FireGun(m_pPlayer, eSprite::dagger, vDir);
+          }
       }
 
 

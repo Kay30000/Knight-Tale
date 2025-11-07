@@ -14,7 +14,7 @@
 
 enum class eSprite: UINT{
 
-  Background, Bullet, Bullet2, Turret, Smoke, Spark, Tile, Line, Furniture, Fireball, PlayerWalkLeftSpriteSheet, PlayerWalkRightSpriteSheet,
+  Background, Bullet, Bullet2, Turret, Smoke, Spark, Tile, Line, Furniture, Fireball, sword, greatsword, dagger, PlayerWalkLeftSpriteSheet, PlayerWalkRightSpriteSheet,
 PlayerStandLeftSpriteSheet, PlayerStandRightSpriteSheet,
 PlayerWalkLeft, PlayerWalkRight, PlayerStandLeft, PlayerStandRight, PlayerWalkUpSpriteSheet, PlayerWalkDownSpriteSheet,
 PlayerStandUpSpriteSheet, PlayerStandDownSpriteSheet,
@@ -50,5 +50,29 @@ enum class eGameState{
 //FireBall
 const int FIREBALL_DAMAGE = 5;
 const float FIREBALL_SPEED = 500.0f;
+
+//Sword
+const int SWORD_DAMAGE = 2;
+const float SWORD_SPEED = 1000.0f;
+const float SWORD_LIFESPAN = 0.05f;
+const float SWORD_OFFSET = 67.0f;
+
+const int GREATSWORD_DAMAGE = 5;
+const float GREATSWORD_SPEED = 500.0f;
+const float GREATSWORD_LIFESPAN = 0.15f;
+const float GREATSWORD_OFFSET = 90.0f;
+
+
+const int DAGGER_DAMAGE = 1;
+const float DAGGER_LIFESPAN = 0.03f;
+const float DAGGER_OFFSET = 67.0f;
+const float DAGGER_SPEED = 1500.0f;
+
+
+const float COOLDOWN_BULLET = 0.5f;
+const float COOLDOWN_FIREBALL = 1.2f;
+const float COOLDOWN_SWORD = 0.4f;
+const float COOLDOWN_GREATSWORD = 1.5f;
+const float COOLDOWN_DAGGER = 0.2f;
 
 #endif //__L4RC_GAME_GAMEDEFINES_H__

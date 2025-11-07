@@ -8,6 +8,8 @@
 #include "EventTimer.h"
 
 class CPlayer : public CObject {
+    friend class CGame;
+
 protected:
     const UINT m_nMaxHealth = 12;
     UINT m_nHealth = m_nMaxHealth;
@@ -17,6 +19,13 @@ protected:
     bool m_bStrafeBack = false;
 
     LEventTimer* m_pFrameEvent = nullptr;
+    LEventTimer* m_pBulletCooldown = nullptr;
+    LEventTimer* m_pFireballCooldown = nullptr;
+    LEventTimer* m_pSwordCooldown = nullptr;
+    LEventTimer* m_pGreatswordCooldown = nullptr;
+    LEventTimer* m_pDaggerCooldown = nullptr;
+
+
 
     virtual void CollisionResponse(const Vector2&, float, CObject* = nullptr);
     virtual void DeathFX();
