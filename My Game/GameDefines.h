@@ -42,7 +42,7 @@ enum class eSound: UINT{
 /// let sounds and particle effects play to the end without being cut short.
 
 enum class eGameState{
-  Playing, Waiting
+  Playing, Waiting, Paused
 }; //eGameState
 
 

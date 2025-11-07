@@ -179,7 +179,13 @@ void CGame::KeyboardHandler(){
   if(m_pKeyboard->TriggerDown(VK_BACK)) //start game
     BeginGame();
 
-  if (m_pPlayer) { 
+  if (m_pKeyboard->TriggerDown('P') || m_pKeyboard->TriggerDown(VK_ESCAPE)) {
+      m_eGameState = (m_eGameState == eGameState::Paused) ?
+          eGameState::Playing :
+          eGameState::Paused;
+  }
+
+  if (m_eGameState != eGameState::Paused && m_pPlayer) {
       m_pPlayer->SetRotSpeed(0.0f);
 
       bool bMovingVertically = m_pKeyboard->Down('W') || m_pKeyboard->Down('S');
@@ -295,6 +301,11 @@ void CGame::DrawFrameRateText(){
 /// Draw the god mode text to a hard-coded position in the window using the
 /// font specified in `gamesettings.xml`.
 
+void CGame::DrawPausedText() {
+    const Vector2 pos(m_nWinWidth / 2.0f - 64.0f, m_nWinHeight / 2.0f);
+    m_pRenderer->DrawScreenText("Paused", pos);
+}
+
 void CGame::DrawGodModeText(){
   const Vector2 pos(64.0f, 30.0f); //hard-coded position
   m_pRenderer->DrawScreenText("God Mode", pos); //draw to screen
@@ -311,6 +322,8 @@ void CGame::RenderFrame(){
   m_pParticleEngine->Draw(); //draw particles
   if(m_bDrawFrameRate)DrawFrameRateText(); //draw frame rate, if required
   if(m_bGodMode)DrawGodModeText(); //draw god mode text, if required
+  if (m_eGameState == eGameState::Paused) //draw paused text
+      DrawPausedText();
 
   m_pRenderer->EndFrame(); //required after rendering
 } //RenderFrame
@@ -347,6 +360,10 @@ void CGame::FollowCamera(){
 
 void CGame::ProcessFrame(){
   KeyboardHandler(); //handle keyboard input
+  if (m_eGameState == eGameState::Paused) {
+      RenderFrame();
+      return;
+  }
   ControllerHandler(); //handle controller input
   m_pAudio->BeginFrame(); //notify audio player that frame has begun
   

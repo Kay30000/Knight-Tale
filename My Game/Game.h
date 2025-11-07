@@ -37,6 +37,7 @@ class CGame:
     void ControllerHandler(); ///< The controller handler.
     void RenderFrame(); ///< Render an animation frame.
     void DrawFrameRateText(); ///< Draw frame rate text to screen.
+    void DrawPausedText(); ///< Draw pause text when paused.
     void DrawGodModeText(); ///< Draw god mode text if in god mode.
     void CreateObjects(); ///< Create game objects.
     void FollowCamera(); ///< Make camera follow player character.

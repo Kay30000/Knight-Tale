@@ -31,6 +31,7 @@ class CCommon{
 
     static bool m_bDrawAABBs; ///< Draw AABB flag.
     static bool m_bGodMode; ///< God mode flag.
+    static bool m_bPauseMode; ///< Pause mode flag
 
     static Vector2 m_vWorldSize; ///< World height and width.
     static CPlayer* m_pPlayer; ///< Pointer to player character.
