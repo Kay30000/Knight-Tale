@@ -39,7 +39,7 @@ CPlayer::~CPlayer() {
 
 void CPlayer::move() {
 	const float t = m_pTimer->GetFrameTime(); 
-	const float baseSpeed = 200.0f;
+	const float baseSpeed = 300.0f;
 	const float delta = baseSpeed * t;
 
 	m_fRotSpeed = 0.0f;

@@ -47,31 +47,32 @@ enum class eGameState{
 
 
 
-//FireBall
+// FireBall
 const int FIREBALL_DAMAGE = 5;
 const float FIREBALL_SPEED = 500.0f;
 
-//Sword
+// Sword
 const int SWORD_DAMAGE = 2;
 const float SWORD_SPEED = 1000.0f;
-const float SWORD_LIFESPAN = 0.05f;
-const float SWORD_OFFSET = 67.0f;
+const float SWORD_LIFESPAN = 0.5f;
+const float SWORD_OFFSET = 67.0f;;
 
+// Great Sword
 const int GREATSWORD_DAMAGE = 5;
 const float GREATSWORD_SPEED = 500.0f;
 const float GREATSWORD_LIFESPAN = 0.15f;
-const float GREATSWORD_OFFSET = 90.0f;
+const float GREATSWORD_OFFSET = 67.0f;
 
-
+// Dagger
 const int DAGGER_DAMAGE = 1;
+const float DAGGER_SPEED = 1500.0f;
 const float DAGGER_LIFESPAN = 0.03f;
 const float DAGGER_OFFSET = 67.0f;
-const float DAGGER_SPEED = 1500.0f;
 
-
+// Cooldowns
 const float COOLDOWN_BULLET = 0.5f;
 const float COOLDOWN_FIREBALL = 1.2f;
-const float COOLDOWN_SWORD = 0.4f;
+const float COOLDOWN_SWORD = 0.5f;
 const float COOLDOWN_GREATSWORD = 1.5f;
 const float COOLDOWN_DAGGER = 0.2f;
 

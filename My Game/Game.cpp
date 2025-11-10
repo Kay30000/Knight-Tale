@@ -135,10 +135,10 @@ void CGame::BeginGame(){
   m_pParticleEngine->clear(); //clear old particles
   
   switch(m_nNextLevel){
-    case 0: m_pTileManager->LoadMap("Media\\Maps\\tiny.txt"); break;
-    case 1: m_pTileManager->LoadMap("Media\\Maps\\small.txt"); break;
-    case 2: m_pTileManager->LoadMap("Media\\Maps\\map.txt"); break;
-    case 3: m_pTileManager->LoadMapFromImageFile("Media\\Maps\\maze.png");break;
+    //case 0: m_pTileManager->LoadMap("Media\\Maps\\tiny.txt"); break;
+    //case 1: m_pTileManager->LoadMap("Media\\Maps\\small.txt"); break;
+    //case 2: m_pTileManager->LoadMap("Media\\Maps\\map.txt"); break;
+    case 0: m_pTileManager->LoadMapFromImageFile("Media\\Maps\\maze.png");break;
   } //switch
 
   m_pObjectManager->clear(); //clear old objects
