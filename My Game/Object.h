@@ -36,6 +36,7 @@ class CObject:
     bool m_bStatic = true; 
     bool m_bIsTarget = true; 
     bool m_bIsBullet = false; 
+	
 
 
     LEventTimer* m_pGunFireEvent = nullptr; 
@@ -48,6 +49,7 @@ class CObject:
 
   public:
 
+    bool isHealthBar = false;
     bool isFurniture = false; ///< Is furniture
     CObject(eSprite, const Vector2&); ///< Constructor.
     virtual ~CObject(); ///< Destructor.

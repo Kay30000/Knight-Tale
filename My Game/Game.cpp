@@ -110,6 +110,7 @@ void CGame::CreateObjects(){
 
   for(const Vector2& pos: turretpos)
     m_pObjectManager->create(eSprite::Turret, pos);
+ 
   for (CTileManager::furniture furn : furniturepos)
   {
 	  Vector2 pos = furn.location;

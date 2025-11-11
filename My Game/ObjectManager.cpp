@@ -12,6 +12,7 @@
 #include "GameDefines.h"
 #include "TileManager.h"
 #include "Furniture.h"
+#include "HealthBar.h"
 
 /// Create an object and put a pointer to it at the back of the object list
 /// `m_stdObjectList`, which it inherits from `LBaseObjectManager`.
@@ -47,7 +48,12 @@ CObject* CObjectManager::create(eSprite t, const Vector2& pos) {
 
 CObject* CObjectManager::createFurniture(eSprite t, const Vector2& pos, char type) {
     CObject* pObj = nullptr;
-
+    if (type = 'H')
+    {
+		pObj = new CHealthBar(pos);
+		m_stdObjectList.push_back(pObj); //push pointer onto object list
+		return pObj; //return pointer to created object
+    }
 
 
     pObj = new CFurniture(pos);
@@ -67,7 +73,14 @@ void CObjectManager::draw(){
 
   if(m_bDrawAABBs)
     m_pTileManager->DrawBoundingBoxes(eSprite::Line); //draw AABBs
-
+  for (CObject* pObj : m_stdObjectList)
+  {
+      if (pObj->isHealthBar)
+      {
+		  pObj->m_nCurrentFrame = m_pPlayer->getHealthToMaxHealthRatio();
+		  pObj->m_vPos = m_pPlayer->m_vPos + Vector2(0.0f, -1.0f);
+      }
+  }
   LBaseObjectManager::draw();
 } //draw
 

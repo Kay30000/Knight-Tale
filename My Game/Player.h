@@ -30,7 +30,12 @@ public:
 
     virtual void move(); 
 
-	
+    int getHealthToMaxHealthRatio()
+    {
+        int temp = (int)floor((float)m_nHealth / (float)m_nMaxHealth * 100);
+        temp = temp - (temp % 5);
+        return temp / 5;
+    }
 
     void WalkLeft();
     void WalkRight();
