@@ -6,6 +6,7 @@
 
 #include "Object.h"
 #include "EventTimer.h"
+#include <iostream>
 
 
 class CPlayer : public CObject {
@@ -30,11 +31,14 @@ public:
 
     virtual void move(); 
 
-    int getHealthToMaxHealthRatio()
+    int GetHealth()
     {
-        int temp = (int)floor((float)m_nHealth / (float)m_nMaxHealth * 100);
-        temp = temp - (temp % 5);
-        return temp / 5;
+		return m_nHealth;
+    }
+
+    int GetMaxHealth()
+    {
+        return m_nMaxHealth;
     }
 
     void WalkLeft();

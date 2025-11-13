@@ -12,6 +12,6 @@ protected:
 
 public:
 	CHealthBar(const Vector2& p); ///< Constructor.
-	int currentFrame = 19;
+	int currentFrame = 0;
 
 }; //CHealthBar

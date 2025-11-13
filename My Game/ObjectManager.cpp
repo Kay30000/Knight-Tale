@@ -48,9 +48,10 @@ CObject* CObjectManager::create(eSprite t, const Vector2& pos) {
 
 CObject* CObjectManager::createFurniture(eSprite t, const Vector2& pos, char type) {
     CObject* pObj = nullptr;
-    if (type = 'H')
+    if (type == 'H')
     {
 		pObj = new CHealthBar(pos);
+		pObj->SetSprite(eSprite::HealthBar);
 		m_stdObjectList.push_back(pObj); //push pointer onto object list
 		return pObj; //return pointer to created object
     }
@@ -75,10 +76,22 @@ void CObjectManager::draw(){
     m_pTileManager->DrawBoundingBoxes(eSprite::Line); //draw AABBs
   for (CObject* pObj : m_stdObjectList)
   {
-      if (pObj->isHealthBar)
-      {
-		  pObj->m_nCurrentFrame = m_pPlayer->getHealthToMaxHealthRatio();
-		  pObj->m_vPos = m_pPlayer->m_vPos + Vector2(0.0f, -1.0f);
+      if (pObj->isHealthBar && m_pPlayer) {
+          const UINT spriteIndex = pObj->m_nSpriteIndex;
+          const size_t numFrames = m_pRenderer->GetNumFrames(spriteIndex);
+          if (numFrames == 0) continue; // nothing loaded
+
+          // Replace these with getters on CPlayer (add if necessary)
+          const float health = (float)m_pPlayer->GetHealth();        // implement GetHealth()
+          const float maxHealth = (float)m_pPlayer->GetMaxHealth();  // implement GetMaxHealth()
+          const float ratio = (maxHealth > 0.0f) ? (health / maxHealth) : 1.0f;
+
+          // map full health -> last frame or first frame depending on art:
+          const int frame = (int)roundf((1.0f - ratio) * (float)(numFrames - 1));
+          pObj->m_nCurrentFrame = 0;
+
+          // position above player in sprite units (use tile/sprite extents, not 1.0f)
+          pObj->m_vPos = m_pPlayer->m_vPos + Vector2(0.0f, -m_pRenderer->GetHeight(m_pPlayer->m_nSpriteIndex) * 0.5f - 10.0f);
       }
   }
   LBaseObjectManager::draw();
