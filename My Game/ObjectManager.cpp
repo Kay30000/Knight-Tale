@@ -38,6 +38,9 @@ CObject* CObjectManager::create(eSprite t, const Vector2& pos) {
         case eSprite::Bullet:  pObj = new CBullet(eSprite::Bullet, pos); break;
         case eSprite::Bullet2: pObj = new CBullet(eSprite::Bullet2, pos); break;
         case eSprite::Fireball: pObj = new CBullet(eSprite::Fireball, pos); break;
+        case eSprite::sword: pObj = new CBullet(eSprite::sword, pos); break;
+        case eSprite::greatsword: pObj = new CBullet(eSprite::greatsword, pos); break;
+        case eSprite::dagger: pObj = new CBullet(eSprite::dagger, pos); break;
         default: pObj = new CObject(t, pos);
         } 
     }
@@ -153,23 +156,60 @@ void CObjectManager::NarrowPhase(CObject* p0, CObject* p1){
 /// \param bullet Sprite type of bullet.
 
 void CObjectManager::FireGun(CPlayer* pPlayer, eSprite t, const Vector2& vDir) {
-    m_pAudio->play(eSound::Gun);
+    float fSpeed = 500.0f;
+    float fLifeSpan = 0.0f;
 
-    float fSpeed = 500.0f; 
+    const float w0 = 0.5f * m_pRenderer->GetWidth(pPlayer->m_nSpriteIndex);
+    const float w1 = m_pRenderer->GetWidth(t);
+    float fLaunchDistance = w0 + w1;
 
     if (t == eSprite::Fireball) {
         fSpeed = FIREBALL_SPEED;
+        fLifeSpan = 5.0f;
     }
-    const float w0 = 0.5f * m_pRenderer->GetWidth(pPlayer->m_nSpriteIndex);
-    const float w1 = m_pRenderer->GetWidth(t);
-    const Vector2 pos = pPlayer->m_vPos + (w0 + w1) * vDir; 
+    else if (t == eSprite::sword) {
+        fSpeed = SWORD_SPEED;
+        fLifeSpan = SWORD_LIFESPAN;
 
-   
-    CObject* pBullet = create(t, pos); 
+        fLaunchDistance = SWORD_OFFSET;
 
-    const Vector2 norm = VectorNormalCC(vDir); 
+        m_pAudio->stop(eSound::Gun);
+        m_pAudio->play(eSound::Clang);
+    }
+    else if (t == eSprite::greatsword) {
+        fSpeed = GREATSWORD_SPEED;
+        fLifeSpan = GREATSWORD_LIFESPAN;
+        fLaunchDistance = GREATSWORD_OFFSET;
+
+        m_pAudio->stop(eSound::Gun);
+        m_pAudio->play(eSound::Boom);
+    }
+
+    else if (t == eSprite::dagger) {
+        fSpeed = DAGGER_SPEED;
+        fLifeSpan = DAGGER_LIFESPAN;
+        fLaunchDistance = DAGGER_OFFSET;
+
+        m_pAudio->stop(eSound::Gun);
+        m_pAudio->play(eSound::Clang);
+    }
+    else {
+
+        m_pAudio->play(eSound::Gun);
+    }
+
+
+    const Vector2 pos = pPlayer->m_vPos + fLaunchDistance * vDir;
+
+
+    CObject* pBullet = create(t, pos);
+
+    pBullet->m_fMaxLifeSpan = fLifeSpan;
+    pBullet->m_fTimeAlive = 0.0f;
+
+    const Vector2 norm = VectorNormalCC(vDir);
     const float m = 2.0f * m_pRandom->randf() - 1.0f;
-    const Vector2 deflection = 0.01f * m * norm; 
+    const Vector2 deflection = 0.01f * m * norm;
 
     pBullet->m_vVelocity = pPlayer->m_vVelocity + fSpeed * (vDir + deflection);
     pBullet->m_fRoll = pPlayer->m_fRoll;
@@ -177,16 +217,17 @@ void CObjectManager::FireGun(CPlayer* pPlayer, eSprite t, const Vector2& vDir) {
 
     LParticleDesc2D d;
 
-    d.m_nSpriteIndex = (UINT)eSprite::Spark;
-    d.m_vPos = pos;
-    d.m_vVel = pPlayer->m_fSpeed * vDir;
-    d.m_fLifeSpan = 0.25f;
-    d.m_fScaleInFrac = 0.4f;
-    d.m_fFadeOutFrac = 0.5f;
-    d.m_fMaxScale = 0.5f;
-    d.m_f4Tint = XMFLOAT4(Colors::Yellow);
-
-    m_pParticleEngine->create(d);
+    if (t != eSprite::Fireball && t != eSprite::sword) {
+        d.m_nSpriteIndex = (UINT)eSprite::Spark;
+        d.m_vPos = pos;
+        d.m_vVel = pPlayer->m_fSpeed * vDir;
+        d.m_fLifeSpan = 0.25f;
+        d.m_fScaleInFrac = 0.4f;
+        d.m_fFadeOutFrac = 0.5f;
+        d.m_fMaxScale = 0.5f;
+        d.m_f4Tint = XMFLOAT4(Colors::Yellow);
+        m_pParticleEngine->create(d);
+    }
 
     if (t == eSprite::Fireball) {
         d.m_nSpriteIndex = (UINT)eSprite::Smoke;
@@ -198,7 +239,6 @@ void CObjectManager::FireGun(CPlayer* pPlayer, eSprite t, const Vector2& vDir) {
         d.m_fMaxScale = 1.0f;
         d.m_f4Tint = XMFLOAT4(Colors::Red);
         m_pParticleEngine->create(d);
-
     }
 }
 

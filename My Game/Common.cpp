@@ -13,6 +13,7 @@ CTileManager* CCommon::m_pTileManager = nullptr;
 
 bool CCommon::m_bDrawAABBs = false;
 bool CCommon::m_bGodMode = false;
+bool CCommon::m_bPauseMode = false;
 
 Vector2 CCommon::m_vWorldSize = Vector2::Zero;
 CPlayer* CCommon::m_pPlayer = nullptr;

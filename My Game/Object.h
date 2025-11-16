@@ -38,6 +38,9 @@ class CObject:
     bool m_bIsBullet = false; 
 	
 
+    float m_fMaxLifeSpan = 0.0f;
+    float m_fTimeAlive = 0.0f;
+
 
     LEventTimer* m_pGunFireEvent = nullptr; 
     

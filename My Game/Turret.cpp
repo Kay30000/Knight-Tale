@@ -64,12 +64,22 @@ void CTurret::CollisionResponse(const Vector2& norm, float d, CObject* pObj) {
         if (pObj->m_nSpriteIndex == (UINT)eSprite::Fireball) {
             damageToTake = FIREBALL_DAMAGE;
         }
+        else if (pObj->m_nSpriteIndex == (UINT)eSprite::sword) {
+            damageToTake = SWORD_DAMAGE;
+        }
+        else if (pObj->m_nSpriteIndex == (UINT)eSprite::greatsword) {
+            damageToTake = GREATSWORD_DAMAGE;
+        }
+
+        else if (pObj->m_nSpriteIndex == (UINT)eSprite::dagger) {
+            damageToTake = DAGGER_DAMAGE;
+        }
+
         pObj->SetDead();
 
         this->TakeDamage(damageToTake);
     }
 }
-
 
 
 void CTurret::TakeDamage(int damage) {

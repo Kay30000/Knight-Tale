@@ -56,6 +56,9 @@ void CGame::LoadImages(){
   m_pRenderer->Load(eSprite::Line,    "greenline");
   m_pRenderer->Load(eSprite::Furniture, "furniture");
   m_pRenderer->Load(eSprite::Fireball, "fireball");
+  m_pRenderer->Load(eSprite::sword, "sword");
+  m_pRenderer->Load(eSprite::greatsword, "greatsword");
+  m_pRenderer->Load(eSprite::dagger, "dagger");
   m_pRenderer->Load(eSprite::PlayerStandRight, "standright");
   m_pRenderer->Load(eSprite::PlayerStandLeft, "standleft");
   m_pRenderer->Load(eSprite::PlayerStandUp, "standup");
@@ -135,10 +138,10 @@ void CGame::BeginGame(){
   m_pParticleEngine->clear(); //clear old particles
   
   switch(m_nNextLevel){
-    case 0: m_pTileManager->LoadMap("Media\\Maps\\tiny.txt"); break;
-    case 1: m_pTileManager->LoadMap("Media\\Maps\\small.txt"); break;
-    case 2: m_pTileManager->LoadMap("Media\\Maps\\map.txt"); break;
-    case 3: m_pTileManager->LoadMapFromImageFile("Media\\Maps\\maze.png");break;
+    //case 0: m_pTileManager->LoadMap("Media\\Maps\\tiny.txt"); break;
+    //case 1: m_pTileManager->LoadMap("Media\\Maps\\small.txt"); break;
+    case 0: m_pTileManager->LoadMap("Media\\Maps\\map.txt"); break;
+    //case 0: m_pTileManager->LoadMapFromImageFile("Media\\Maps\\maze.png");break;
   } //switch
 
   m_pObjectManager->clear(); //clear old objects
@@ -173,10 +176,19 @@ void CGame::KeyboardHandler(){
       m_nNextLevel = (m_nNextLevel + 1) % 4;
       BeginGame();
   }
+
+
+
   if(m_pKeyboard->TriggerDown(VK_BACK)) //start game
     BeginGame();
 
-  if (m_pPlayer) { 
+  if (m_pKeyboard->TriggerDown('P') || m_pKeyboard->TriggerDown(VK_ESCAPE)) {
+      m_eGameState = (m_eGameState == eGameState::Paused) ?
+          eGameState::Playing :
+          eGameState::Paused;
+  }
+
+  if (m_eGameState != eGameState::Paused && m_pPlayer) {
       m_pPlayer->SetRotSpeed(0.0f);
 
       bool bMovingVertically = m_pKeyboard->Down('W') || m_pKeyboard->Down('S');
@@ -212,15 +224,39 @@ void CGame::KeyboardHandler(){
           m_pPlayer->Stop(); 
       }
 
-      if (m_pKeyboard->TriggerDown(VK_SPACE)) { 
-          
-          Vector2 vDir = m_pPlayer->GetDirectionVector();
-          m_pObjectManager->FireGun(m_pPlayer, eSprite::Bullet, vDir);
+      if (m_pKeyboard->TriggerDown(VK_SPACE)) {
+          if (m_pPlayer->m_pBulletCooldown->Triggered()) {
+              Vector2 vDir = m_pPlayer->GetDirectionVector();
+              m_pObjectManager->FireGun(m_pPlayer, eSprite::Bullet, vDir);
+          }
       }
 
       if (m_pKeyboard->TriggerDown('Q')) {
-          Vector2 vDir = m_pPlayer->GetDirectionVector();
-          m_pObjectManager->FireGun(m_pPlayer, eSprite::Fireball, vDir); 
+          if (m_pPlayer->m_pFireballCooldown->Triggered()) {
+              Vector2 vDir = m_pPlayer->GetDirectionVector();
+              m_pObjectManager->FireGun(m_pPlayer, eSprite::Fireball, vDir);
+          }
+      }
+
+      if (m_pKeyboard->TriggerDown('E')) {
+          if (m_pPlayer->m_pSwordCooldown->Triggered()) {
+              Vector2 vDir = m_pPlayer->GetDirectionVector();
+              m_pObjectManager->FireGun(m_pPlayer, eSprite::sword, vDir);
+          }
+      }
+
+      if (m_pKeyboard->TriggerDown('R')) {
+          if (m_pPlayer->m_pGreatswordCooldown->Triggered()) {
+              Vector2 vDir = m_pPlayer->GetDirectionVector();
+              m_pObjectManager->FireGun(m_pPlayer, eSprite::greatsword, vDir);
+          }
+      }
+
+      if (m_pKeyboard->TriggerDown('T')) {
+          if (m_pPlayer->m_pDaggerCooldown->Triggered()) {
+              Vector2 vDir = m_pPlayer->GetDirectionVector();
+              m_pObjectManager->FireGun(m_pPlayer, eSprite::dagger, vDir);
+          }
       }
 
 
@@ -268,6 +304,11 @@ void CGame::DrawFrameRateText(){
 /// Draw the god mode text to a hard-coded position in the window using the
 /// font specified in `gamesettings.xml`.
 
+void CGame::DrawPausedText() {
+    const Vector2 pos(m_nWinWidth / 2.0f - 64.0f, m_nWinHeight / 2.0f);
+    m_pRenderer->DrawScreenText("Paused", pos);
+}
+
 void CGame::DrawGodModeText(){
   const Vector2 pos(64.0f, 30.0f); //hard-coded position
   m_pRenderer->DrawScreenText("God Mode", pos); //draw to screen
@@ -284,6 +325,8 @@ void CGame::RenderFrame(){
   m_pParticleEngine->Draw(); //draw particles
   if(m_bDrawFrameRate)DrawFrameRateText(); //draw frame rate, if required
   if(m_bGodMode)DrawGodModeText(); //draw god mode text, if required
+  if (m_eGameState == eGameState::Paused) //draw paused text
+      DrawPausedText();
 
   m_pRenderer->EndFrame(); //required after rendering
 } //RenderFrame
@@ -320,6 +363,10 @@ void CGame::FollowCamera(){
 
 void CGame::ProcessFrame(){
   KeyboardHandler(); //handle keyboard input
+  if (m_eGameState == eGameState::Paused) {
+      RenderFrame();
+      return;
+  }
   ControllerHandler(); //handle controller input
   m_pAudio->BeginFrame(); //notify audio player that frame has begun
   
