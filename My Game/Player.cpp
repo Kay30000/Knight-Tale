@@ -14,6 +14,7 @@ CPlayer::CPlayer(eSprite t, const Vector2& p) : CObject(t, p) {
 	m_bStrafeLeft = false;
 	m_bStrafeRight = false; 
 	m_bStrafeBack = false; 
+	m_bStatic = false;
 
 	m_pFrameEvent = new LEventTimer(0.12f);
 	
