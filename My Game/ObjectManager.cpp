@@ -84,14 +84,18 @@ void CObjectManager::draw(){
           // Replace these with getters on CPlayer (add if necessary)
           const float health = (float)m_pPlayer->GetHealth();        // implement GetHealth()
           const float maxHealth = (float)m_pPlayer->GetMaxHealth();  // implement GetMaxHealth()
-          const float ratio = (maxHealth > 0.0f) ? (health / maxHealth) : 1.0f;
+          const float ratio = health / maxHealth;
 
-          // map full health -> last frame or first frame depending on art:
-          const int frame = (int)roundf((1.0f - ratio) * (float)(numFrames - 1));
-          pObj->m_nCurrentFrame = 0;
+          int frame = (int)floor(ratio * 100);
+          frame -= frame % 5;
+          frame /= 5;
+
+		  if (frame < 0) frame = 0;
+
+          pObj->m_nCurrentFrame = frame;
 
           // position above player in sprite units (use tile/sprite extents, not 1.0f)
-          pObj->m_vPos = m_pPlayer->m_vPos + Vector2(0.0f, -m_pRenderer->GetHeight(m_pPlayer->m_nSpriteIndex) * 0.5f - 10.0f);
+          pObj->m_vPos = m_pPlayer->m_vPos - Vector2(0.0f, -m_pRenderer->GetHeight(m_pPlayer->m_nSpriteIndex) * 0.5f - 10.0f);
       }
   }
   LBaseObjectManager::draw();

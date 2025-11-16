@@ -15,7 +15,7 @@
 enum class eSprite: UINT{
 
   Background, Bullet, Bullet2, Turret, Smoke, Spark, Tile, Line, Furniture, Fireball, PlayerWalkLeftSpriteSheet, PlayerWalkRightSpriteSheet,
-PlayerStandLeftSpriteSheet, PlayerStandRightSpriteSheet, HealthBar, HealthBarSheet,
+PlayerStandLeftSpriteSheet, PlayerStandRightSpriteSheet, HealthBar,
 PlayerWalkLeft, PlayerWalkRight, PlayerStandLeft, PlayerStandRight, PlayerWalkUpSpriteSheet, PlayerWalkDownSpriteSheet,
 PlayerStandUpSpriteSheet, PlayerStandDownSpriteSheet,
 PlayerWalkUp, PlayerWalkDown, PlayerStandUp, PlayerStandDown, PlayerAttackLeft, 

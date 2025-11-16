@@ -31,6 +31,11 @@ public:
 
     virtual void move(); 
 
+	void TakeDamage() //This is here for testing purposes, it might come in handy later so I'm leaving it
+    {
+		m_nHealth -= 1;
+    }//Take Damage
+
     int GetHealth()
     {
 		return m_nHealth;

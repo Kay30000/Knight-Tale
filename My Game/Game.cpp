@@ -68,7 +68,7 @@ void CGame::LoadImages(){
   m_pRenderer->Load(eSprite::PlayerWalkUp, "walkup");
   m_pRenderer->Load(eSprite::PlayerWalkDownSpriteSheet, "walkdownsheet");
   m_pRenderer->Load(eSprite::PlayerWalkDown, "walkdown");
-  m_pRenderer->Load(eSprite::HealthBarSheet, "healthbarsheet");
+  m_pRenderer->Load(eSprite::HealthBar, "healthbar");
   m_pRenderer->Load(eSprite::HealthBar, "healthbar");
   
 
