@@ -15,7 +15,7 @@
 
 CTurret::CTurret(const Vector2& p): CObject(eSprite::Turret, p){
   m_bStatic = true; //turrets are static
-  m_fPatrolSpeed = 20.0f;
+  m_fPatrolSpeed = 60.0f;
   m_vHomePos = p; // store spawn position
 } //constructor
 
@@ -28,9 +28,10 @@ void CTurret::InitializePatrol(const std::vector<Vector2>& points) {
     }
 }
 
-void CTurret::move(){
+void CTurret::move() {
     const float t = m_pTimer->GetFrameTime();
     Vector2 desiredDir(0, 0);
+    float moveSpeed = 0.0f;
 
     if (m_pPlayer) {
         float distToPlayer = (m_pPlayer->GetPos() - m_vPos).Length();
@@ -42,11 +43,11 @@ void CTurret::move(){
         else if (distToPlayer > m_fReturnRadius)
             m_bChasing = false;
     }
-
+    
     if (m_bChasing && m_pPlayer) {
         // Move toward the player
-        Vector2 toPlayer = Normalize(m_pPlayer->GetPos() - m_vPos);
-        m_vPos += toPlayer * m_fPatrolSpeed * 2.5f * t; // slightly faster chase
+        desiredDir = Normalize(m_pPlayer->GetPos() - m_vPos);
+        moveSpeed = m_fPatrolSpeed * 2.5f; // slightly faster chase
     }
     else {
         // Return to home or patrol route
@@ -59,25 +60,25 @@ void CTurret::move(){
                 m_nCurrentPatrolIndex = (m_nCurrentPatrolIndex + 1) % m_vPatrolPoints.size();
             }
             else {
-                Vector2 dir = Normalize(toTarget);
-                m_vPos += dir * m_fPatrolSpeed * t;
+                desiredDir = Normalize(toTarget);
+                moveSpeed = m_fPatrolSpeed;
             }
         }
         else {
             // No patrol path — just go back to home
             Vector2 toHome = m_vHomePos - m_vPos;
             if (toHome.Length() > 5.0f) {
-                Vector2 dir = Normalize(toHome);
-                m_vPos += dir * m_fPatrolSpeed * t;
+                desiredDir = Normalize(toHome);
+                moveSpeed = m_fReturnSpeed;
             }
         }
     }
 
-    Vector2 nextPos = m_vPos + desiredDir * t;
+    Vector2 nextPos = m_vPos + desiredDir * moveSpeed * t;
 
     BoundingSphere s(Vector3(nextPos), m_fRadius);
     Vector2 norm;
-    float d = 0.0f;
+    float d;
 
     // Push turret out of walls if overlap occurs
     if (m_pTileManager->CollideWithWall(s, norm, d)) {
@@ -86,7 +87,6 @@ void CTurret::move(){
 
     // Apply safe movement
     m_vPos = nextPos;
-
   if(m_pPlayer){ //safety
     const float r = ((CTurret*)m_pPlayer)->m_fRadius;
 

@@ -8,6 +8,7 @@
 #include "ComponentIncludes.h"
 #include "ParticleEngine.h"
 #include "TileManager.h"
+#include "Turret.h"
 
 #include "shellapi.h"
 
@@ -101,6 +102,43 @@ void CGame::Release(){
 /// Ask the object manager to create a player object and turrets specified by
 /// the tile manager.
 
+void CGame::CreateObjects() {
+    std::vector<Vector2> turretpos; //vector of turret positions
+    std::vector<CTileManager::furniture> furniturepos; //vector of furniture positions
+    Vector2 playerpos; //player positions
+
+
+    m_pTileManager->GetObjects(turretpos, furniturepos, playerpos); //get positions
+
+
+    for (const Vector2& pos : turretpos) {
+        CTurret* pTurret = (CTurret*)m_pObjectManager->create(eSprite::Turret, pos);
+
+
+        std::vector<Vector2> patrolPath = {
+        pos,
+        pos + Vector2(100.0f, 0.0f)
+        };
+        pTurret->InitializePatrol(patrolPath);
+    }
+
+
+    for (CTileManager::furniture furn : furniturepos)
+    {
+        Vector2 pos = furn.location;
+        m_pObjectManager->createFurniture(eSprite::Furniture, pos, furn.type);
+    }
+
+
+    m_pPlayer = (CPlayer*)m_pObjectManager->create(eSprite::PlayerStandDown, playerpos);
+
+
+    if (m_pPlayer) {
+        m_pPlayer->Stop();
+    }
+} //CreateObjects
+
+/*
 void CGame::CreateObjects(){
   std::vector<Vector2> turretpos; //vector of turret positions
   std::vector<CTileManager::furniture> furniturepos; //vector of furniture positions
@@ -114,6 +152,17 @@ void CGame::CreateObjects(){
   for(const Vector2& pos: turretpos)
     m_pObjectManager->create(eSprite::Turret, pos);
  
+  for (const Vector2& pos : turretpos) {
+      auto pTurret = (CTurret*)m_pObjectManager->create(eSprite::Turret, pos);
+
+
+      std::vector<Vector2> patrolPath = {
+      pos,
+      pos + Vector2(100.0f, 0.0f)
+      };
+      pTurret->InitializePatrol(patrolPath);
+  }
+
   for (CTileManager::furniture furn : furniturepos)
   {
 	  Vector2 pos = furn.location;
@@ -125,10 +174,9 @@ void CGame::CreateObjects(){
   if (m_pPlayer) {
       m_pPlayer->Stop();
   }
-  
-  
-} //CreateObjects
 
+} //CreateObjects
+*/
 /// Call this function to start a new game. This should be re-entrant so that
 /// you can restart a new game without having to shut down and restart the
 /// program. Clear the particle engine to get rid of any existing particles,
