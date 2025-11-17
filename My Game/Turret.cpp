@@ -15,7 +15,7 @@
 
 CTurret::CTurret(const Vector2& p): CObject(eSprite::Turret, p){
   m_bStatic = true; //turrets are static
-  m_fPatrolSpeed = 60.0f;
+  m_fPatrolSpeed = 70.0f;
   m_vHomePos = p; // store spawn position
 } //constructor
 
