@@ -27,7 +27,8 @@ protected:
     LEventTimer* m_pGreatswordCooldown = nullptr;
     LEventTimer* m_pDaggerCooldown = nullptr;
 
-
+    bool m_bShieldActive = false;
+    CObject* m_pShieldObject = nullptr;
 
     virtual void CollisionResponse(const Vector2&, float, CObject* = nullptr);
     virtual void DeathFX();

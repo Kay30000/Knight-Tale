@@ -43,6 +43,15 @@ CObject::~CObject(){
 void CObject::move(){
   if(!m_bDead && !m_bStatic)
     m_vPos += m_vVelocity*m_pTimer->GetFrameTime();
+
+  if (m_bIsBullet && m_fMaxLifeSpan > 0.0f) {
+      m_fTimeAlive += m_pTimer->GetFrameTime();
+
+      if (m_fTimeAlive >= m_fMaxLifeSpan) {
+          SetDead();
+      }
+  }
+
 } //move
 
 /// Ask the renderer to draw the sprite described in the sprite descriptor.

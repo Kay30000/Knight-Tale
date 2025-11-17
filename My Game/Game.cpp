@@ -60,6 +60,7 @@ void CGame::LoadImages(){
   m_pRenderer->Load(eSprite::sword, "sword");
   m_pRenderer->Load(eSprite::greatsword, "greatsword");
   m_pRenderer->Load(eSprite::dagger, "dagger");
+  m_pRenderer->Load(eSprite::shield, "shield");
   m_pRenderer->Load(eSprite::PlayerStandRight, "standright");
   m_pRenderer->Load(eSprite::PlayerStandLeft, "standleft");
   m_pRenderer->Load(eSprite::PlayerStandUp, "standup");
