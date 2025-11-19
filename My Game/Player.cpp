@@ -25,6 +25,9 @@ CPlayer::CPlayer(eSprite t, const Vector2& p) : CObject(t, p) {
 	m_pSwordCooldown = new LEventTimer(COOLDOWN_SWORD);
 	m_pGreatswordCooldown = new LEventTimer(COOLDOWN_GREATSWORD);
 	m_pDaggerCooldown = new LEventTimer(COOLDOWN_DAGGER);
+
+	m_bShieldActive = false;
+	m_pShieldObject = nullptr;
 } 
 
 CPlayer::~CPlayer() {
@@ -35,42 +38,39 @@ CPlayer::~CPlayer() {
 	delete m_pSwordCooldown;
 	delete m_pGreatswordCooldown;
 	delete m_pDaggerCooldown;
+	delete m_pSwordCooldown;
 
 } 
 
 void CPlayer::move() {
-	const float t = m_pTimer->GetFrameTime(); 
-	const float baseSpeed = 300.0f;
-	const float delta = baseSpeed * t;
+	CObject::move();
+
+	const float t = m_pTimer->GetFrameTime();
+	const float delta = m_fSpeed * t;
 
 	m_fRotSpeed = 0.0f;
 	NormalizeAngle(m_fRoll);
 
-	// W Forward/Up movement 
-	if (m_fSpeed > 0.0f) {
+
+	if (m_bStrafeBack || (m_fSpeed > 0.0f && !m_bStrafeRight && !m_bStrafeLeft)) {
 		m_vPos.y += delta;
-		
 	}
 
-	// S Backward/Down movement 
-	else if (m_bStrafeBack) {
-		m_vPos.y -= delta;
-		
-	}
 
-	// D Right movement
-	if (m_bStrafeRight) {
+	if (m_bStrafeRight || m_bStrafeLeft) {
 		m_vPos.x += delta;
-		
-	}
-
-	// A Left movement
-	else if (m_bStrafeLeft) {
-		m_vPos.x -= delta;
-		
 	}
 
 	m_bStrafeLeft = m_bStrafeRight = m_bStrafeBack = false;
+
+
+	if (m_bShieldActive && m_pShieldObject) {
+		Vector2 playerDir = GetDirectionVector();
+		m_pShieldObject->m_vPos = m_vPos + playerDir * SHIELD_OFFSET;
+		m_pShieldObject->m_fRoll = m_fRoll;
+	}
+
+	UpdateFramenumber();
 }
 
 void CPlayer::UpdateFramenumber() {
@@ -122,6 +122,25 @@ void CPlayer::CollisionResponse(const Vector2& norm, float d, CObject* pObj) {
 	if (m_bDead)return;
 
 	if (pObj && pObj->isBullet()) {
+
+
+		if (m_bShieldActive) {
+			Vector2 playerDir = GetDirectionVector();
+			Vector2 toBullet = Normalize(pObj->GetPos() - m_vPos);
+
+
+			const float SHIELD_BLOCK_THRESHOLD = 0.5f;
+
+			if (Dot(playerDir, toBullet) > SHIELD_BLOCK_THRESHOLD) {
+				pObj->SetDead();
+				m_pAudio->play(eSound::Clang);
+				return;
+			}
+		}
+
+
+
+
 		if (m_bGodMode)
 			m_pAudio->play(eSound::Grunt);
 

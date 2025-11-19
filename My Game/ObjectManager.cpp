@@ -41,6 +41,7 @@ CObject* CObjectManager::create(eSprite t, const Vector2& pos) {
         case eSprite::sword: pObj = new CBullet(eSprite::sword, pos); break;
         case eSprite::greatsword: pObj = new CBullet(eSprite::greatsword, pos); break;
         case eSprite::dagger: pObj = new CBullet(eSprite::dagger, pos); break;
+        case eSprite::shield: pObj = new CObject(eSprite::shield, pos); break;
         default: pObj = new CObject(t, pos);
         } 
     }

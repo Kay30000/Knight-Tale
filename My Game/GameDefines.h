@@ -82,4 +82,8 @@ const float SHIELD_OFFSET = 67.0f;
 const float SHIELD_DURATION = 0.0f;
 const float SHIELD_RADIUS_MODIFIER = 1.0f;
 
+const float PLAYER_NORMAL_SPEED = 300.0f;
+const float PLAYER_SHIELD_SPEED = 100.0f;
+
+
 #endif //__L4RC_GAME_GAMEDEFINES_H__

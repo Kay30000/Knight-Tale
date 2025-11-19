@@ -67,8 +67,9 @@ class CObject:
 
     const bool isBullet() const; 
 
-
+    const Vector2& GetPos() const { return m_vPos; }
     void SetDead() { m_bDead = true; }
+    void SetStatic(bool isStatic) { m_bStatic = isStatic; }
 }; 
 
 #endif 
