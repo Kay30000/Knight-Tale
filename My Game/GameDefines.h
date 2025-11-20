@@ -78,7 +78,7 @@ const float COOLDOWN_GREATSWORD = 1.5f;
 const float COOLDOWN_DAGGER = 0.2f;
 
 // Shield 
-const float SHIELD_OFFSET = 67.0f;
+const float SHIELD_OFFSET = 55.0f;
 const float SHIELD_DURATION = 0.0f;
 const float SHIELD_RADIUS_MODIFIER = 1.0f;
 
