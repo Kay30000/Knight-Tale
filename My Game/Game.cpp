@@ -59,19 +59,28 @@ void CGame::LoadImages(){
   m_pRenderer->Load(eSprite::sword, "sword");
   m_pRenderer->Load(eSprite::greatsword, "greatsword");
   m_pRenderer->Load(eSprite::dagger, "dagger");
-  m_pRenderer->Load(eSprite::PlayerStandRight, "standright");
   m_pRenderer->Load(eSprite::PlayerStandLeft, "standleft");
+  m_pRenderer->Load(eSprite::PlayerStandRight, "standright");
   m_pRenderer->Load(eSprite::PlayerStandUp, "standup");
   m_pRenderer->Load(eSprite::PlayerStandDown, "standdown");
-  m_pRenderer->Load(eSprite::PlayerWalkRightSpriteSheet, "walkrightsheet");
-  m_pRenderer->Load(eSprite::PlayerWalkRight, "walkright");
   m_pRenderer->Load(eSprite::PlayerWalkLeftSpriteSheet, "walkleftsheet");
   m_pRenderer->Load(eSprite::PlayerWalkLeft, "walkleft");
+  m_pRenderer->Load(eSprite::PlayerWalkRightSpriteSheet, "walkrightsheet");
+  m_pRenderer->Load(eSprite::PlayerWalkRight, "walkright");
   m_pRenderer->Load(eSprite::PlayerWalkUpSpriteSheet, "walkupsheet");
   m_pRenderer->Load(eSprite::PlayerWalkUp, "walkup");
   m_pRenderer->Load(eSprite::PlayerWalkDownSpriteSheet, "walkdownsheet");
   m_pRenderer->Load(eSprite::PlayerWalkDown, "walkdown");
-  
+
+  m_pRenderer->Load(eSprite::PlayerAttackLeftSpriteSheet, "attackleftsheet");
+  m_pRenderer->Load(eSprite::PlayerAttackLeft, "attackleft");
+  m_pRenderer->Load(eSprite::PlayerAttackRightSpriteSheet, "attackrightsheet");
+  m_pRenderer->Load(eSprite::PlayerAttackRight, "attackright");
+  m_pRenderer->Load(eSprite::PlayerAttackUpSpriteSheet, "attackupsheet");
+  m_pRenderer->Load(eSprite::PlayerAttackUp, "attackup");
+  m_pRenderer->Load(eSprite::PlayerAttackDownSpriteSheet, "attackdownsheet");
+  m_pRenderer->Load(eSprite::PlayerAttackDown, "attackdown");
+
 
   m_pRenderer->EndResourceUpload();
 } //LoadImages
@@ -255,6 +264,12 @@ void CGame::KeyboardHandler(){
               m_pObjectManager->FireGun(m_pPlayer, eSprite::dagger, vDir);
           }
       }
+
+      // Trigger attack animation with 'J'
+      if (m_pKeyboard->TriggerDown('J')) {
+        m_pPlayer->TriggerAttack();  // <- call a function inside CPlayer
+}
+
 
 
 

@@ -18,6 +18,10 @@ protected:
     bool m_bStrafeRight = false;
     bool m_bStrafeBack = false;
 
+    bool m_bAttacking = false;
+    float m_fAttackDuration = 0.3f; // duration of attack animation
+    float m_fAttackTimer = 0.0f;
+
     LEventTimer* m_pFrameEvent = nullptr;
     LEventTimer* m_pBulletCooldown = nullptr;
     LEventTimer* m_pFireballCooldown = nullptr;
@@ -42,6 +46,10 @@ public:
     void WalkRight();
     void WalkUp();
     void WalkDown();
+    void Update(float dt) override;
+    float GetRadius() const { return m_fRadius; }
+    void TriggerAttack();
+
     void Stop(); 
 
     void SetSpeed(const float speed);
@@ -54,6 +62,11 @@ public:
     const Vector2& GetPos() const;
 
     Vector2 GetDirectionVector();
+
+    void TakeDamage(int damage); // added: allow others to damage player
+
+private:
+	void SetSprite(eSprite sprite);
 }; 
 
 #endif 
