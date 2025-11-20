@@ -8,6 +8,7 @@
 #include "ComponentIncludes.h"
 #include "ParticleEngine.h"
 #include "TileManager.h"
+#include "Turret.h"
 
 #include "shellapi.h"
 
@@ -59,6 +60,8 @@ void CGame::LoadImages(){
   m_pRenderer->Load(eSprite::sword, "sword");
   m_pRenderer->Load(eSprite::greatsword, "greatsword");
   m_pRenderer->Load(eSprite::dagger, "dagger");
+  m_pRenderer->Load(eSprite::shield, "shield");
+  m_pRenderer->Load(eSprite::PlayerStandRight, "standright");
   m_pRenderer->Load(eSprite::PlayerStandLeft, "standleft");
   m_pRenderer->Load(eSprite::PlayerStandRight, "standright");
   m_pRenderer->Load(eSprite::PlayerStandUp, "standup");
@@ -81,6 +84,9 @@ void CGame::LoadImages(){
   m_pRenderer->Load(eSprite::PlayerAttackDownSpriteSheet, "attackdownsheet");
   m_pRenderer->Load(eSprite::PlayerAttackDown, "attackdown");
 
+  m_pRenderer->Load(eSprite::HealthBar, "healthbar");
+  m_pRenderer->Load(eSprite::HealthBar, "healthbar");
+  
 
   m_pRenderer->EndResourceUpload();
 } //LoadImages
@@ -108,6 +114,43 @@ void CGame::Release(){
 /// Ask the object manager to create a player object and turrets specified by
 /// the tile manager.
 
+void CGame::CreateObjects() {
+    std::vector<Vector2> turretpos; //vector of turret positions
+    std::vector<CTileManager::furniture> furniturepos; //vector of furniture positions
+    Vector2 playerpos; //player positions
+
+
+    m_pTileManager->GetObjects(turretpos, furniturepos, playerpos); //get positions
+
+
+    for (const Vector2& pos : turretpos) {
+        CTurret* pTurret = (CTurret*)m_pObjectManager->create(eSprite::Turret, pos);
+
+
+        std::vector<Vector2> patrolPath = {
+        pos,
+        pos + Vector2(100.0f, 0.0f)
+        };
+        pTurret->InitializePatrol(patrolPath);
+    }
+
+
+    for (CTileManager::furniture furn : furniturepos)
+    {
+        Vector2 pos = furn.location;
+        m_pObjectManager->createFurniture(eSprite::Furniture, pos, furn.type);
+    }
+
+
+    m_pPlayer = (CPlayer*)m_pObjectManager->create(eSprite::PlayerStandDown, playerpos);
+
+
+    if (m_pPlayer) {
+        m_pPlayer->Stop();
+    }
+} //CreateObjects
+
+/*
 void CGame::CreateObjects(){
   std::vector<Vector2> turretpos; //vector of turret positions
   std::vector<CTileManager::furniture> furniturepos; //vector of furniture positions
@@ -120,6 +163,18 @@ void CGame::CreateObjects(){
 
   for(const Vector2& pos: turretpos)
     m_pObjectManager->create(eSprite::Turret, pos);
+ 
+  for (const Vector2& pos : turretpos) {
+      auto pTurret = (CTurret*)m_pObjectManager->create(eSprite::Turret, pos);
+
+
+      std::vector<Vector2> patrolPath = {
+      pos,
+      pos + Vector2(100.0f, 0.0f)
+      };
+      pTurret->InitializePatrol(patrolPath);
+  }
+
   for (CTileManager::furniture furn : furniturepos)
   {
 	  Vector2 pos = furn.location;
@@ -131,10 +186,9 @@ void CGame::CreateObjects(){
   if (m_pPlayer) {
       m_pPlayer->Stop();
   }
-  
-  
-} //CreateObjects
 
+} //CreateObjects
+*/
 /// Call this function to start a new game. This should be re-entrant so that
 /// you can restart a new game without having to shut down and restart the
 /// program. Clear the particle engine to get rid of any existing particles,
@@ -197,38 +251,48 @@ void CGame::KeyboardHandler(){
   if (m_eGameState != eGameState::Paused && m_pPlayer) {
       m_pPlayer->SetRotSpeed(0.0f);
 
-      bool bMovingVertically = m_pKeyboard->Down('W') || m_pKeyboard->Down('S');
-      bool bMovingHorizontally = m_pKeyboard->Down('A') || m_pKeyboard->Down('D');
+      float fTargetSpeed = 0.0f;
+
+      bool bMovementKeyHeld = m_pKeyboard->Down('W') || m_pKeyboard->Down('S') || m_pKeyboard->Down('A') || m_pKeyboard->Down('D');
+
+
+     
 
       m_pPlayer->SetSpeed(0.0f);
 
       // Vertical Movement
       if (m_pKeyboard->Down('W') && !m_pKeyboard->Down('S')) {
-          m_pPlayer->SetSpeed(100.0f); 
+          fTargetSpeed = PLAYER_NORMAL_SPEED; 
           m_pPlayer->WalkUp();
       }
       else if (m_pKeyboard->Down('S') && !m_pKeyboard->Down('W')) {
+          fTargetSpeed = -PLAYER_NORMAL_SPEED;
           m_pPlayer->StrafeBack();
-          m_pPlayer->WalkDown(); 
+          m_pPlayer->WalkDown();
       }
 
       // Horizontal Movement 
-      else if (!bMovingVertically) {
+      else if (!bMovementKeyHeld || m_pKeyboard->Down('A') || m_pKeyboard->Down('D')) {
           if (m_pKeyboard->Down('D') && !m_pKeyboard->Down('A')) {
+              fTargetSpeed = PLAYER_NORMAL_SPEED;
               m_pPlayer->StrafeRight();
-              m_pPlayer->WalkRight(); 
+              m_pPlayer->WalkRight();
           }
           else if (m_pKeyboard->Down('A') && !m_pKeyboard->Down('D')) {
-              m_pPlayer->StrafeLeft(); 
-              m_pPlayer->WalkLeft(); 
+              fTargetSpeed = -PLAYER_NORMAL_SPEED;
+              m_pPlayer->StrafeLeft();
+              m_pPlayer->WalkLeft();
           }
       }
 
-      if (!m_pKeyboard->Down('W') && !m_pKeyboard->Down('S') &&
-          !m_pKeyboard->Down('A') && !m_pKeyboard->Down('D')) {
-
-          m_pPlayer->Stop(); 
+      if (!bMovementKeyHeld) {
+          m_pPlayer->Stop();
       }
+
+
+
+
+
 
       if (m_pKeyboard->TriggerDown(VK_SPACE)) {
           if (m_pPlayer->m_pBulletCooldown->Triggered()) {
@@ -270,6 +334,42 @@ void CGame::KeyboardHandler(){
         m_pPlayer->TriggerAttack();  // <- call a function inside CPlayer
 }
 
+
+
+      // Shield
+      if (m_pKeyboard->Down(VK_LSHIFT)) {
+          if (!m_pPlayer->m_bShieldActive) {
+              m_pPlayer->m_bShieldActive = true;
+
+              Vector2 playerDir = m_pPlayer->GetDirectionVector();
+              Vector2 shieldPos = m_pPlayer->m_vPos + playerDir * SHIELD_OFFSET;
+              m_pPlayer->m_pShieldObject = m_pObjectManager->create(eSprite::shield, shieldPos);
+              m_pPlayer->m_pShieldObject->SetStatic(true);
+              m_pPlayer->m_pShieldObject->m_fRoll = m_pPlayer->m_fRoll;
+          }
+
+          if (bMovementKeyHeld) {
+
+              if (fTargetSpeed > 0.0f) {
+                  fTargetSpeed = PLAYER_SHIELD_SPEED;
+              }
+              else if (fTargetSpeed < 0.0f) {
+                  fTargetSpeed = -PLAYER_SHIELD_SPEED;
+              }
+          }
+      }
+      else {
+          if (m_pPlayer->m_bShieldActive) {
+              m_pPlayer->m_bShieldActive = false;
+
+              if (m_pPlayer->m_pShieldObject) {
+                  m_pPlayer->m_pShieldObject->SetDead();
+                  m_pPlayer->m_pShieldObject = nullptr;
+              }
+          }
+      }
+
+      m_pPlayer->SetSpeed(fTargetSpeed);
 
 
 

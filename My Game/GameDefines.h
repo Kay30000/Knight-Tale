@@ -36,6 +36,13 @@ SkeletonWalkDown, SkeletonWalkDownSpriteSheet,
 //Skeleton Attack
 SkeletonAttackLeft, SkeletonAttackLeftSpriteSheet, SkeletonAttackRight, SkeletonAttackRightSpriteSheet,
 SkeletonAttackUp, SkeletonAttackUpSpriteSheet, SkeletonAttackDown, SkeletonAttackDownSpriteSheet, EnemySkeleton,
+
+  Background, Bullet, Bullet2, Turret, Smoke, Spark, Tile, Line, Furniture, Fireball, sword, greatsword, dagger, shield, PlayerWalkLeftSpriteSheet, PlayerWalkRightSpriteSheet,
+PlayerStandLeftSpriteSheet, PlayerStandRightSpriteSheet, HealthBar,
+PlayerWalkLeft, PlayerWalkRight, PlayerStandLeft, PlayerStandRight, PlayerWalkUpSpriteSheet, PlayerWalkDownSpriteSheet,
+PlayerStandUpSpriteSheet, PlayerStandDownSpriteSheet,
+PlayerWalkUp, PlayerWalkDown, PlayerStandUp, PlayerStandDown, PlayerAttackLeft, 
+PlayerAttackRight, PlayerAttackUp, PlayerAttackDown,
 Size  //MUST BE LAST
 
 }; //eSprite
@@ -70,7 +77,7 @@ const float FIREBALL_SPEED = 500.0f;
 // Sword
 const int SWORD_DAMAGE = 2;
 const float SWORD_SPEED = 1000.0f;
-const float SWORD_LIFESPAN = 0.5f;
+const float SWORD_LIFESPAN = 0.1f;
 const float SWORD_OFFSET = 67.0f;;
 
 // Great Sword
@@ -82,7 +89,7 @@ const float GREATSWORD_OFFSET = 67.0f;
 // Dagger
 const int DAGGER_DAMAGE = 1;
 const float DAGGER_SPEED = 1500.0f;
-const float DAGGER_LIFESPAN = 0.03f;
+const float DAGGER_LIFESPAN = 0.05f;
 const float DAGGER_OFFSET = 67.0f;
 
 // Cooldowns
@@ -91,5 +98,14 @@ const float COOLDOWN_FIREBALL = 1.2f;
 const float COOLDOWN_SWORD = 0.5f;
 const float COOLDOWN_GREATSWORD = 1.5f;
 const float COOLDOWN_DAGGER = 0.2f;
+
+// Shield 
+const float SHIELD_OFFSET = 55.0f;
+const float SHIELD_DURATION = 0.0f;
+const float SHIELD_RADIUS_MODIFIER = 1.0f;
+
+const float PLAYER_NORMAL_SPEED = 300.0f;
+const float PLAYER_SHIELD_SPEED = 100.0f;
+
 
 #endif //__L4RC_GAME_GAMEDEFINES_H__

@@ -28,6 +28,13 @@ protected:
     bool m_bStatic = true;
     bool m_bIsTarget = true;
     bool m_bIsBullet = false;
+    float m_fSpeed = 0; 
+    float m_fRotSpeed = 0;
+    Vector2 m_vVelocity; 
+    bool m_bStatic = true; 
+    bool m_bIsTarget = true; 
+    bool m_bIsBullet = false; 
+	
 
     float m_fMaxLifeSpan = 0.0f;
     float m_fTimeAlive = 0.0f;
@@ -43,6 +50,10 @@ public:
 
     CObject(eSprite t, const Vector2& pos);
     virtual ~CObject();
+    bool isHealthBar = false;
+    bool isFurniture = false; ///< Is furniture
+    CObject(eSprite, const Vector2&); ///< Constructor.
+    virtual ~CObject(); ///< Destructor.
 
     virtual void Update(float dt) {}
 
@@ -58,5 +69,11 @@ public:
 
     void SetDead() { m_bDead = true; }
 };
+    const bool isBullet() const; 
+
+    const Vector2& GetPos() const { return m_vPos; }
+    void SetDead() { m_bDead = true; }
+    void SetStatic(bool isStatic) { m_bStatic = isStatic; }
+}; 
 
 #endif

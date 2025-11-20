@@ -15,47 +15,102 @@
 
 CTurret::CTurret(const Vector2& p): CObject(eSprite::Turret, p){
   m_bStatic = true; //turrets are static
+  m_fPatrolSpeed = 70.0f;
+  m_vHomePos = p; // store spawn position
 } //constructor
 
-void CTurret::move(){
-  if(m_pPlayer){ //safety
-    const float r = ((CTurret*)m_pPlayer)->m_fRadius;
+void CTurret::InitializePatrol(const std::vector<Vector2>& points) {
+    m_vPatrolPoints = points;
+    m_nCurrentPatrolIndex = 0;
+    if (!points.empty()) {
+        m_vPos = points[0];
+        m_vHomePos = points[0];
+    }
+}
 
-    if(m_pTileManager->Visible(m_vPos, m_pPlayer->m_vPos, r)) 
-      RotateTowards(m_pPlayer->m_vPos);
-    
-  } 
+void CTurret::move() {
+    const float t = m_pTimer->GetFrameTime();
+    Vector2 desiredDir(0, 0);
+    float moveSpeed = 0.0f;
+    Vector2 targetPos;
 
-  m_fRoll += 0.2f*m_fRotSpeed*XM_2PI*m_pTimer->GetFrameTime(); 
-  NormalizeAngle(m_fRoll); 
-} 
+    if (m_pPlayer) {
+        float distToPlayer = (m_pPlayer->GetPos() - m_vPos).Length();
 
-void CTurret::RotateTowards(const Vector2& pos){
-  const Vector2 v = pos - m_vPos; //vector from target to turret
-  const float theta = atan2f(v.y, v.x); //orientation of that vector
-  float diff = m_fRoll - theta; //difference with turret orientation
-  NormalizeAngle(diff); //normalize to [-pi, pi]
+        if (distToPlayer < m_fFollowRadius)
+            m_bChasing = true;
+        else if (distToPlayer > m_fReturnRadius)
+            m_bChasing = false;
+    }
 
-  //set rotation speed from diff
+    if (m_bChasing && m_pPlayer) {
+        targetPos = m_pPlayer->GetPos();
+        moveSpeed = m_fPatrolSpeed * 2.5f;
+    }
+    else {
+        if (!m_vPatrolPoints.empty()) {
+            targetPos = m_vPatrolPoints[m_nCurrentPatrolIndex];
 
-  const float fAngleDelta = 0.05f; //allowable angle discrepancy
-  const float fTrackingSpeed = 2.0f; //rotation speed when tracking
+            if ((targetPos - m_vPos).Length() < 5.0f) {
+                m_nCurrentPatrolIndex = (m_nCurrentPatrolIndex + 1) % m_vPatrolPoints.size();
+                targetPos = m_vPatrolPoints[m_nCurrentPatrolIndex];
+            }
+            moveSpeed = m_fPatrolSpeed;
+        }
+        else {
+            targetPos = m_vHomePos;
+            if ((targetPos - m_vPos).Length() < 5.0f) {
+                moveSpeed = 0.0f;
+            }
+            else {
+                moveSpeed = m_fReturnSpeed;
+            }
+        }
+    }
 
-  if(diff > fAngleDelta)m_fRotSpeed = -fTrackingSpeed; //clockwise
-  else if(diff < -fAngleDelta)m_fRotSpeed = fTrackingSpeed; //counterclockwise
-  else m_fRotSpeed = 0; //stop rotating
+    if (moveSpeed > 0.0f) {
+        Vector2 toTarget = targetPos - m_vPos;
+        float absX = fabsf(toTarget.x);
+        float absY = fabsf(toTarget.y);
 
-  
-} 
+        if (absX > absY) {
+            desiredDir.x = toTarget.x > 0 ? 1.0f : -1.0f;
+            desiredDir.y = 0.0f;
+        }
+        else if (absY > absX) {
+            desiredDir.x = 0.0f;
+            desiredDir.y = toTarget.y > 0 ? 1.0f : -1.0f;
+        }
+        else if (absX > 0.0f) {
+            desiredDir.x = toTarget.x > 0 ? 1.0f : -1.0f;
+            desiredDir.y = 0.0f;
+        }
+    }
 
-/// Response to collision. 
-/// \param norm Collision normal.
-/// \param d Overlap distance.
-/// \param pObj Pointer to object being collided with (defaults to `nullptr`,
-/// which means collision with a wall).
+    Vector2 nextPos = m_vPos + desiredDir * moveSpeed * t;
+    BoundingSphere s(Vector3(nextPos), m_fRadius);
+    Vector2 norm;
+    float d;
+
+    if (m_pTileManager->CollideWithWall(s, norm, d)) {
+        nextPos += norm * d;
+    }
+
+    m_vPos = nextPos;
+    m_fRotSpeed = 0.0f;
+}
 
 void CTurret::CollisionResponse(const Vector2& norm, float d, CObject* pObj) {
     if (m_bDead)return;
+
+    if (pObj && !pObj->isBullet()) {
+        const float MAX_PUSH_DISTANCE = 5.0f;
+        const float COLLISION_EPSILON = 0.05f;
+        float required_total_push = d + COLLISION_EPSILON;
+        float required_push_half = required_total_push * 0.5f;
+        float safe_d = std::min(required_push_half, MAX_PUSH_DISTANCE);
+        m_vPos += norm * safe_d;
+    }
 
     if (pObj && pObj->isBullet()) {
 
@@ -80,7 +135,6 @@ void CTurret::CollisionResponse(const Vector2& norm, float d, CObject* pObj) {
         this->TakeDamage(damageToTake);
     }
 }
-
 
 void CTurret::TakeDamage(int damage) {
     if (m_bDead) return;

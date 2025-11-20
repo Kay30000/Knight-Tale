@@ -9,7 +9,7 @@
   <font file="Media\Fonts\AverageSans_24.spritefont"/>
 
   <!-- sprites -->
-   
+  
   <sprites path="Media\Images">
 
 	
@@ -19,14 +19,15 @@
     <sprite name="bullet2" file="bullet2.png"/>
     <sprite name="smoke" file="graysmoke.png"/>
     <sprite name="spark" file="spark.png"/>
-
+	<sprite name = "healthbar" file ="healthbar" ext="png" frames ="21"/>
 	<sprite name = "furniture" file ="furniture" ext="png" frames ="2"/>
     <sprite name="greenline" file="greenline.png"/>
 	<sprite name="fireball" file="fireball.png"/>
 	  <sprite name="sword" file="sword.png"/>
 	  <sprite name="greatsword" file="greatsword.png"/>
 	  <sprite name="dagger" file="dagger.png"/>
-	  <!-- playerstand -->
+	  <sprite name="shield" file="shield.png"/>
+	  <!-- stand -->
 	  <sprite name="standleft" file="standleft.png"/>
 	  <sprite name="standright" file="standright.png"/>
 	  <sprite name="standup" file="standup.png"/>
@@ -180,6 +181,7 @@
 		  <frame index="7" left="0" top="700"  right="100" bottom="800"/>
 	  </sprite>
 
+	  
   </sprites>
 
   <!-- sound -->

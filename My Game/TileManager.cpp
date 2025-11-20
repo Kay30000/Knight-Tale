@@ -271,6 +271,10 @@ void CTileManager::LoadMap(char* filename){
       else if(c == 'P'){
         m_chMap[i][j] = 'F'; //floor tile
         m_vPlayer = m_fTileSize*Vector2(j + 0.5f, m_nHeight - i - 0.5f);
+        furniture furn;
+		furn.location = m_fTileSize * Vector2(j + 0.5f, m_nHeight - i - 5.5f);
+		furn.type = 'H'; //health bar above player
+        m_vecFurniture.push_back(furn);
       } //else if
 
       else m_chMap[i][j] = c; //load character into map

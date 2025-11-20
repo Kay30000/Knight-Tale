@@ -6,6 +6,8 @@
 
 #include "Object.h"
 #include "EventTimer.h"
+#include <iostream>
+
 
 class CPlayer : public CObject {
     friend class CGame;
@@ -29,7 +31,8 @@ protected:
     LEventTimer* m_pGreatswordCooldown = nullptr;
     LEventTimer* m_pDaggerCooldown = nullptr;
 
-
+    bool m_bShieldActive = false;
+    CObject* m_pShieldObject = nullptr;
 
     virtual void CollisionResponse(const Vector2&, float, CObject* = nullptr);
     virtual void DeathFX();
@@ -41,6 +44,21 @@ public:
     virtual ~CPlayer(); 
 
     virtual void move(); 
+
+	void TakeDamage() //This is here for testing purposes, it might come in handy later so I'm leaving it
+    {
+		m_nHealth -= 1;
+    }//Take Damage
+
+    int GetHealth()
+    {
+		return m_nHealth;
+    }
+
+    int GetMaxHealth()
+    {
+        return m_nMaxHealth;
+    }
 
     void WalkLeft();
     void WalkRight();
