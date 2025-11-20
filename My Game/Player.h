@@ -6,6 +6,8 @@
 
 #include "Object.h"
 #include "EventTimer.h"
+#include <iostream>
+
 
 class CPlayer : public CObject {
     friend class CGame;
@@ -18,10 +20,6 @@ protected:
     bool m_bStrafeRight = false;
     bool m_bStrafeBack = false;
 
-    bool m_bAttacking = false;
-    float m_fAttackDuration = 0.3f; // duration of attack animation
-    float m_fAttackTimer = 0.0f;
-
     LEventTimer* m_pFrameEvent = nullptr;
     LEventTimer* m_pBulletCooldown = nullptr;
     LEventTimer* m_pFireballCooldown = nullptr;
@@ -29,7 +27,8 @@ protected:
     LEventTimer* m_pGreatswordCooldown = nullptr;
     LEventTimer* m_pDaggerCooldown = nullptr;
 
-
+    bool m_bShieldActive = false;
+    CObject* m_pShieldObject = nullptr;
 
     virtual void CollisionResponse(const Vector2&, float, CObject* = nullptr);
     virtual void DeathFX();
@@ -42,14 +41,25 @@ public:
 
     virtual void move(); 
 
+	void TakeDamage() //This is here for testing purposes, it might come in handy later so I'm leaving it
+    {
+		m_nHealth -= 1;
+    }//Take Damage
+
+    int GetHealth()
+    {
+		return m_nHealth;
+    }
+
+    int GetMaxHealth()
+    {
+        return m_nMaxHealth;
+    }
+
     void WalkLeft();
     void WalkRight();
     void WalkUp();
     void WalkDown();
-    void Update(float dt) override;
-    float GetRadius() const { return m_fRadius; }
-    void TriggerAttack();
-
     void Stop(); 
 
     void SetSpeed(const float speed);
@@ -62,11 +72,6 @@ public:
     const Vector2& GetPos() const;
 
     Vector2 GetDirectionVector();
-
-    void TakeDamage(int damage); // added: allow others to damage player
-
-private:
-	void SetSprite(eSprite sprite);
 }; 
 
 #endif 
