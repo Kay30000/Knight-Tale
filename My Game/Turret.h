@@ -17,19 +17,7 @@ class CTurret: public CObject{
     virtual void CollisionResponse(const Vector2&, float, CObject* = nullptr); ///< Collision response.
     virtual void DeathFX(); ///< Death special effects.
 
-    std::vector<Vector2> m_vPatrolPoints;
-    int m_nCurrentPatrolIndex = 0;
-    float m_fPatrolSpeed = 200.0f;
-
-    bool m_bChasing = false;
-    float m_fFollowRadius = 200.0f;
-    float m_fReturnRadius = 500.0f;
-    float m_fReturnSpeed = 2.0f;
-
-    Vector2 m_vHomePos;
-
   public:
-    void InitializePatrol(const std::vector<Vector2>& points);
     CTurret(const Vector2& p); 
     virtual void move(); 
     virtual void TakeDamage(int damage) ;

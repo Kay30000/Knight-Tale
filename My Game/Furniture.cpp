@@ -15,5 +15,4 @@ CFurniture::CFurniture(const Vector2& p):CObject(eSprite::Furniture,p)
 {
 	isFurniture = true;
 	m_bStatic = true;
-	m_nCurrentFrame = 19;
 }
