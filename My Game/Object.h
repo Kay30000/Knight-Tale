@@ -1,5 +1,4 @@
 /// \file Object.h
-/// \brief Interface for the game object class CObject.
 
 #ifndef __L4RC_GAME_OBJECT_H__
 #define __L4RC_GAME_OBJECT_H__
@@ -12,24 +11,23 @@
 #include "BaseObject.h"
 #include "EventTimer.h"
 
-/// \brief The game object. 
-///
-/// The abstract representation of an object. `CObjectManager` is a friend of
-/// this class so that it can access any private members as needed to manage
-/// the objects without the need for reader and set functions for each private
-/// or protected member variable. This class must contain public member
-/// functions `move()` and `draw()` to move and draw the object, respectively.
-
-class CObject:
-  public CCommon,
-  public LBaseObject
+class CObject :
+    public CCommon,
+    public LBaseObject
 {
-  friend class CObjectManager; 
+    friend class CObjectManager;
 
-  protected:
-    float m_fRadius = 0;
+protected:
 
+    float m_fRadius = 0.0f;
+    float m_fSpeed = 0.0f;
+    float m_fRotSpeed = 0.0f;
 
+    Vector2 m_vVelocity = Vector2(0, 0);
+
+    bool m_bStatic = true;
+    bool m_bIsTarget = true;
+    bool m_bIsBullet = false;
     float m_fSpeed = 0; 
     float m_fRotSpeed = 0;
     Vector2 m_vVelocity; 
@@ -41,30 +39,36 @@ class CObject:
     float m_fMaxLifeSpan = 0.0f;
     float m_fTimeAlive = 0.0f;
 
+    LEventTimer* m_pGunFireEvent = nullptr;
 
-    LEventTimer* m_pGunFireEvent = nullptr; 
-    
-    virtual void CollisionResponse(const Vector2&, float,
-      CObject* = nullptr);
-    virtual void DeathFX(); 
+    virtual void CollisionResponse(const Vector2&, float, CObject* = nullptr);
+    virtual void DeathFX();
 
-    const Vector2 GetViewVector() const;
+public:
 
-  public:
+    bool isFurniture = false;
 
+    CObject(eSprite t, const Vector2& pos);
+    virtual ~CObject();
     bool isHealthBar = false;
     bool isFurniture = false; ///< Is furniture
     CObject(eSprite, const Vector2&); ///< Constructor.
     virtual ~CObject(); ///< Destructor.
 
+    virtual void Update(float dt) {}
 
     void move();
     void draw();
 
-
     void SetSprite(eSprite t);
     void SetFrame(eSprite t, char c);
 
+    // DECLARATIONS ONLY (no inline code!)
+    bool isBullet() const;
+    const Vector2 GetViewVector() const;
+
+    void SetDead() { m_bDead = true; }
+};
     const bool isBullet() const; 
 
     const Vector2& GetPos() const { return m_vPos; }
@@ -72,4 +76,4 @@ class CObject:
     void SetStatic(bool isStatic) { m_bStatic = isStatic; }
 }; 
 
-#endif 
+#endif

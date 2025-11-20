@@ -12,6 +12,7 @@
 #include "GameDefines.h"
 #include "TileManager.h"
 #include "Furniture.h"
+#include "Enemy.h"
 #include "HealthBar.h"
 
 /// Create an object and put a pointer to it at the back of the object list
@@ -30,8 +31,10 @@ CObject* CObjectManager::create(eSprite t, const Vector2& pos) {
         t == eSprite::PlayerWalkLeft || t == eSprite::PlayerWalkRight
         ) {
         
-        pObj = new CPlayer(t, pos); 
+        pObj = new CPlayer(t, pos);
+        m_pPlayer = (CPlayer*)pObj;  // <-- restore this
     }
+    
     else { 
         switch (t) { 
         case eSprite::Turret:  pObj = new CTurret(pos); break;
@@ -41,6 +44,16 @@ CObject* CObjectManager::create(eSprite t, const Vector2& pos) {
         case eSprite::sword: pObj = new CBullet(eSprite::sword, pos); break;
         case eSprite::greatsword: pObj = new CBullet(eSprite::greatsword, pos); break;
         case eSprite::dagger: pObj = new CBullet(eSprite::dagger, pos); break;
+        
+        case eSprite::EnemySkeleton:
+        {
+            CEnemy* pEnemy = new CEnemy(pos);      // create enemy
+            pObj = pEnemy;                         // assign to base pointer
+            m_enemies.push_back(pEnemy);           // store in enemy list
+        }
+        break;
+
+        default: pObj = new CObject(t, pos); break;
         case eSprite::shield: pObj = new CObject(eSprite::shield, pos); break;
         default: pObj = new CObject(t, pos);
         } 
@@ -109,23 +122,31 @@ void CObjectManager::draw(){
 /// edges and for all objects with another object, making sure that each pair
 /// of objects is processed only once.
 
-void CObjectManager::BroadPhase(){
-  LBaseObjectManager::BroadPhase(); //collide with other objects
+void CObjectManager::BroadPhase()
+{
+    LBaseObjectManager::BroadPhase();
 
-  //collide with walls
+    float dt = m_pTimer->GetFrameTime();
 
-  for(CObject* pObj: m_stdObjectList) //for each object
-    if(!pObj->m_bDead){ //for each non-dead object, that is
-      for(int i=0; i<2; i++){ //can collide with 2 edges simultaneously
-        Vector2 norm; //collision normal
-        float d = 0; //overlap distance
-        BoundingSphere s(Vector3(pObj->m_vPos), pObj->m_fRadius);
-        
-        if(m_pTileManager->CollideWithWall(s, norm, d)) //collide with wall
-          pObj->CollisionResponse(norm, d); //respond 
-      } //for
-  } //for
-} //BroadPhase
+    for (CObject* pObj : m_stdObjectList)
+    {
+        if (!pObj->m_bDead)
+        {
+            pObj->Update(dt);
+
+            for (int i = 0; i < 2; i++)
+            {
+                Vector2 norm; float d = 0;
+                BoundingSphere s(Vector3(pObj->m_vPos), pObj->m_fRadius);
+
+                if (m_pTileManager->CollideWithWall(s, norm, d))
+                    pObj->CollisionResponse(norm, d);
+            }
+        }
+    }
+}
+
+
 
 /// Perform collision detection and response for a pair of objects. Makes
 /// use of the helper function Identify() because this function may be called
@@ -155,6 +176,17 @@ void CObjectManager::NarrowPhase(CObject* p0, CObject* p1){
 /// the direction that it is facing and continues moving in that direction.
 /// \param pObj Pointer to an object.
 /// \param bullet Sprite type of bullet.
+
+void CObjectManager::Add(CObject* p)
+{
+    if (!p) return;
+    m_stdObjectList.push_back(p);
+
+    // Track enemies if needed
+    if (CEnemy* pEnemy = dynamic_cast<CEnemy*>(p)) {
+        m_enemies.push_back(pEnemy);
+    }
+}
 
 void CObjectManager::FireGun(CPlayer* pPlayer, eSprite t, const Vector2& vDir) {
     float fSpeed = 500.0f;

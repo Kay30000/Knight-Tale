@@ -8,38 +8,51 @@
 #include "ParticleEngine.h"
 #include "Helpers.h"
 
-/// Create and initialize an object given its sprite type and initial position.
-/// \param t Type of sprite.
-/// \param p Initial position of object.
+/// ---------------------------------------------------------------------------
+/// Constructor
+/// ---------------------------------------------------------------------------
+CObject::CObject(eSprite t, const Vector2& p)
+    : LBaseObject(t, p)
+{
+    m_fRoll = XM_PIDIV2;
+    m_bIsTarget = false;
 
-CObject::CObject(eSprite t, const Vector2& p):
-  LBaseObject(t, p)
-{ 
-  m_fRoll = XM_PIDIV2; 
-  m_bIsTarget = false;
+    // Identify bullets
+    if (t == eSprite::Bullet || t == eSprite::Fireball ||
+        t == eSprite::sword || t == eSprite::greatsword || t == eSprite::dagger)
+    {
+        m_bIsBullet = true;
+        m_bStatic = false;
+    }
+    else
+    {
+        m_bIsBullet = false;
+    }
 
+    // Compute collision radius
+    float w = m_pRenderer->GetWidth(t);
+    float h = m_pRenderer->GetHeight(t);
+    m_fRadius = std::max(w, h) / 2.0f;
 
-  if (t == eSprite::Bullet || t == eSprite::Fireball) {
-      m_bIsBullet = true;
-      m_bStatic = false;
-  }
-  else {
-      m_bIsBullet = false;
-  }
-
-  const float w = m_pRenderer->GetWidth(t); 
-  const float h = m_pRenderer->GetHeight(t);
-  m_fRadius = std::max(w, h)/2; 
-
-  m_pGunFireEvent = new LEventTimer(1.0f); 
-} 
-
-
-CObject::~CObject(){
-  delete m_pGunFireEvent;
+    m_pGunFireEvent = new LEventTimer(1.0f);
 }
 
+/// ---------------------------------------------------------------------------
+/// Destructor
+/// ---------------------------------------------------------------------------
+CObject::~CObject()
+{
+    delete m_pGunFireEvent;
+}
 
+/// ---------------------------------------------------------------------------
+/// Base movement
+/// ---------------------------------------------------------------------------
+void CObject::move()
+{
+    if (!m_bDead && !m_bStatic)
+        m_vPos += m_vVelocity * m_pTimer->GetFrameTime();
+}
 void CObject::move(){
   if(!m_bDead && !m_bStatic)
     m_vPos += m_vVelocity*m_pTimer->GetFrameTime();
@@ -80,39 +93,67 @@ void CObject::CollisionResponse(const Vector2& norm, float d, CObject* pObj){
   const Vector2 vOverlap = d*norm; 
   const bool bStatic = !pObj || pObj->m_bStatic; 
 
-  if(!m_bStatic && !bStatic) 
-    m_vPos += vOverlap/2; 
+/// ---------------------------------------------------------------------------
+/// Draw
+/// ---------------------------------------------------------------------------
+void CObject::draw()
+{
+    m_pRenderer->Draw(this);
+}
 
-  else if(!m_bStatic && bStatic) 
-    m_vPos += vOverlap; 
-} 
+/// ---------------------------------------------------------------------------
+/// Collision response
+/// ---------------------------------------------------------------------------
+void CObject::CollisionResponse(const Vector2& norm, float d, CObject* pObj)
+{
+    if (m_bDead) return;
 
-/// Create a particle effect to mark the death of the object.
-/// This function is a stub intended to be overridden by various object classes
-/// derived from this class.
+    Vector2 vOverlap = d * norm;
+    bool collidingWithStatic = (!pObj || pObj->m_bStatic);
 
-void CObject::DeathFX(){
- //stub
-} //DeathFX
+    if (!m_bStatic && !collidingWithStatic)
+        m_vPos += vOverlap / 2.0f;
+    else if (!m_bStatic)
+        m_vPos += vOverlap;
+}
 
+/// ---------------------------------------------------------------------------
+/// Death FX (stub)
+/// ---------------------------------------------------------------------------
+void CObject::DeathFX()
+{
+    // intentionally empty
+}
 
-void CObject::SetSprite(eSprite t) {
+/// ---------------------------------------------------------------------------
+/// Set sprite index
+/// ---------------------------------------------------------------------------
+void CObject::SetSprite(eSprite t)
+{
     m_nSpriteIndex = (UINT)t;
 }
 
-void CObject::SetFrame(eSprite t, char c) {
-    
+/// ---------------------------------------------------------------------------
+/// Set animation frame (from tile furniture)
+/// ---------------------------------------------------------------------------
+void CObject::SetFrame(eSprite t, char c)
+{
     m_nCurrentFrame = c - '0';
 }
 
-/// Compute the view vector from the object orientation.
-/// \return The view vector.
+/// ---------------------------------------------------------------------------
+/// View vector from roll angle
+/// ---------------------------------------------------------------------------
+const Vector2 CObject::GetViewVector() const
+{
+    return AngleToVector(m_fRoll);
+}
 
+/// ---------------------------------------------------------------------------
+/// Is object a bullet?
+/// ---------------------------------------------------------------------------
+bool CObject::isBullet() const
+{
+    return m_bIsBullet;
+}
 
-const Vector2 CObject::GetViewVector() const{
-  return AngleToVector(m_fRoll);
-} 
-
-const bool CObject::isBullet() const{
-  return m_bIsBullet;
-} 
