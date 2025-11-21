@@ -9,6 +9,7 @@
 
 CPlayer::CPlayer(eSprite t, const Vector2& p) : CObject(t, p) {
 	
+	m_bIsTarget = true;
 
 	m_fSpeed = 0.0f; 
 	m_bStrafeLeft = false;
@@ -81,28 +82,29 @@ void CPlayer::UpdateFramenumber() {
 }
 
 void CPlayer::WalkLeft() {
-	if (m_nSpriteIndex != (UINT)eSprite::PlayerWalkLeft)
+	if (m_nSpriteIndex != (UINT)eSprite::PlayerWalkLeft) {
 		m_nSpriteIndex = (UINT)eSprite::PlayerWalkLeft;
-	m_nCurrentFrame = 0;
-} 
- 
+		m_nCurrentFrame = 0;
+	}
+}
 void CPlayer::WalkRight() {
-	if (m_nSpriteIndex != (UINT)eSprite::PlayerWalkRight)
+	if (m_nSpriteIndex != (UINT)eSprite::PlayerWalkRight) {
 		m_nSpriteIndex = (UINT)eSprite::PlayerWalkRight;
-	m_nCurrentFrame = 0;
-} 
-
+		m_nCurrentFrame = 0;
+	}
+}
 void CPlayer::WalkUp() {
-	if (m_nSpriteIndex != (UINT)eSprite::PlayerWalkUp)
+	if (m_nSpriteIndex != (UINT)eSprite::PlayerWalkUp) {
 		m_nSpriteIndex = (UINT)eSprite::PlayerWalkUp;
-	m_nCurrentFrame = 0;
-} 
-
+		m_nCurrentFrame = 0;
+	}
+}
 void CPlayer::WalkDown() {
-	if (m_nSpriteIndex != (UINT)eSprite::PlayerWalkDown)
+	if (m_nSpriteIndex != (UINT)eSprite::PlayerWalkDown) {
 		m_nSpriteIndex = (UINT)eSprite::PlayerWalkDown;
-	m_nCurrentFrame = 0;
-} 
+		m_nCurrentFrame = 0;
+	}
+}
 
 void CPlayer::Stop() {
 	if (m_nSpriteIndex == (UINT)eSprite::PlayerWalkRight)
@@ -116,6 +118,8 @@ void CPlayer::Stop() {
 
 	else if (m_nSpriteIndex == (UINT)eSprite::PlayerWalkDown)
 		m_nSpriteIndex = (UINT)eSprite::PlayerStandDown;
+
+	m_nCurrentFrame = 0;
 } 
 
 void CPlayer::CollisionResponse(const Vector2& norm, float d, CObject* pObj) {
