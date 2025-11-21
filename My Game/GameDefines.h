@@ -15,12 +15,29 @@
 enum class eSprite: UINT{
 
 
-  Background, Bullet, Bullet2, Turret, Smoke, Spark, Tile, Line, Furniture, Fireball, sword, greatsword, dagger, shield, PlayerWalkLeftSpriteSheet, PlayerWalkRightSpriteSheet,
-PlayerStandLeftSpriteSheet, PlayerStandRightSpriteSheet, HealthBar,
-PlayerWalkLeft, PlayerWalkRight, PlayerStandLeft, PlayerStandRight, PlayerWalkUpSpriteSheet, PlayerWalkDownSpriteSheet,
-PlayerStandUpSpriteSheet, PlayerStandDownSpriteSheet,
-PlayerWalkUp, PlayerWalkDown, PlayerStandUp, PlayerStandDown, PlayerAttackLeft, 
-PlayerAttackRight, PlayerAttackUp, PlayerAttackDown,
+Background, Bullet, Bullet2, Turret, Smoke, Spark, Tile, Line, Furniture, 
+Fireball, sword, greatsword, dagger, shield, HealthBar,
+  
+//Player Walk 
+PlayerWalkLeft, PlayerWalkLeftSpriteSheet, PlayerWalkRight,
+PlayerWalkRightSpriteSheet, PlayerWalkUp, PlayerWalkUpSpriteSheet,
+PlayerWalkDown, PlayerWalkDownSpriteSheet,
+// Player Stand
+PlayerStandLeft, PlayerStandRight,
+PlayerStandUp, PlayerStandDown,
+//Player Attack
+PlayerAttackLeft, PlayerAttackLeftSpriteSheet,
+PlayerAttackRight, PlayerAttackRightSpriteSheet, PlayerAttackUp, PlayerAttackUpSpriteSheet, PlayerAttackDown, PlayerAttackDownSpriteSheet,
+//Enemy Skeleton Stand
+SkeletonStandLeft, SkeletonStandRight,
+SkeletonStandUp, SkeletonStandDown,
+//Enemy Skeleton Walk
+SkeletonWalkLeft, SkeletonWalkLeftSpriteSheet,
+SkeletonWalkRight, SkeletonWalkRightSpriteSheet, SkeletonWalkUp, SkeletonWalkUpSpriteSheet,
+SkeletonWalkDown, SkeletonWalkDownSpriteSheet,
+//Skeleton Attack
+SkeletonAttackLeft, SkeletonAttackLeftSpriteSheet, SkeletonAttackRight, SkeletonAttackRightSpriteSheet,
+SkeletonAttackUp, SkeletonAttackUpSpriteSheet, SkeletonAttackDown, SkeletonAttackDownSpriteSheet, EnemySkeleton,
 Size  //MUST BE LAST
 
 }; //eSprite
