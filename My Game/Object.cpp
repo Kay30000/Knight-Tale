@@ -84,26 +84,6 @@ void CObject::draw(){
 /// \param d Overlap distance.
 /// \param pObj Pointer to object being collided with (defaults to `nullptr`,
 /// which means collision with a wall).
-
-void CObject::CollisionResponse(const Vector2& norm, float d, CObject* pObj){
-
-  if(m_bDead)return;
-
-
-  const Vector2 vOverlap = d*norm; 
-  const bool bStatic = !pObj || pObj->m_bStatic; 
-
-/// ---------------------------------------------------------------------------
-/// Draw
-/// ---------------------------------------------------------------------------
-void CObject::draw()
-{
-    m_pRenderer->Draw(this);
-}
-
-/// ---------------------------------------------------------------------------
-/// Collision response
-/// ---------------------------------------------------------------------------
 void CObject::CollisionResponse(const Vector2& norm, float d, CObject* pObj)
 {
     if (m_bDead) return;
