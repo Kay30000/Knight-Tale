@@ -53,15 +53,12 @@ CPlayer::CPlayer(eSprite t, const Vector2& p) : CObject(t, p) {
 
 CPlayer::~CPlayer() {
 	delete m_pFrameEvent; 
-	delete m_pFrameEvent;
 	delete m_pBulletCooldown;
 	delete m_pFireballCooldown;
 	delete m_pSwordCooldown;
 	delete m_pGreatswordCooldown;
 	delete m_pDaggerCooldown;
-	delete m_pSwordCooldown;
-
-} 
+}
 
 void CPlayer::move() {
 	CObject::move();
