@@ -63,8 +63,8 @@
 		  <frame index="7" left="700" top="0" right="800"  bottom="100"/>
 	  </sprite>
 	  <!-- up&down -->
-	  <sprite name="skeletonwalkupsheet" file="skeletonupright.png"/>
-	  <sprite name="skeletonupright" sheet="skeletonwalkupsheet" frames="8">
+	  <sprite name="skeletonwalkupsheet" file="skeletonwalkup.png"/>
+	  <sprite name="skeletonwalkup" sheet="skeletonwalkupsheet" frames="8">
 		  <frame index="0" left="0"   top="0" right="100"  bottom="100"/>
 		  <frame index="1" left="100" top="0" right="200"  bottom="100"/>
 		  <frame index="2" left="200" top="0" right="300"  bottom="100"/>
@@ -75,8 +75,8 @@
 		  <frame index="7" left="700" top="0" right="800"  bottom="100"/>
 	  </sprite>
 
-	  <sprite name="skeletonwalkdownsheet" file="skeletondownright.png"/>
-	  <sprite name="skeletondownright" sheet="skeletonwalkdownsheet" frames="8">
+	  <sprite name="skeletonwalkdownsheet" file="skeletonwalkdown.png"/>
+	  <sprite name="skeletonwalkdown" sheet="skeletonwalkdownsheet" frames="8">
 		  <frame index="0" left="0"   top="0" right="100"  bottom="100"/>
 		  <frame index="1" left="100" top="0" right="200"  bottom="100"/>
 		  <frame index="2" left="200" top="0" right="300"  bottom="100"/>
