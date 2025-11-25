@@ -16,11 +16,12 @@ CEnemy::~CEnemy() {
 }
 
 CEnemy::CEnemy(const Vector2& pos) :
-	CObject(eSprite::EnemySkeleton, pos) {
+	CObject(eSprite::SkeletonStandDown, pos) {
 	m_pFrameEvent = new LEventTimer(0.12f);
 	m_pAttackCooldown = new LEventTimer(2.0f);
 	m_fSpeed = 80.0f; // enemy movement speed 
 	m_fRadius = 16.0f;
+
 
 	Initialize(); // <--- Call here to ensure it's ready
 }

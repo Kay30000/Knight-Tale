@@ -85,6 +85,16 @@ void CGame::LoadImages(){
   m_pRenderer->Load(eSprite::PlayerAttackDown, "attackdown");
   m_pRenderer->Load(eSprite::HealthBar, "healthbar");
   m_pRenderer->Load(eSprite::HealthBar, "healthbar");
+
+  m_pRenderer->Load(eSprite::SkeletonStandLeft, "skeletonstandleft");
+  m_pRenderer->Load(eSprite::SkeletonStandRight, "skeletonstandright");
+  m_pRenderer->Load(eSprite::SkeletonStandUp, "skeletonstandup");
+  m_pRenderer->Load(eSprite::SkeletonStandDown, "skeletonstanddown");
+  m_pRenderer->Load(eSprite::SkeletonWalkLeftSpriteSheet, "skeletonwalkleftsheet");
+  m_pRenderer->Load(eSprite::SkeletonWalkRightSpriteSheet, "skeletonwalkrightsheet");
+  m_pRenderer->Load(eSprite::SkeletonWalkUpSpriteSheet, "skeletonwalkupsheet");
+  m_pRenderer->Load(eSprite::SkeletonWalkDownSpriteSheet, "skeletonwalkdownsheet");
+
   
 
   m_pRenderer->EndResourceUpload();
@@ -114,6 +124,7 @@ void CGame::Release(){
 /// the tile manager.
 
 void CGame::CreateObjects() {
+    std::vector<Vector2> skeletonpos; //vector of skeleton enemy positions
     std::vector<Vector2> turretpos; //vector of turret positions
     std::vector<CTileManager::furniture> furniturepos; //vector of furniture positions
     Vector2 playerpos; //player positions
@@ -133,6 +144,17 @@ void CGame::CreateObjects() {
         pTurret->InitializePatrol(patrolPath);
     }
 
+    skeletonpos = {
+    Vector2(5 * 32.0f, 5 * 32.0f),
+    Vector2(10 * 32.0f, 12 * 32.0f)
+    };
+
+
+    for (const Vector2& pos : skeletonpos) {
+        m_pObjectManager->create(eSprite::SkeletonStandDown, pos);
+    }
+
+
 
     for (CTileManager::furniture furn : furniturepos)
     {
@@ -148,46 +170,7 @@ void CGame::CreateObjects() {
         m_pPlayer->Stop();
     }
 } //CreateObjects
-
-/*
-void CGame::CreateObjects(){
-  std::vector<Vector2> turretpos; //vector of turret positions
-  std::vector<CTileManager::furniture> furniturepos; //vector of furniture positions
-  Vector2 playerpos; //player positions
-
-  m_pTileManager->GetObjects(turretpos, furniturepos, playerpos); //get positions
-
-  
-  
-
-  for(const Vector2& pos: turretpos)
-    m_pObjectManager->create(eSprite::Turret, pos);
  
-  for (const Vector2& pos : turretpos) {
-      auto pTurret = (CTurret*)m_pObjectManager->create(eSprite::Turret, pos);
-
-
-      std::vector<Vector2> patrolPath = {
-      pos,
-      pos + Vector2(100.0f, 0.0f)
-      };
-      pTurret->InitializePatrol(patrolPath);
-  }
-
-  for (CTileManager::furniture furn : furniturepos)
-  {
-	  Vector2 pos = furn.location;
-      m_pObjectManager->createFurniture(eSprite::Furniture, pos, furn.type);
-  }
-
-  m_pPlayer = (CPlayer*)m_pObjectManager->create(eSprite::PlayerStandDown, playerpos);
-
-  if (m_pPlayer) {
-      m_pPlayer->Stop();
-  }
-
-} //CreateObjects
-*/
 /// Call this function to start a new game. This should be re-entrant so that
 /// you can restart a new game without having to shut down and restart the
 /// program. Clear the particle engine to get rid of any existing particles,

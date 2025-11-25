@@ -9,10 +9,9 @@
   <font file="Media\Fonts\AverageSans_24.spritefont"/>
 
   <!-- sprites -->
-  
+
   <sprites path="Media\Images">
 
-	
 	<sprite name="tile" file="tile" ext ="png" frames="5"/>
     <sprite name="turret" file="turret.png"/>
     <sprite name="bullet" file="bullet.png"/>
@@ -180,9 +179,6 @@
 		  <frame index="6" left="0" top="600"  right="100" bottom="700"/>
 		  <frame index="7" left="0" top="700"  right="100" bottom="800"/>
 	  </sprite>
-
-
-
 
   </sprites>
 
