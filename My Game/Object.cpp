@@ -48,11 +48,11 @@ CObject::~CObject()
 /// ---------------------------------------------------------------------------
 /// Base movement
 /// ---------------------------------------------------------------------------
-void CObject::move()
+/*void CObject::move()
 {
     if (!m_bDead && !m_bStatic)
         m_vPos += m_vVelocity * m_pTimer->GetFrameTime();
-}
+} I'm not sure what move() is the intended behavior so I just commented out the first one*/
 void CObject::move(){
   if(!m_bDead && !m_bStatic)
     m_vPos += m_vVelocity*m_pTimer->GetFrameTime();

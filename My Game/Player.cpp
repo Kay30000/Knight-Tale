@@ -8,26 +8,7 @@
 #include "Particle.h"
 #include "ParticleEngine.h"
 
-CPlayer::CPlayer(eSprite t, const Vector2& p) :
-    CObject(t, p)
-{
-    m_bIsTarget = true;
-    m_bStatic = false;
 
-    m_fSpeed = 0.0f;
-    m_bStrafeLeft = false;
-    m_bStrafeRight = false;
-    m_bStrafeBack = false;
-
-    m_pFrameEvent = new LEventTimer(0.12f);
-
-    m_fRadius = 16.0f;
-
-    m_pBulletCooldown = new LEventTimer(COOLDOWN_BULLET);
-    m_pFireballCooldown = new LEventTimer(COOLDOWN_FIREBALL);
-    m_pSwordCooldown = new LEventTimer(COOLDOWN_SWORD);
-    m_pGreatswordCooldown = new LEventTimer(COOLDOWN_GREATSWORD);
-    m_pDaggerCooldown = new LEventTimer(COOLDOWN_DAGGER);
 CPlayer::CPlayer(eSprite t, const Vector2& p) : CObject(t, p) {
 	
 	m_bIsTarget = true;
@@ -53,14 +34,13 @@ CPlayer::CPlayer(eSprite t, const Vector2& p) : CObject(t, p) {
 } 
 
 CPlayer::~CPlayer() {
-	delete m_pFrameEvent; 
+	
 	delete m_pFrameEvent;
 	delete m_pBulletCooldown;
 	delete m_pFireballCooldown;
 	delete m_pSwordCooldown;
 	delete m_pGreatswordCooldown;
 	delete m_pDaggerCooldown;
-	delete m_pSwordCooldown;
 
 } 
 
@@ -95,17 +75,9 @@ void CPlayer::move() {
 	UpdateFramenumber();
 }
 
-CPlayer::~CPlayer()
-{
-    delete m_pFrameEvent;
-    delete m_pBulletCooldown;
-    delete m_pFireballCooldown;
-    delete m_pSwordCooldown;
-    delete m_pGreatswordCooldown;
-    delete m_pDaggerCooldown;
-}
 
-void CPlayer::move()
+
+/*void CPlayer::move()
 {
     const float t = m_pTimer->GetFrameTime();
     const float baseSpeed = 300.0f;
@@ -147,7 +119,8 @@ void CPlayer::move()
     }
     else
         Stop();
-}
+}*/
+//Not sure which move() is the intended behavior so I just commented out the second one
 
 void CPlayer::TriggerAttack()
 {
@@ -168,6 +141,8 @@ void CPlayer::TriggerAttack()
     else {
         SetSprite(eSprite::PlayerAttackDown);
     }
+}
+/*
 void CPlayer::WalkLeft() {
 	if (m_nSpriteIndex != (UINT)eSprite::PlayerWalkLeft) {
 		m_nSpriteIndex = (UINT)eSprite::PlayerWalkLeft;
@@ -192,7 +167,10 @@ void CPlayer::WalkDown() {
 		m_nCurrentFrame = 0;
 	}
 }
+*/
+//not sure which set of movement functions is intended
 
+/*
 void CPlayer::Stop() {
 	if (m_nSpriteIndex == (UINT)eSprite::PlayerWalkRight)
 		m_nSpriteIndex = (UINT)eSprite::PlayerStandRight;
@@ -207,7 +185,8 @@ void CPlayer::Stop() {
 		m_nSpriteIndex = (UINT)eSprite::PlayerStandDown;
 
 	m_nCurrentFrame = 0;
-} 
+} */
+//not sure which stop function is intended
 
 void CPlayer::CollisionResponse(const Vector2& norm, float d, CObject* pObj) {
 	if (m_bDead)return;
@@ -254,18 +233,9 @@ void CPlayer::CollisionResponse(const Vector2& norm, float d, CObject* pObj) {
 	CObject::CollisionResponse(norm, d, pObj);
 } 
 
-void CPlayer::DeathFX() {
-	LParticleDesc2D d;
-	d.m_vPos = m_vPos;
 
-	d.m_nSpriteIndex = (UINT)eSprite::Smoke;
-	
-	m_pParticleEngine->create(d);
-} 
 
-void CPlayer::StrafeLeft() {
-	m_bStrafeLeft = true; 
-}
+
 
 void CPlayer::Update(float dt)
 {
@@ -357,11 +327,12 @@ void CPlayer::Stop()
 
 // ------------ Collision ------------
 
-void CPlayer::CollisionResponse(const Vector2& norm, float d, CObject* pObj)
+/*void CPlayer::CollisionResponse(const Vector2& norm, float d, CObject* pObj)
 {
     if (m_bDead) return;
     CObject::CollisionResponse(norm, d, pObj);
-}
+}*/ 
+//Pretty sure this isn't the intended collision response, but I commented it out incase there was a change I wasn't aware of
 
 // ------------ Movement Flags ------------
 

@@ -50,12 +50,10 @@ CObject* CObjectManager::create(eSprite t, const Vector2& pos) {
             CEnemy* pEnemy = new CEnemy(pos);      // create enemy
             pObj = pEnemy;                         // assign to base pointer
             m_enemies.push_back(pEnemy);           // store in enemy list
+            break;
         }
-        break;
-
-        default: pObj = new CObject(t, pos); break;
         case eSprite::shield: pObj = new CObject(eSprite::shield, pos); break;
-        default: pObj = new CObject(t, pos);
+        default: pObj = new CObject(t, pos); break;
         } 
     }
 
