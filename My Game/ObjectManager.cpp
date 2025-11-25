@@ -13,6 +13,7 @@
 #include "TileManager.h"
 #include "Furniture.h"
 #include "HealthBar.h"
+#include "Enemy.h"
 
 /// Create an object and put a pointer to it at the back of the object list
 /// `m_stdObjectList`, which it inherits from `LBaseObjectManager`.
@@ -42,6 +43,7 @@ CObject* CObjectManager::create(eSprite t, const Vector2& pos) {
         case eSprite::greatsword: pObj = new CBullet(eSprite::greatsword, pos); break;
         case eSprite::dagger: pObj = new CBullet(eSprite::dagger, pos); break;
         case eSprite::shield: pObj = new CObject(eSprite::shield, pos); break;
+        case eSprite::SkeletonStandDown: pObj = new CEnemy(pos); break;
         default: pObj = new CObject(t, pos);
         } 
     }

@@ -6,16 +6,17 @@
 class CEnemy : public CObject
 {
 public:
+    // Change constructor to take Vector2, matching usage in ObjectManager.cpp
     CEnemy(const Vector2& pos);
     ~CEnemy();
 
-    void Update(float dt);   // override OK
+    void Update(float dt);
     void Initialize();
 
-    void TakeDamage(int damage); // declare TakeDamage so other code can call it
+    void TakeDamage(int damage);
 
 private:
-    float m_fHealth = 0.0f; // health for the enemy
+    float m_fHealth = 0.0f;
     LEventTimer* m_pFrameEvent = nullptr;
     LEventTimer* m_pAttackCooldown = nullptr;
 };

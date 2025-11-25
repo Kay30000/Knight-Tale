@@ -37,7 +37,7 @@ SkeletonWalkRight, SkeletonWalkRightSpriteSheet, SkeletonWalkUp, SkeletonWalkUpS
 SkeletonWalkDown, SkeletonWalkDownSpriteSheet,
 //Skeleton Attack
 SkeletonAttackLeft, SkeletonAttackLeftSpriteSheet, SkeletonAttackRight, SkeletonAttackRightSpriteSheet,
-SkeletonAttackUp, SkeletonAttackUpSpriteSheet, SkeletonAttackDown, SkeletonAttackDownSpriteSheet, EnemySkeleton,
+SkeletonAttackUp, SkeletonAttackUpSpriteSheet, SkeletonAttackDown, SkeletonAttackDownSpriteSheet,
 Size  //MUST BE LAST
 
 }; //eSprite

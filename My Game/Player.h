@@ -72,6 +72,8 @@ public:
     const Vector2& GetPos() const;
 
     Vector2 GetDirectionVector();
+	float GetRadius() const { return m_fRadius; }
+
 }; 
 
 #endif 
