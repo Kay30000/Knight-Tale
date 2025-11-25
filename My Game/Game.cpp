@@ -9,6 +9,7 @@
 #include "ParticleEngine.h"
 #include "TileManager.h"
 #include "Turret.h"
+#include "HealthBar.h"
 
 #include "shellapi.h"
 

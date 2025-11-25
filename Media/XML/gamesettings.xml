@@ -27,7 +27,7 @@
 	  <sprite name="greatsword" file="greatsword.png"/>
 	  <sprite name="dagger" file="dagger.png"/>
 	  <sprite name="shield" file="shield.png"/>
-	  <!-- stand -->
+	  <!-- playerstand -->
 	  <sprite name="standleft" file="standleft.png"/>
 	  <sprite name="standright" file="standright.png"/>
 	  <sprite name="standup" file="standup.png"/>
@@ -86,10 +86,10 @@
 		  <frame index="6" left="600" top="0" right="700"  bottom="100"/>
 		  <frame index="7" left="700" top="0" right="800"  bottom="100"/>
 	  </sprite>
-	  
+
 	  <!-- player attack -->
 	  <!-- right&left-->
-	  <sprite name="attackrightsheet" file="attackrightsheet.png"/>
+	  <sprite name="attackrightsheet" file="attackright.png"/>
 	  <sprite name="attackright" sheet="attackrightsheet" frames="6">
 		  <frame index="0" left="0"   top="0" right="100" bottom="100"/>
 		  <frame index="1" left="100" top="0" right="200" bottom="100"/>
@@ -99,7 +99,8 @@
 		  <frame index="5" left="500" top="0" right="600" bottom="100"/>
 	  </sprite>
 
-	  <sprite name="attackleftsheet" file="attackleftsheet.png"/>
+
+	  <sprite name="attackleftsheet" file="attackleft.png"/>
 	  <sprite name="attackleft" sheet="attackleftsheet" frames="6">
 		  <frame index="5" left="0"   top="0" right="100" bottom="100"/>
 		  <frame index="4" left="100" top="0" right="200" bottom="100"/>
@@ -110,7 +111,8 @@
 	  </sprite>
 
 	  <!-- up&down-->
-	  <sprite name="attackupsheet" file="attackupsheet.png"/>
+
+	  <sprite name="attackupsheet" file="attackup.png"/>
 	  <sprite name="attackup" sheet="attackupsheet" frames="6">
 		  <frame index="0" left="0"   top="0" right="100" bottom="100"/>
 		  <frame index="1" left="100" top="0" right="200" bottom="100"/>
@@ -120,7 +122,8 @@
 		  <frame index="5" left="500" top="0" right="600" bottom="100"/>
 	  </sprite>
 
-	  <sprite name="attackdownsheet" file="attackdownsheet.png"/>
+
+	  <sprite name="attackdownsheet" file="attackdown.png"/>
 	  <sprite name="attackdown" sheet="attackdownsheet" frames="6">
 		  <frame index="0" left="0"   top="0" right="100" bottom="100"/>
 		  <frame index="1" left="100" top="0" right="200" bottom="100"/>
@@ -181,7 +184,9 @@
 		  <frame index="7" left="0" top="700"  right="100" bottom="800"/>
 	  </sprite>
 
-	  
+
+
+
   </sprites>
 
   <!-- sound -->
