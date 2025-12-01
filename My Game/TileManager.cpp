@@ -199,6 +199,8 @@ void CTileManager::LoadMap(char* filename){
 
   m_vecTurrets.clear(); //clear out the turret list
   m_vecFurniture.clear(); //clear out furniture list
+  m_vecPitFalls.clear(); //clear out pitfall list
+  m_vecSandTraps.clear(); //clear out sandtrap list 
 
   FILE *input; //input file handle
 
@@ -258,7 +260,22 @@ void CTileManager::LoadMap(char* filename){
         const Vector2 pos = m_fTileSize*Vector2(j + 0.5f, m_nHeight - i - 0.5f);
         m_vecTurrets.push_back(pos);
       } //if
-      
+      else if (c == 'b')
+      {
+		  m_chMap[i][j] = 'b'; //pitfall
+		  const Vector2 pos = m_fTileSize * Vector2(j,m_nHeight - i);
+          m_vecPitFalls.push_back(pos);
+      }
+      else if (c == 's')
+      {
+		  m_chMap[i][j] = 's'; //sandtrap
+          const Vector2 pos = m_fTileSize * Vector2(j, m_nHeight - i);
+		  m_vecSandTraps.push_back(pos);
+	  } 
+      else if (c == 'c')
+      {
+		  m_chMap[i][j] = 'b'; //Creates blackspace on map without pitfall for aesthetic purposes 
+      }
       else if (isdigit(c)) { //furniture
           m_chMap[i][j] = 'F'; //floor tile
           const Vector2 pos = m_fTileSize * Vector2(j + 0.5f, m_nHeight - i - 0.5f);
@@ -340,7 +357,9 @@ void CTileManager::Draw(eSprite t){
       switch(m_chMap[i][j]){ //select which frame of the tile sprite is to be drawn
 	  case 'F': desc.m_nCurrentFrame = 4;  break; // floor
       case 'W': desc.m_nCurrentFrame = 1;  break; //wall
-      case 'D': desc.m_nCurrentFrame = 3;  break; //One instance of Furniture
+      case 'D': desc.m_nCurrentFrame = 3;  break; //One instance of Tile Based Furniture
+	  case 'b': desc.m_nCurrentFrame = 5;  break; //pitfall
+	  case 's': desc.m_nCurrentFrame = 6;  break; //slow down tile(sand maybe???)
       default:  desc.m_nCurrentFrame = 2;  break; //error tile
       } //switch
 
@@ -451,3 +470,9 @@ const bool CTileManager::CollideWithWall(
 
   return hit;
 } //CollideWithWall
+
+
+void CTileManager::GetSandTrapsAndPitFalls(std::vector<Vector2>& sandtraps, std::vector<Vector2>& pitfalls) {
+    sandtraps = m_vecSandTraps;
+    pitfalls = m_vecPitFalls;
+}

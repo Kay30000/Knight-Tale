@@ -7,6 +7,8 @@
 #include "Object.h"
 #include "EventTimer.h"
 #include <iostream>
+#include "Common.h"
+
 
 
 class CPlayer : public CObject {
@@ -20,9 +22,11 @@ protected:
     bool m_bStrafeRight = false;
     bool m_bStrafeBack = false;
 
+	
     bool m_bAttacking = false;
     float m_fAttackDuration = 0.3f; // duration of attack animation
     float m_fAttackTimer = 0.0f;
+	
 
     LEventTimer* m_pFrameEvent = nullptr;
     LEventTimer* m_pBulletCooldown = nullptr;
@@ -40,6 +44,9 @@ protected:
     void UpdateFramenumber(); 
 
 public:
+	float resistance = 1; //Resistance to movement depending on tile effects
+	Vector2 lastSafePosition = Vector2(0, 0); //Last safe position before falling into a pitfall
+
     CPlayer(eSprite t, const Vector2& p);
     virtual ~CPlayer(); 
 
@@ -59,6 +66,9 @@ public:
     {
         return m_nMaxHealth;
     }
+
+    
+
 
     void WalkLeft();
     void WalkRight();

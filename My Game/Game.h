@@ -42,6 +42,10 @@ class CGame:
     void CreateObjects(); ///< Create game objects.
     void FollowCamera(); ///< Make camera follow player character.
     void ProcessGameState(); ///< Process game state.
+	void HandleTileEffects(); ///< Handle tile effects on player.
+
+    bool PlayerInPitfall(std::vector<Vector2> pitfalls);
+    
 
   public:
     ~CGame(); ///< Destructor.

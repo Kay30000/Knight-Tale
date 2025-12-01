@@ -22,6 +22,7 @@ CPlayer::CPlayer(eSprite t, const Vector2& p) : CObject(t, p) {
 	m_pFrameEvent = new LEventTimer(0.12f);
 	
 	m_fRadius = 16.0f; // player collision radius
+	lastSafePosition = p; // initialize last safe position
 
 	m_pBulletCooldown = new LEventTimer(COOLDOWN_BULLET);
 	m_pFireballCooldown = new LEventTimer(COOLDOWN_FIREBALL);
@@ -47,32 +48,37 @@ CPlayer::~CPlayer() {
 void CPlayer::move() {
 	CObject::move();
 
-	const float t = m_pTimer->GetFrameTime();
-	const float delta = m_fSpeed * t;
-
-	m_fRotSpeed = 0.0f;
-	NormalizeAngle(m_fRoll);
-
-
-	if (m_bStrafeBack || (m_fSpeed > 0.0f && !m_bStrafeRight && !m_bStrafeLeft)) {
-		m_vPos.y += delta;
-	}
+    
+    
+        const float t = m_pTimer->GetFrameTime();
+        const float delta = m_fSpeed * t * resistance;
 
 
-	if (m_bStrafeRight || m_bStrafeLeft) {
-		m_vPos.x += delta;
-	}
-
-	m_bStrafeLeft = m_bStrafeRight = m_bStrafeBack = false;
+        m_fRotSpeed = 0.0f;
+        NormalizeAngle(m_fRoll);
 
 
-	if (m_bShieldActive && m_pShieldObject) {
-		Vector2 playerDir = GetDirectionVector();
-		m_pShieldObject->m_vPos = m_vPos + playerDir * SHIELD_OFFSET;
-		m_pShieldObject->m_fRoll = m_fRoll;
-	}
+        if (m_bStrafeBack || (m_fSpeed > 0.0f && !m_bStrafeRight && !m_bStrafeLeft)) {
+            m_vPos.y += delta;
+        }
 
+
+        if (m_bStrafeRight || m_bStrafeLeft) {
+            m_vPos.x += delta;
+        }
+
+        m_bStrafeLeft = m_bStrafeRight = m_bStrafeBack = false;
+
+
+        if (m_bShieldActive && m_pShieldObject) {
+            Vector2 playerDir = GetDirectionVector();
+            m_pShieldObject->m_vPos = m_vPos + playerDir * SHIELD_OFFSET;
+            m_pShieldObject->m_fRoll = m_fRoll;
+        }
+
+    
 	UpdateFramenumber();
+
 }
 
 
@@ -239,6 +245,9 @@ void CPlayer::CollisionResponse(const Vector2& norm, float d, CObject* pObj) {
 
 void CPlayer::Update(float dt)
 {
+   
+
+
     if (m_bAttacking) {
         m_fAttackTimer += dt;
         if (m_fAttackTimer >= m_fAttackDuration) {
@@ -373,21 +382,25 @@ void CPlayer::DeathFX()
 
 void CPlayer::TakeDamage(int damage)
 {
-    if (m_bDead) return;
-    if (damage <= 0) return;
+    
+        if (m_bDead) return;
+        if (damage <= 0) return;
 
-    if (damage >= (int)m_nHealth) {
-        m_nHealth = 0;
-        m_bDead = true;
-        DeathFX();
-    }
-    else {
-        m_nHealth -= (UINT)damage;
-    }
+        if (damage >= (int)m_nHealth) {
+            m_nHealth = 0;
+            m_bDead = true;
+            DeathFX();
+        }
+        else {
+            m_nHealth -= (UINT)damage;
+        }
 
-    // small hit effect
-    LParticleDesc2D pd;
-    pd.m_vPos = m_vPos;
-    pd.m_nSpriteIndex = (UINT)eSprite::Smoke;
-    m_pParticleEngine->create(pd);
+        /*
+        // small hit effect
+        LParticleDesc2D pd;
+        pd.m_vPos = m_vPos;
+        pd.m_nSpriteIndex = (UINT)eSprite::Smoke;
+        m_pParticleEngine->create(pd);
+        */ //Commented out for ascetic purposes. No reason for a knight to smoke when hit.
+    
 }

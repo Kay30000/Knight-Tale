@@ -11,6 +11,7 @@
 #include "Turret.h"
 #include "HealthBar.h"
 
+
 #include "shellapi.h"
 
 /// Delete the renderer, the object manager, and the tile manager. The renderer
@@ -475,7 +476,8 @@ void CGame::FollowCamera(){
 /// Move the game objects. Render a frame of animation. 
 
 void CGame::ProcessFrame(){
-  KeyboardHandler(); //handle keyboard input
+    HandleTileEffects();
+    KeyboardHandler(); //handle keyboard input
   if (m_eGameState == eGameState::Paused) {
       RenderFrame();
       return;
@@ -518,3 +520,60 @@ void CGame::ProcessGameState(){
       break;
   } //switch
 } //CheckForEndOfGame
+
+void CGame::HandleTileEffects() {
+    if (m_pPlayer == nullptr) return; //safety
+
+    std::vector<Vector2> sandtraps;
+    std::vector<Vector2> pitfalls;
+    Vector2 pos = m_pPlayer->GetPos();
+    m_pTileManager->GetSandTrapsAndPitFalls(sandtraps, pitfalls);
+
+
+
+
+    for (Vector2 sandPos : sandtraps)
+    {
+        Vector2 temp = sandPos / m_pTileManager->m_fTileSize;
+        temp.x = temp.x + 1.0f;
+        temp.y = temp.y - 1.0f;
+        temp = temp * m_pTileManager->m_fTileSize;
+        m_pPlayer->resistance = 1; // reset player speed
+        if (pos.x > sandPos.x && pos.x < temp.x && pos.y < sandPos.y && pos.y > temp.y)
+        {
+            m_pPlayer->resistance = .5; // reduce player speed by half
+            break;
+        }
+
+    }
+    if (PlayerInPitfall(pitfalls))
+    {
+		m_pPlayer->TakeDamage(1); // Player takes 1 damage
+		m_pPlayer->m_vPos = m_pPlayer->lastSafePosition; // Move player back to last safe position
+    }
+    else
+    {
+		m_pPlayer->lastSafePosition = m_pPlayer->GetPos();
+    }
+
+}
+
+
+bool CGame::PlayerInPitfall(std::vector<Vector2> pitfalls)
+{
+    {
+        Vector2 pos = m_pPlayer->GetPos();
+        for (Vector2 pitPos : pitfalls)
+        {
+            Vector2 temp = pitPos / m_pTileManager->m_fTileSize;
+            temp.x = temp.x + 1.0f;
+            temp.y = temp.y - 1.0f;
+            temp = temp * m_pTileManager->m_fTileSize;
+            if (pos.x > pitPos.x && pos.x < temp.x && pos.y < pitPos.y && pos.y > temp.y)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+}
