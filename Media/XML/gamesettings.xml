@@ -27,6 +27,7 @@
 	  <sprite name="greatsword" file="greatsword.png"/>
 	  <sprite name="dagger" file="dagger.png"/>
 	  <sprite name="shield" file="shield.png"/>
+	  
 	  <!-- playerstand -->
 	  <sprite name="standleft" file="standleft.png"/>
 	  <sprite name="standright" file="standright.png"/>

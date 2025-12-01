@@ -285,16 +285,13 @@ void CGame::KeyboardHandler(){
               m_pPlayer->WalkLeft();
           }
       }
-
       if (!bMovementKeyHeld) {
           m_pPlayer->Stop();
       }
 
+      // Weapons
 
-
-
-
-
+      // Arrow
       if (m_pKeyboard->TriggerDown(VK_SPACE)) {
           if (m_pPlayer->m_pBulletCooldown->Triggered()) {
               Vector2 vDir = m_pPlayer->GetDirectionVector();
@@ -302,6 +299,7 @@ void CGame::KeyboardHandler(){
           }
       }
 
+      // Fireball
       if (m_pKeyboard->TriggerDown('Q')) {
           if (m_pPlayer->m_pFireballCooldown->Triggered()) {
               Vector2 vDir = m_pPlayer->GetDirectionVector();
@@ -309,6 +307,7 @@ void CGame::KeyboardHandler(){
           }
       }
 
+      // Regular Sword
       if (m_pKeyboard->TriggerDown('E')) {
           if (m_pPlayer->m_pSwordCooldown->Triggered()) {
               Vector2 vDir = m_pPlayer->GetDirectionVector();
@@ -316,6 +315,7 @@ void CGame::KeyboardHandler(){
           }
       }
 
+      // Great Sword
       if (m_pKeyboard->TriggerDown('R')) {
           if (m_pPlayer->m_pGreatswordCooldown->Triggered()) {
               Vector2 vDir = m_pPlayer->GetDirectionVector();
@@ -323,6 +323,7 @@ void CGame::KeyboardHandler(){
           }
       }
 
+      // Dagger
       if (m_pKeyboard->TriggerDown('T')) {
           if (m_pPlayer->m_pDaggerCooldown->Triggered()) {
               Vector2 vDir = m_pPlayer->GetDirectionVector();
@@ -330,9 +331,9 @@ void CGame::KeyboardHandler(){
           }
       }
 
-      // Trigger attack animation with 'J'
+      // Trigger attack animation with 
       if (m_pKeyboard->TriggerDown('J')) {
-        m_pPlayer->TriggerAttack();  // <- call a function inside CPlayer
+        m_pPlayer->TriggerAttack();  
 }
 
 
