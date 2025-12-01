@@ -12,6 +12,7 @@ public:
     void Update(float dt) override;   // override OK
 
     void TakeDamage(int damage); // declare TakeDamage so other code can call it
+    
 
 private:
     float m_fHealth = 0.0f; // health for the enemy

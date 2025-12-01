@@ -44,7 +44,7 @@ protected:
 
 public:
 
-
+    float resistance = 1; //Resistance to movement depending on tile effects
     
     bool isHealthBar = false;
     bool isFurniture = false; ///< Is furniture

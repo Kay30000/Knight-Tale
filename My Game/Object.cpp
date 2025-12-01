@@ -55,7 +55,7 @@ CObject::~CObject()
 } I'm not sure what move() is the intended behavior so I just commented out the first one*/
 void CObject::move(){
   if(!m_bDead && !m_bStatic)
-    m_vPos += m_vVelocity*m_pTimer->GetFrameTime();
+    m_vPos += m_vVelocity*m_pTimer->GetFrameTime() * resistance;
 
   if (m_bIsBullet && m_fMaxLifeSpan > 0.0f) {
       m_fTimeAlive += m_pTimer->GetFrameTime();

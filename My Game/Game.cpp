@@ -10,6 +10,7 @@
 #include "TileManager.h"
 #include "Turret.h"
 #include "HealthBar.h"
+#include "Enemy.h"
 
 
 #include "shellapi.h"
@@ -555,6 +556,7 @@ void CGame::HandleTileEffects() {
     {
 		m_pPlayer->lastSafePosition = m_pPlayer->GetPos();
     }
+
 
 }
 

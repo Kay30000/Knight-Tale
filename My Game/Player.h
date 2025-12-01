@@ -44,7 +44,7 @@ protected:
     void UpdateFramenumber(); 
 
 public:
-	float resistance = 1; //Resistance to movement depending on tile effects
+	
 	Vector2 lastSafePosition = Vector2(0, 0); //Last safe position before falling into a pitfall
 
     CPlayer(eSprite t, const Vector2& p);

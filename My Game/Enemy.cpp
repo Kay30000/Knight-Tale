@@ -19,6 +19,7 @@ CEnemy::CEnemy(const Vector2& pos) :
 	m_pAttackCooldown = new LEventTimer(2.0f); 
 	m_fSpeed = 80.0f; // enemy movement speed 
 	m_fRadius = 16.0f; 
+
 } 
 void CEnemy::Update(float dt) { 
 	CPlayer* pPlayer = m_pObjectManager->m_pPlayer; 
@@ -39,7 +40,7 @@ void CEnemy::Update(float dt) {
 
 		 Vector2 oldPos = m_vPos; 
 
-		 m_vVelocity = dir * m_fSpeed; 
+		 m_vVelocity = dir * m_fSpeed;
 		 CObject::move(); bool blocked = (m_vPos - oldPos).Length() < 1.0f; 
 		 
 		 m_vPos = oldPos; if (blocked) { 
