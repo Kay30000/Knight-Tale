@@ -21,6 +21,9 @@ class CObjectManager:
 	CObject* createFurniture(eSprite, const Vector2&, char); ///< Create new furniture object.
     
     virtual void draw(); ///< Draw all objects.
+    void Add(CObject* pObj) {
+        m_stdObjectList.push_back(pObj);
+    }
 
     void FireGun(CPlayer*, eSprite, const Vector2& vDir);
     const size_t GetNumTurrets() const; 

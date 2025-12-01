@@ -10,6 +10,8 @@
 #include "TileManager.h"
 #include "Turret.h"
 #include "HealthBar.h"
+#include "Enemy.h"
+#include "ObjectManager.h"
 
 #include "shellapi.h"
 
@@ -151,8 +153,11 @@ void CGame::CreateObjects() {
 
 
     for (const Vector2& pos : skeletonpos) {
-        m_pObjectManager->create(eSprite::SkeletonStandDown, pos);
+        CEnemy* pEnemy = new CEnemy(pos);
+        pEnemy->Initialize();
+        m_pObjectManager->Add(pEnemy);
     }
+
 
 
 

@@ -32,8 +32,16 @@ void CEnemy::Initialize() {
 	m_pRenderer = CObject::m_pRenderer;
 }
 
+void CEnemy::move() {
+	float dt = m_pTimer->GetFrameTime();
+	Update(dt);  // calls your main logic
+}
+
+
 void CEnemy::Update(float dt) {
 	if (!m_pObjectManager || !m_pTileManager || !m_pRenderer) return;
+	
+	OutputDebugStringA("CEnemy::Update called\n");
 
 	CPlayer* pPlayer = m_pObjectManager->m_pPlayer;
 	if (!pPlayer) return;
@@ -96,6 +104,7 @@ void CEnemy::Update(float dt) {
 				(UINT)eSprite::SkeletonWalkDownSpriteSheet;
 			if (m_pFrameEvent->Triggered()) {
 				UINT frames = m_pRenderer->GetNumFrames(m_nSpriteIndex);
+
 				m_nCurrentFrame = (m_nCurrentFrame + 1) % frames;
 			}
 		}

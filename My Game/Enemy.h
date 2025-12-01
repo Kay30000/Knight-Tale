@@ -12,6 +12,8 @@ public:
 
     void Update(float dt);
     void Initialize();
+    void move() override;
+
 
     void TakeDamage(int damage);
 

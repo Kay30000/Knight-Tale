@@ -48,6 +48,7 @@ class CObject:
       CObject* = nullptr);
     virtual void DeathFX(); 
 
+
     const Vector2 GetViewVector() const;
 
   public:
@@ -57,8 +58,7 @@ class CObject:
     CObject(eSprite, const Vector2&); ///< Constructor.
     virtual ~CObject(); ///< Destructor.
 
-
-    void move();
+    virtual void move() override;
     void draw();
 
 
