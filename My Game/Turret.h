@@ -26,13 +26,20 @@ class CTurret: public CObject{
     float m_fReturnRadius = 500.0f;
     float m_fReturnSpeed = 2.0f;
 
+
+
     Vector2 m_vHomePos;
 
   public:
     void InitializePatrol(const std::vector<Vector2>& points);
     CTurret(const Vector2& p); 
     virtual void move(); 
-    virtual void TakeDamage(int damage) ;
+    virtual void TakeDamage(int damage);
+
+    UINT m_nSpriteLeft = 0;
+    UINT m_nSpriteRight = 0;
+    UINT m_nSpriteUp = 0;
+    UINT m_nSpriteDown = 0;
 
 }; //CBullet
 

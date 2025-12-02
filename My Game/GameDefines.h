@@ -38,6 +38,14 @@ SkeletonWalkDown, SkeletonWalkDownSpriteSheet,
 //Skeleton Attack
 SkeletonAttackLeft, SkeletonAttackLeftSpriteSheet, SkeletonAttackRight, SkeletonAttackRightSpriteSheet,
 SkeletonAttackUp, SkeletonAttackUpSpriteSheet, SkeletonAttackDown, SkeletonAttackDownSpriteSheet,
+//Zombie Stand
+ZombieStandDown, ZombieStandLeft, ZombieStandRight, ZombieStandUp,
+//Zombie Walk
+ZombieWalkDown, ZombieWalkLeft, ZombieWalkRight, ZombieWalkUp,
+ZombieWalkDownSpriteSheet, ZombieWalkLeftSpriteSheet, 
+ZombieWalkRightSpriteSheet, ZombieWalkUpSpriteSheet,
+
+
 Size  //MUST BE LAST
 
 }; //eSprite

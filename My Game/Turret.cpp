@@ -9,6 +9,7 @@
 #include "Helpers.h"
 #include "Particle.h"
 #include "ParticleEngine.h"
+#include "GameDefines.h"
 
 /// Create and initialize a turret object given its position.
 /// \param p Position of turret.
@@ -86,6 +87,16 @@ void CTurret::move() {
             desiredDir.y = 0.0f;
         }
     }
+
+    if (vx > 0)
+        SetSprite(ZombieWalkRightSpriteSheet);
+    else if (vx < 0)
+        SetSprite(ZombieWalkLeftSpriteSheet);
+    else if (vy > 0)
+        SetSprite(ZombieWalkDownSpriteSheet);
+    else if (vy < 0)
+        SetSprite(ZombieWalkUpSpriteSheet);
+
 
     Vector2 nextPos = m_vPos + desiredDir * moveSpeed * t;
     BoundingSphere s(Vector3(nextPos), m_fRadius);
