@@ -27,6 +27,7 @@ class CZombie: public CObject{
     float m_fReturnSpeed = 2.0f;
     
     LEventTimer* m_pFrameEvent = nullptr;
+    Vector2 m_vLastDirection = Vector2::Zero;
 
 
 

@@ -90,16 +90,25 @@ void CZombie::move() {
         }
     }
 
-    if (desiredDir.x > 0)
-        ZombieWalkRight();
-    else if (desiredDir.x < 0)
-        ZombieWalkLeft();
-    else if (desiredDir.y > 0)
-        ZombieWalkDown();
-    else if (desiredDir.y < 0)
-        ZombieWalkUp();
-    else
-        ZombieStand();  // No movement = idle
+    if (desiredDir != m_vLastDirection) {
+        if (desiredDir.x > 0) {
+            ZombieWalkRight();
+        }
+        else if (desiredDir.x < 0) {
+            ZombieWalkLeft();
+        }
+        else if (desiredDir.y > 0) {
+            ZombieWalkDown();
+        }
+        else if (desiredDir.y < 0) {
+            ZombieWalkUp();
+        }
+        else {
+            ZombieStand();  // No movement = idle
+        }
+
+        m_vLastDirection = desiredDir;
+    }
 
 
 
