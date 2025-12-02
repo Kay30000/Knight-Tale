@@ -27,7 +27,9 @@ class CZombie: public CObject{
     float m_fReturnSpeed = 2.0f;
     
     LEventTimer* m_pFrameEvent = nullptr;
-    Vector2 m_vLastDirection = Vector2::Zero;
+    Vector2 m_vLastDirection = Vector2(0, 0);
+    bool m_bIsMoving = false;
+
 
 
 
@@ -48,10 +50,10 @@ class CZombie: public CObject{
     void ZombieStand();
 
 
-    UINT m_nSpriteLeft = 0;
+    /*UINT m_nSpriteLeft = 0;
     UINT m_nSpriteRight = 0;
     UINT m_nSpriteUp = 0;
-    UINT m_nSpriteDown = 0;
+    UINT m_nSpriteDown = 0;*/
 
 }; //CBullet
 

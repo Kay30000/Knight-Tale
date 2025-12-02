@@ -90,28 +90,32 @@ void CZombie::move() {
         }
     }
 
-    if (desiredDir != m_vLastDirection) {
-        if (desiredDir.x > 0) {
-            ZombieWalkRight();
-        }
-        else if (desiredDir.x < 0) {
-            ZombieWalkLeft();
-        }
-        else if (desiredDir.y > 0) {
-            ZombieWalkDown();
-        }
-        else if (desiredDir.y < 0) {
-            ZombieWalkUp();
-        }
-        else {
-            ZombieStand();  // No movement = idle
-        }
+    // Handle animation state
+    bool isMoving = desiredDir.x != 0 || desiredDir.y != 0;
 
-        m_vLastDirection = desiredDir;
+    if (isMoving) {
+        if (desiredDir != m_vLastDirection) {
+            if (desiredDir.x > 0)
+                ZombieWalkRight();
+            else if (desiredDir.x < 0)
+                ZombieWalkLeft();
+            else if (desiredDir.y > 0)
+                ZombieWalkDown();
+            else if (desiredDir.y < 0)
+                ZombieWalkUp();
+
+            m_vLastDirection = desiredDir;
+        }
+    }
+    else {
+        if (m_bIsMoving) {
+            ZombieStand();
+        }
     }
 
+    m_bIsMoving = isMoving;
 
-
+    // Movement and collision
     Vector2 nextPos = m_vPos + desiredDir * moveSpeed * t;
     BoundingSphere s(Vector3(nextPos), m_fRadius);
     Vector2 norm;
@@ -123,13 +127,14 @@ void CZombie::move() {
 
     m_vPos = nextPos;
 
+    // Animate
     const UINT n = (UINT)m_pRenderer->GetNumFrames(m_nSpriteIndex);
     if (n > 1 && m_pFrameEvent && m_pFrameEvent->Triggered())
         m_nCurrentFrame = (m_nCurrentFrame + 1) % n;
 
-
     m_fRotSpeed = 0.0f;
 }
+
 
 void CZombie::CollisionResponse(const Vector2& norm, float d, CObject* pObj) {
     if (m_bDead)return;
@@ -242,14 +247,18 @@ void CZombie::ZombieWalkDown() {
 void CZombie::ZombieStand() {
     switch (m_nSpriteIndex) {
     case (UINT)eSprite::ZombieWalkLeft:
-        m_nSpriteIndex = (UINT)eSprite::ZombieStandLeft; break;
+        m_nSpriteIndex = (UINT)eSprite::ZombieStandLeft;
+        break;
     case (UINT)eSprite::ZombieWalkRight:
-        m_nSpriteIndex = (UINT)eSprite::ZombieStandRight; break;
+        m_nSpriteIndex = (UINT)eSprite::ZombieStandRight;
+        break;
     case (UINT)eSprite::ZombieWalkUp:
-        m_nSpriteIndex = (UINT)eSprite::ZombieStandUp; break;
+        m_nSpriteIndex = (UINT)eSprite::ZombieStandUp;
+        break;
     case (UINT)eSprite::ZombieWalkDown:
     default:
-        m_nSpriteIndex = (UINT)eSprite::ZombieStandDown; break;
+        m_nSpriteIndex = (UINT)eSprite::ZombieStandDown;
+        break;
     }
     m_nCurrentFrame = 0;
 }
