@@ -15,8 +15,9 @@
 	
 	<sprite name="tile" file="tile" ext ="png" frames="5"/>
     <sprite name="turret" file="turret.png"/>
-    <sprite name="bullet" file="bullet.png"/>
-    <sprite name="bullet2" file="bullet2.png"/>
+	  <sprite name="stationaryturret" file="stationaryturret.png"/>
+	  <sprite name="bullet" file="bullet.png"/>
+    <sprite name="bulletenemy" file="bulletenemy.png"/>
     <sprite name="smoke" file="graysmoke.png"/>
     <sprite name="spark" file="spark.png"/>
 	<sprite name = "healthbar" file ="healthbar" ext="png" frames ="21"/>

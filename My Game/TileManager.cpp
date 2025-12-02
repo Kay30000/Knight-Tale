@@ -30,6 +30,7 @@ CTileManager::~CTileManager(){
 void CTileManager::LoadMapFromImageFile(char* filename) {
     m_vecTurrets.clear(); //clear turrets from previous level
 	m_vecFurniture.clear(); //clear furniture from previous level
+    m_vecStationaryTurrets.clear();
 
     if (m_chMap != nullptr) { //unload any previous maps
         for (int i = 0; i < m_nHeight; i++)
@@ -61,11 +62,12 @@ void CTileManager::LoadMapFromImageFile(char* filename) {
                 (buffer[index] == 0 && buffer[index + 1] == 0 && buffer[index + 2] == 0) ? 'W' : 'F'; //load character into map
             if (buffer[index] == 0 && buffer[index + 1] == 255 && buffer[index + 2] == 0)
                 m_vecTurrets.push_back(Vector2((float)j, m_nHeight - (float)i) * m_fTileSize);
-            index += channels;
-        } //for
+            
+            else if (buffer[index] == 0 && buffer[index + 1] == 0 && buffer[index + 2] == 255)
+                m_vecStationaryTurrets.push_back(Vector2((float)j, m_nHeight - (float)i) * m_fTileSize);
 
-      //finish up
-
+            index += channels;  
+        } 
     m_vWorldSize = Vector2((float)m_nWidth, (float)m_nHeight) * m_fTileSize;
     MakeBoundingBoxes();
 
@@ -199,6 +201,7 @@ void CTileManager::LoadMap(char* filename){
 
   m_vecTurrets.clear(); //clear out the turret list
   m_vecFurniture.clear(); //clear out furniture list
+  m_vecStationaryTurrets.clear();
 
   FILE *input; //input file handle
 
@@ -258,6 +261,12 @@ void CTileManager::LoadMap(char* filename){
         const Vector2 pos = m_fTileSize*Vector2(j + 0.5f, m_nHeight - i - 0.5f);
         m_vecTurrets.push_back(pos);
       } //if
+
+      else if (c == 'S') {
+          m_chMap[i][j] = 'F'; 
+          const Vector2 pos = m_fTileSize * Vector2(j + 0.5f, m_nHeight - i - 0.5f);
+          m_vecStationaryTurrets.push_back(pos);
+      }
       
       else if (isdigit(c)) { //furniture
           m_chMap[i][j] = 'F'; //floor tile

@@ -14,6 +14,8 @@
 #include "Furniture.h"
 #include "Enemy.h"
 #include "HealthBar.h"
+#include "StationaryTurret.h"
+#include "BulletEnemy.h"
 
 /// Create an object and put a pointer to it at the back of the object list
 /// `m_stdObjectList`, which it inherits from `LBaseObjectManager`.
@@ -32,14 +34,22 @@ CObject* CObjectManager::create(eSprite t, const Vector2& pos) {
         ) {
         
         pObj = new CPlayer(t, pos);
-        m_pPlayer = (CPlayer*)pObj;  // <-- restore this
+        m_pPlayer = (CPlayer*)pObj;  
     }
     
     else { 
         switch (t) { 
         case eSprite::Turret:  pObj = new CTurret(pos); break;
+        case eSprite::stationaryturret:
+        {
+            CStationaryTurret* pStatTurret = new CStationaryTurret(pos);
+            pObj = pStatTurret;
+            break;
+        }
+
+        case eSprite::bulletenemy: pObj = new CBulletEnemy(eSprite::bulletenemy, pos); break;
         case eSprite::Bullet:  pObj = new CBullet(eSprite::Bullet, pos); break;
-        case eSprite::Bullet2: pObj = new CBullet(eSprite::Bullet2, pos); break;
+        //case eSprite::Bullet2: pObj = new CBullet(eSprite::Bullet2, pos); break;
         case eSprite::Fireball: pObj = new CBullet(eSprite::Fireball, pos); break;
         case eSprite::sword: pObj = new CBullet(eSprite::sword, pos); break;
         case eSprite::greatsword: pObj = new CBullet(eSprite::greatsword, pos); break;
@@ -273,8 +283,45 @@ void CObjectManager::FireGun(CPlayer* pPlayer, eSprite t, const Vector2& vDir) {
     }
 }
 
-/// Reader function for the number of turrets. 
-/// \return Number of turrets in the object list.
+
+
+// For StationaryTurret
+void CObjectManager::FireGun(CObject* pObj, eSprite bullet) {
+    if (!pObj) return;
+
+    const Vector2 vDir = pObj->GetViewVector();
+
+   
+
+    m_pAudio->play(eSound::Gun); 
+
+    const float w0 = 0.5f * m_pRenderer->GetWidth(pObj->m_nSpriteIndex); 
+    const float w1 = m_pRenderer->GetWidth(bullet); 
+    const Vector2 pos = pObj->m_vPos + (w0 + w1) * vDir; 
+
+    CObject* pBullet = create(bullet, pos);
+
+    const Vector2 norm = VectorNormalCC(vDir); 
+    const float m = 2.0f * m_pRandom->randf() - 1.0f;
+    const Vector2 deflection = 0.01f * m * norm; 
+
+    float fEnemySpeed = 0.0f; 
+    float fBulletSpeed = 500.0f; 
+
+    pBullet->m_vVelocity = fEnemySpeed * vDir + fBulletSpeed * (vDir + deflection);
+    pBullet->m_fRoll = pObj->m_fRoll;
+
+    LParticleDesc2D d;
+    d.m_nSpriteIndex = (UINT)eSprite::Spark;
+    d.m_vPos = pos;
+    d.m_vVel = fEnemySpeed * vDir;
+    d.m_fLifeSpan = 0.25f;
+    d.m_fScaleInFrac = 0.4f;
+    d.m_fFadeOutFrac = 0.5f;
+    d.m_fMaxScale = 0.5f;
+    d.m_f4Tint = XMFLOAT4(Colors::Yellow);
+    m_pParticleEngine->create(d);
+}
 
 const size_t CObjectManager::GetNumTurrets() const{
   size_t n = 0; 

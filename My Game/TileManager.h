@@ -31,6 +31,7 @@ class CTileManager:
 
     std::vector<BoundingBox> m_vecWalls; ///< AABBs for the walls.
     std::vector<Vector2> m_vecTurrets;///< Turret positions.
+    std::vector<Vector2> m_vecStationaryTurrets;
     
  
     Vector2 m_vPlayer; ///< Player location.
@@ -51,6 +52,10 @@ class CTileManager:
     void LoadMap(char*); ///< Load a map.
     void Draw(eSprite); ///< Draw the map with a given tile.
     void DrawBoundingBoxes(eSprite); ///< Draw the bounding boxes.
+    const std::vector<Vector2>& GetTurrets() const { return m_vecTurrets; }
+    const std::vector<furniture>& GetFurniture() const { return m_vecFurniture; }
+    const Vector2& GetPlayerPos() const { return m_vPlayer; }
+    const std::vector<Vector2>& GetStationaryTurrets() const { return m_vecStationaryTurrets; }
     void GetObjects(std::vector<Vector2>&, std::vector<furniture>&, Vector2&); ///< Get objects.
     
     const bool Visible(const Vector2&, const Vector2&, float) const; ///< Check visibility.

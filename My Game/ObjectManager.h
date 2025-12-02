@@ -28,6 +28,7 @@ class CObjectManager:
     virtual void draw(); ///< Draw all objects.
 
     void FireGun(CPlayer*, eSprite, const Vector2& vDir);
+    void FireGun(CObject* pObj, eSprite t);
     const size_t GetNumTurrets() const; 
 }; //CObjectManager
 

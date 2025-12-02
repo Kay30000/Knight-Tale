@@ -51,10 +51,11 @@ void CGame::LoadImages(){
 
   m_pRenderer->Load(eSprite::Tile,    "tile"); 
   m_pRenderer->Load(eSprite::Bullet,  "bullet");
-  m_pRenderer->Load(eSprite::Bullet2, "bullet2");
+  m_pRenderer->Load(eSprite::bulletenemy, "bulletenemy");
   m_pRenderer->Load(eSprite::Smoke,   "smoke");
   m_pRenderer->Load(eSprite::Spark,   "spark");
   m_pRenderer->Load(eSprite::Turret,  "turret");
+  m_pRenderer->Load(eSprite::stationaryturret, "stationaryturret");
   m_pRenderer->Load(eSprite::Line,    "greenline");
   m_pRenderer->Load(eSprite::Furniture, "furniture");
   m_pRenderer->Load(eSprite::Fireball, "fireball");
@@ -115,41 +116,42 @@ void CGame::Release(){
 /// Ask the object manager to create a player object and turrets specified by
 /// the tile manager.
 
+
+
 void CGame::CreateObjects() {
-    std::vector<Vector2> turretpos; //vector of turret positions
-    std::vector<CTileManager::furniture> furniturepos; //vector of furniture positions
-    Vector2 playerpos; //player positions
+   
+    const std::vector<Vector2>& movingTurretPos = m_pTileManager->GetTurrets();
 
+    const std::vector<Vector2>& stationaryTurretPos = m_pTileManager->GetStationaryTurrets();
 
-    m_pTileManager->GetObjects(turretpos, furniturepos, playerpos); //get positions
+    const std::vector<CTileManager::furniture>& furniturepos = m_pTileManager->GetFurniture();
+    const Vector2& playerpos = m_pTileManager->GetPlayerPos(); 
 
-
-    for (const Vector2& pos : turretpos) {
+    for (const Vector2& pos : movingTurretPos) {
         CTurret* pTurret = (CTurret*)m_pObjectManager->create(eSprite::Turret, pos);
 
-
         std::vector<Vector2> patrolPath = {
-        pos,
-        pos + Vector2(100.0f, 0.0f)
+            pos,
+            pos + Vector2(100.0f, 0.0f)
         };
         pTurret->InitializePatrol(patrolPath);
     }
 
+    for (const Vector2& pos : stationaryTurretPos) {
+        m_pObjectManager->create(eSprite::stationaryturret, pos);
+    }
 
-    for (CTileManager::furniture furn : furniturepos)
-    {
+    for (CTileManager::furniture furn : furniturepos) {
         Vector2 pos = furn.location;
         m_pObjectManager->createFurniture(eSprite::Furniture, pos, furn.type);
     }
 
-
     m_pPlayer = (CPlayer*)m_pObjectManager->create(eSprite::PlayerStandDown, playerpos);
-
 
     if (m_pPlayer) {
         m_pPlayer->Stop();
     }
-} //CreateObjects
+} 
 
 /*
 void CGame::CreateObjects(){
