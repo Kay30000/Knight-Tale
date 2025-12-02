@@ -27,25 +27,15 @@ PlayerStandLeft, PlayerStandRight,
 PlayerStandUp, PlayerStandDown,
 //Player Attack
 PlayerAttackLeft, PlayerAttackLeftSpriteSheet,
-PlayerAttackRight, PlayerAttackRightSpriteSheet, PlayerAttackUp, PlayerAttackUpSpriteSheet, PlayerAttackDown, PlayerAttackDownSpriteSheet,
-//Enemy Skeleton Stand
-SkeletonStandLeft, SkeletonStandRight,
-SkeletonStandUp, SkeletonStandDown,
-//Enemy Skeleton Walk
-SkeletonWalkLeft, SkeletonWalkLeftSpriteSheet,
-SkeletonWalkRight, SkeletonWalkRightSpriteSheet, SkeletonWalkUp, SkeletonWalkUpSpriteSheet,
-SkeletonWalkDown, SkeletonWalkDownSpriteSheet,
-//Skeleton Attack
-SkeletonAttackLeft, SkeletonAttackLeftSpriteSheet, SkeletonAttackRight, SkeletonAttackRightSpriteSheet,
-SkeletonAttackUp, SkeletonAttackUpSpriteSheet, SkeletonAttackDown, SkeletonAttackDownSpriteSheet,
+PlayerAttackRight, PlayerAttackRightSpriteSheet, PlayerAttackUp, 
+PlayerAttackUpSpriteSheet, PlayerAttackDown, PlayerAttackDownSpriteSheet,
 //Zombie Stand
 ZombieStandDown, ZombieStandLeft, ZombieStandRight, ZombieStandUp,
 //Zombie Walk
-ZombieWalkDown, ZombieWalkLeft, ZombieWalkRight, ZombieWalkUp,
-ZombieWalkDownSpriteSheet, ZombieWalkLeftSpriteSheet, 
-ZombieWalkRightSpriteSheet, ZombieWalkUpSpriteSheet,
-
-
+ZombieWalkLeftSpriteSheet, ZombieWalkLeft,
+ZombieWalkRightSpriteSheet, ZombieWalkRight,
+ZombieWalkUpSpriteSheet, ZombieWalkUp,
+ZombieWalkDownSpriteSheet, ZombieWalkDown,
 Size  //MUST BE LAST
 
 }; //eSprite

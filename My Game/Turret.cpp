@@ -9,15 +9,14 @@
 #include "Helpers.h"
 #include "Particle.h"
 #include "ParticleEngine.h"
-#include "GameDefines.h"
 
 /// Create and initialize a turret object given its position.
 /// \param p Position of turret.
 
-CTurret::CTurret(const Vector2& p): CObject(eSprite::Turret, p){
-  m_bStatic = true; //turrets are static
-  m_fPatrolSpeed = 70.0f;
-  m_vHomePos = p; // store spawn position
+CTurret::CTurret(const Vector2& p) : CObject(eSprite::Turret, p) {
+    m_bStatic = true; //turrets are static
+    m_fPatrolSpeed = 70.0f;
+    m_vHomePos = p; // store spawn position
 } //constructor
 
 void CTurret::InitializePatrol(const std::vector<Vector2>& points) {
@@ -88,16 +87,6 @@ void CTurret::move() {
         }
     }
 
-    if (vx > 0)
-        SetSprite(ZombieWalkRightSpriteSheet);
-    else if (vx < 0)
-        SetSprite(ZombieWalkLeftSpriteSheet);
-    else if (vy > 0)
-        SetSprite(ZombieWalkDownSpriteSheet);
-    else if (vy < 0)
-        SetSprite(ZombieWalkUpSpriteSheet);
-
-
     Vector2 nextPos = m_vPos + desiredDir * moveSpeed * t;
     BoundingSphere s(Vector3(nextPos), m_fRadius);
     Vector2 norm;
@@ -149,7 +138,7 @@ void CTurret::CollisionResponse(const Vector2& norm, float d, CObject* pObj) {
 
 void CTurret::TakeDamage(int damage) {
     if (m_bDead) return;
-  
+
     if (m_nHealth > (UINT)damage) {
         m_nHealth -= damage;
     }
@@ -165,7 +154,7 @@ void CTurret::TakeDamage(int damage) {
     else {
         m_pAudio->play(eSound::Clang);
         const float f = 0.5f + 0.5f * (float)m_nHealth / m_nMaxHealth;
-        m_f4Tint = XMFLOAT4(1.0f, f, f, 0); 
+        m_f4Tint = XMFLOAT4(1.0f, f, f, 0);
     }
 }
 
@@ -189,4 +178,4 @@ void CTurret::DeathFX() {
     d.m_fFadeOutFrac = 0.5f;
     d.m_f4Tint = XMFLOAT4(Colors::Orange);
     m_pParticleEngine->create(d);
-} 
+}

@@ -5,6 +5,7 @@
 #include "ComponentIncludes.h"
 
 #include "Player.h"
+#include "Zombie.h"
 #include "Turret.h"
 #include "Bullet.h"
 #include "ParticleEngine.h"
@@ -36,6 +37,7 @@ CObject* CObjectManager::create(eSprite t, const Vector2& pos) {
     else { 
         switch (t) { 
         case eSprite::Turret:  pObj = new CTurret(pos); break;
+        case eSprite::ZombieStandDown: pObj = new CZombie(pos); break;
         case eSprite::Bullet:  pObj = new CBullet(eSprite::Bullet, pos); break;
         case eSprite::Bullet2: pObj = new CBullet(eSprite::Bullet2, pos); break;
         case eSprite::Fireball: pObj = new CBullet(eSprite::Fireball, pos); break;
@@ -43,7 +45,8 @@ CObject* CObjectManager::create(eSprite t, const Vector2& pos) {
         case eSprite::greatsword: pObj = new CBullet(eSprite::greatsword, pos); break;
         case eSprite::dagger: pObj = new CBullet(eSprite::dagger, pos); break;
         case eSprite::shield: pObj = new CObject(eSprite::shield, pos); break;
-        case eSprite::SkeletonStandDown: pObj = new CEnemy(pos); break;
+
+
         default: pObj = new CObject(t, pos);
         } 
     }
@@ -245,15 +248,15 @@ void CObjectManager::FireGun(CPlayer* pPlayer, eSprite t, const Vector2& vDir) {
     }
 }
 
-/// Reader function for the number of turrets. 
-/// \return Number of turrets in the object list.
+/// Reader function for the number of Zombies. 
+/// \return Number of Zombies in the object list.
 
 const size_t CObjectManager::GetNumTurrets() const{
   size_t n = 0; 
   
-  for(CObject* pObj: m_stdObjectList) 
+  for(CObject* pObj: m_stdObjectList)
     if(pObj->m_nSpriteIndex == (UINT)eSprite::Turret)
       n++;
 
   return n;
-} //GetNumTurrets
+} //GetNumZombies

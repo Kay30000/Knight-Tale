@@ -162,7 +162,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Common.cpp" />
-    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Furniture.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="HealthBar.cpp" />
@@ -174,10 +173,10 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="TileManager.cpp" />
     <ClCompile Include="Turret.cpp" />
+    <ClCompile Include="Zombie.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
-    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Furniture.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameDefines.h" />
@@ -190,6 +189,7 @@
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="TileManager.h" />
     <ClInclude Include="Turret.h" />
+    <ClInclude Include="Zombie.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="My Game.rc" />

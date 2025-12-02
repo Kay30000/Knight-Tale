@@ -44,15 +44,18 @@ class CTileManager:
     struct furniture {
         Vector2 location;
         char type;
+    
     };
+
+    std::vector<Vector2> m_vecZombies;
     std::vector<furniture> m_vecFurniture;
 
     void LoadMapFromImageFile(char*); ///< Load map.
     void LoadMap(char*); ///< Load a map.
     void Draw(eSprite); ///< Draw the map with a given tile.
     void DrawBoundingBoxes(eSprite); ///< Draw the bounding boxes.
-    void GetObjects(std::vector<Vector2>&, std::vector<furniture>&, Vector2&); ///< Get objects.
-    
+    void GetObjects(std::vector<Vector2>& turrets, std::vector<furniture>& furniture,
+        Vector2& player, std::vector<Vector2>& zombies) const; ///< Get objects.
     const bool Visible(const Vector2&, const Vector2&, float) const; ///< Check visibility.
     const bool CollideWithWall(BoundingSphere, Vector2&, float&) const; ///< Object-wall collision test.
 }; //CTileManager

@@ -8,6 +8,7 @@
 #include "ComponentIncludes.h"
 #include "ParticleEngine.h"
 #include "TileManager.h"
+#include "Zombie.h"
 #include "Turret.h"
 #include "HealthBar.h"
 #include "Enemy.h"
@@ -88,16 +89,18 @@ void CGame::LoadImages(){
   m_pRenderer->Load(eSprite::HealthBar, "healthbar");
   m_pRenderer->Load(eSprite::HealthBar, "healthbar");
 
-  m_pRenderer->Load(eSprite::SkeletonStandLeft, "skeletonstandleft");
-  m_pRenderer->Load(eSprite::SkeletonStandRight, "skeletonstandright");
-  m_pRenderer->Load(eSprite::SkeletonStandUp, "skeletonstandup");
-  m_pRenderer->Load(eSprite::SkeletonStandDown, "skeletonstanddown");
-  m_pRenderer->Load(eSprite::SkeletonWalkLeftSpriteSheet, "skeletonwalkleftsheet");
-  m_pRenderer->Load(eSprite::SkeletonWalkRightSpriteSheet, "skeletonwalkrightsheet");
-  m_pRenderer->Load(eSprite::SkeletonWalkUpSpriteSheet, "skeletonwalkupsheet");
-  m_pRenderer->Load(eSprite::SkeletonWalkDownSpriteSheet, "skeletonwalkdownsheet");
-
-  
+  m_pRenderer->Load(eSprite::ZombieStandLeft, "zombiestandleft");
+  m_pRenderer->Load(eSprite::ZombieStandRight, "zombiestandright");
+  m_pRenderer->Load(eSprite::ZombieStandUp, "zombiestandup");
+  m_pRenderer->Load(eSprite::ZombieStandDown, "zombiestanddown");
+  m_pRenderer->Load(eSprite::ZombieWalkLeftSpriteSheet, "zombiewalkleftsheet");
+  m_pRenderer->Load(eSprite::ZombieWalkLeft, "zombiewalkleft");
+  m_pRenderer->Load(eSprite::ZombieWalkRightSpriteSheet, "zombiewalkrightsheet");
+  m_pRenderer->Load(eSprite::ZombieWalkRight, "zombiewalkright");
+  m_pRenderer->Load(eSprite::ZombieWalkUpSpriteSheet, "zombiewalkupsheet");
+  m_pRenderer->Load(eSprite::ZombieWalkUp, "zombiewalkup");
+  m_pRenderer->Load(eSprite::ZombieWalkDownSpriteSheet, "zombiewalkdownsheet");
+  m_pRenderer->Load(eSprite::ZombieWalkDown, "zombiewalkdown");
 
   m_pRenderer->EndResourceUpload();
 } //LoadImages
@@ -122,22 +125,21 @@ void CGame::Release(){
   m_pRenderer = nullptr; //for safety
 } //Release
 
-/// Ask the object manager to create a player object and turrets specified by
+/// Ask the object manager to create a player object and Turrets specified by
 /// the tile manager.
 
 void CGame::CreateObjects() {
-    std::vector<Vector2> skeletonpos; //vector of skeleton enemy positions
-    std::vector<Vector2> turretpos; //vector of turret positions
+    std::vector<Vector2> turretpos; //vector of Turret positions
     std::vector<CTileManager::furniture> furniturepos; //vector of furniture positions
     Vector2 playerpos; //player positions
+    std::vector<Vector2> zombiepos;
 
 
-    m_pTileManager->GetObjects(turretpos, furniturepos, playerpos); //get positions
+    m_pTileManager->GetObjects(turretpos, furniturepos, playerpos, zombiepos); //get positions
 
 
     for (const Vector2& pos : turretpos) {
         CTurret* pTurret = (CTurret*)m_pObjectManager->create(eSprite::Turret, pos);
-
 
         std::vector<Vector2> patrolPath = {
         pos,
@@ -146,20 +148,18 @@ void CGame::CreateObjects() {
         pTurret->InitializePatrol(patrolPath);
     }
 
-    skeletonpos = {
-    Vector2(5 * 32.0f, 5 * 32.0f),
-    Vector2(10 * 32.0f, 12 * 32.0f)
-    };
+    for (const Vector2& pos : zombiepos) {
+        CZombie* pZombie = (CZombie*)m_pObjectManager->create(eSprite::ZombieStandDown, pos);
 
-
-    for (const Vector2& pos : skeletonpos) {
-        CEnemy* pEnemy = new CEnemy(pos);
-        pEnemy->Initialize();
-        m_pObjectManager->Add(pEnemy);
+        std::vector<Vector2> patrolPath = {
+            pos,
+            pos + Vector2(100.0f, 0.0f)
+        };
+        pZombie->InitializePatrol(patrolPath);
     }
 
 
-
+    
 
     for (CTileManager::furniture furn : furniturepos)
     {
@@ -169,6 +169,7 @@ void CGame::CreateObjects() {
 
 
     m_pPlayer = (CPlayer*)m_pObjectManager->create(eSprite::PlayerStandDown, playerpos);
+
 
 
     if (m_pPlayer) {
@@ -474,7 +475,7 @@ void CGame::ProcessFrame(){
 } //ProcessFrame
 
 /// Take action appropriate to the current game state. If the game is currently
-/// playing, then if the player has been killed or all turrets have been
+/// playing, then if the player has been killed or all Zombies have been
 /// killed, then enter the wait state. If the game has been in the wait
 /// state for longer than 3 seconds, then restart the game.
 
@@ -496,5 +497,5 @@ void CGame::ProcessGameState(){
         BeginGame(); //restart game
       } //if
       break;
-  } //switch
+  } //switcha
 } //CheckForEndOfGame

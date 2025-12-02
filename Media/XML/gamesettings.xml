@@ -9,7 +9,6 @@
   <font file="Media\Fonts\AverageSans_24.spritefont"/>
 
   <!-- sprites -->
-
   <sprites path="Media\Images">
 
 	<sprite name="tile" file="tile" ext ="png" frames="5"/>
@@ -84,9 +83,6 @@
 		  <frame index="6" left="600" top="0" right="700" bottom="100"/>
 		  <frame index="7" left="700" top="0" right="800" bottom="100"/>
 	  </sprite>
-
-	  
-
 
 	  <!-- player attack -->
 	  <!-- right&left-->
