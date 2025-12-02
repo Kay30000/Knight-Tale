@@ -87,7 +87,7 @@ const float DAGGER_LIFESPAN = 0.05f;
 const float DAGGER_OFFSET = 67.0f;
 
 // Cooldowns
-const float COOLDOWN_BULLET = 0.5f;
+const float COOLDOWN_BULLET = 0.1f;
 const float COOLDOWN_FIREBALL = 1.2f;
 const float COOLDOWN_SWORD = 0.5f;
 const float COOLDOWN_GREATSWORD = 1.5f;

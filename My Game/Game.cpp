@@ -221,7 +221,9 @@ void CGame::KeyboardHandler(){
       m_nNextLevel = (m_nNextLevel + 1) % 4;
       BeginGame();
   } 
-
+  
+  
+    
   
   if(m_pKeyboard->TriggerDown(VK_F1)) //help
     ShellExecute(0, 0, "https://larc.unt.edu/code/topdown/", 0, 0, SW_SHOW);
@@ -250,6 +252,7 @@ void CGame::KeyboardHandler(){
   }
 
   if (m_eGameState != eGameState::Paused && m_pPlayer) {
+      int playerWeapon = m_pPlayer->weaponEquipped;
       m_pPlayer->SetRotSpeed(0.0f);
 
       float fTargetSpeed = 0.0f;
@@ -292,13 +295,60 @@ void CGame::KeyboardHandler(){
       // Weapons
 
       // Arrow
-      if (m_pKeyboard->TriggerDown(VK_SPACE)) {
+      if (m_pKeyboard->Down('I') && m_pKeyboard->Down('L') && !m_pKeyboard->Down('K') && !m_pKeyboard->Down('J'))
+      {
           if (m_pPlayer->m_pBulletCooldown->Triggered()) {
-              Vector2 vDir = m_pPlayer->GetDirectionVector();
-              m_pObjectManager->FireGun(m_pPlayer, eSprite::Bullet, vDir);
+              Vector2 vDir(.707, .707);
+              m_pObjectManager->FireGun(m_pPlayer, eSprite::Bullet, vDir, playerWeapon);
+		  }
+      }
+      else if (m_pKeyboard->Down('I') && m_pKeyboard->Down('J') && !m_pKeyboard->Down('K') && !m_pKeyboard->Down('L'))
+      {
+          if (m_pPlayer->m_pBulletCooldown->Triggered()) {
+              Vector2 vDir(-.707, .707);
+              m_pObjectManager->FireGun(m_pPlayer, eSprite::Bullet, vDir, playerWeapon);
+          }
+      }
+      else if (m_pKeyboard->Down('J') && m_pKeyboard->Down('K') && !m_pKeyboard->Down('I') && !m_pKeyboard->Down('L'))
+      {
+          if (m_pPlayer->m_pBulletCooldown->Triggered()) {
+              Vector2 vDir(-.707, -.707);
+              m_pObjectManager->FireGun(m_pPlayer, eSprite::Bullet, vDir, playerWeapon);
+          }
+      }
+      else if (m_pKeyboard->Down('K') && m_pKeyboard->Down('L') && !m_pKeyboard->Down('I') && !m_pKeyboard->Down('J'))
+      {
+          if (m_pPlayer->m_pBulletCooldown->Triggered()) {
+              Vector2 vDir(.707, -.707);
+              m_pObjectManager->FireGun(m_pPlayer, eSprite::Bullet, vDir, playerWeapon);
+          }
+      }
+      else if (m_pKeyboard->Down('L')) {
+          if (m_pPlayer->m_pBulletCooldown->Triggered()) {
+              Vector2 vDir(1,0);
+              m_pObjectManager->FireGun(m_pPlayer, eSprite::Bullet, vDir, playerWeapon);
+          }
+      }
+      else if (m_pKeyboard->Down('J')) {
+          if (m_pPlayer->m_pBulletCooldown->Triggered()) {
+              Vector2 vDir(-1, 0);
+              m_pObjectManager->FireGun(m_pPlayer, eSprite::Bullet, vDir, playerWeapon);
+          }
+      }
+      else if (m_pKeyboard->Down('I')) {
+          if (m_pPlayer->m_pBulletCooldown->Triggered()) {
+              Vector2 vDir(0, 1);
+              m_pObjectManager->FireGun(m_pPlayer, eSprite::Bullet, vDir, playerWeapon);
+          }
+      }
+      else if (m_pKeyboard->Down('K')) {
+          if (m_pPlayer->m_pBulletCooldown->Triggered()) {
+              Vector2 vDir(0, -1);
+              m_pObjectManager->FireGun(m_pPlayer, eSprite::Bullet, vDir, playerWeapon);
           }
       }
 
+      /*
       // Fireball
       if (m_pKeyboard->TriggerDown('Q')) {
           if (m_pPlayer->m_pFireballCooldown->Triggered()) {
@@ -331,10 +381,7 @@ void CGame::KeyboardHandler(){
           }
       }
 
-      // Trigger attack animation with 
-      if (m_pKeyboard->TriggerDown('J')) {
-        m_pPlayer->TriggerAttack();  
-}
+      */
 
 
 

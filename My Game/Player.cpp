@@ -12,6 +12,7 @@
 CPlayer::CPlayer(eSprite t, const Vector2& p) : CObject(t, p) {
 	
 	m_bIsTarget = true;
+	weaponEquipped = 1; // start with default weapon
 
 	m_fSpeed = 0.0f; 
 	m_bStrafeLeft = false;

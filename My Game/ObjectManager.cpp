@@ -190,7 +190,7 @@ void CObjectManager::FireGun(CPlayer* pPlayer, eSprite t, const Vector2& vDir) {
     float fSpeed = 500.0f;
     float fLifeSpan = 0.0f;
 
-    const float w0 = 0.5f * m_pRenderer->GetWidth(pPlayer->m_nSpriteIndex);
+    const float w0 = 0.1f * m_pRenderer->GetWidth(pPlayer->m_nSpriteIndex);
     const float w1 = m_pRenderer->GetWidth(t);
     float fLaunchDistance = w0 + w1;
 
@@ -224,10 +224,7 @@ void CObjectManager::FireGun(CPlayer* pPlayer, eSprite t, const Vector2& vDir) {
         m_pAudio->stop(eSound::Gun);
         m_pAudio->play(eSound::Clang);
     }
-    else {
-
-        m_pAudio->play(eSound::Gun);
-    }
+    
 
 
     const Vector2 pos = pPlayer->m_vPos + fLaunchDistance * vDir;
@@ -285,3 +282,135 @@ const size_t CObjectManager::GetNumTurrets() const{
 
   return n;
 } //GetNumTurrets
+
+
+//alternate version of FirGun that includes weapon type for player
+void CObjectManager::FireGun(CPlayer* pPlayer, eSprite t, const Vector2& vDir, int weapon) {
+    float fSpeed = 500.0f;
+    float fLifeSpan = 0.0f;
+
+    Vector2 vDirUp;
+	Vector2 vDirDown;
+
+    const float w0 = 0.1f * m_pRenderer->GetWidth(pPlayer->m_nSpriteIndex);
+   
+    switch (weapon)
+    {
+	case 0: t = eSprite::Bullet; fSpeed = 500.0f; fLifeSpan = 2.0f; break;
+    case 1: t = eSprite::dagger; fSpeed = 500.00; fLifeSpan = 2.0f; break;
+    case 2:
+    default: break;
+    }
+
+    const float w1 = m_pRenderer->GetWidth(t);
+    float fLaunchDistance = w0 + w1;
+
+
+    float xUp = cos(acos(vDir.x)+.262);
+    float xDown = cos(acos(vDir.x) - .262);
+
+	float yUp = sin(asin(vDir.y) + .262);
+	float yDown = sin(asin(vDir.y) - .262);
+
+    if ((vDir.x < 0 && vDir.y > 0) || (vDir.x > 0 && vDir.y < 0))
+    {
+        vDirUp = Vector2(xDown, yUp);
+        vDirDown = Vector2(xUp, yDown);
+    }
+    else
+    {
+        vDirUp = Vector2(xUp, yUp);
+        vDirDown = Vector2(xDown, yDown);
+    }
+	
+
+    const Vector2 pos = pPlayer->m_vPos + fLaunchDistance * vDir;
+	const Vector2 posUp = pPlayer->m_vPos + fLaunchDistance * vDirUp;
+	const Vector2 posDown = pPlayer->m_vPos + fLaunchDistance * vDirDown;
+   
+
+    switch (weapon)
+    {
+    case 0: 
+    {
+        CObject* pBullet = create(t, pos);
+        pBullet->m_fMaxLifeSpan = fLifeSpan;
+        pBullet->m_fTimeAlive = 0.0f;
+
+        const Vector2 norm = VectorNormalCC(vDir);
+        const float m = 2.0f * m_pRandom->randf() - 1.0f;
+        const Vector2 deflection = 0.01f * m * norm;
+
+        pBullet->m_vVelocity = pPlayer->m_vVelocity + fSpeed * (vDir + deflection);
+        pBullet->m_fRoll = pPlayer->m_fRoll;
+        break;
+    }
+    case 1:
+    {
+            CObject* pBullet = create(t, posUp);
+            pBullet->m_fMaxLifeSpan = fLifeSpan;
+            pBullet->m_fTimeAlive = 0.0f;
+
+            const Vector2 norm = VectorNormalCC(vDirUp);
+            const float m = 2.0f * m_pRandom->randf() - 1.0f;
+            const Vector2 deflection = 0.01f * m * norm;
+
+            pBullet->m_vVelocity = pPlayer->m_vVelocity + fSpeed * (vDirUp + deflection);
+            pBullet->m_fRoll = pPlayer->m_fRoll;
+
+            CObject* pBullet2 = create(t, pos);
+            pBullet2->m_fMaxLifeSpan = fLifeSpan;
+            pBullet2->m_fTimeAlive = 0.0f;
+
+            const Vector2 norm2 = VectorNormalCC(vDir);
+            const float m2 = 2.0f * m_pRandom->randf() - 1.0f;
+            const Vector2 deflection2 = 0.01f * m2 * norm2;
+
+            pBullet2->m_vVelocity = pPlayer->m_vVelocity + fSpeed * (vDir + deflection2);
+            pBullet2->m_fRoll = pPlayer->m_fRoll;
+
+            CObject* pBullet3 = create(t, posDown);
+            pBullet3->m_fMaxLifeSpan = fLifeSpan;
+            pBullet3->m_fTimeAlive = 0.0f;
+
+            const Vector2 norm3 = VectorNormalCC(vDirDown);
+            const float m3 = 2.0f * m_pRandom->randf() - 1.0f;
+            const Vector2 deflection3 = 0.01f * m3 * norm3;
+
+            pBullet3->m_vVelocity = pPlayer->m_vVelocity + fSpeed * (vDirDown + deflection3);
+            pBullet3->m_fRoll = pPlayer->m_fRoll;
+        
+    }
+    case 2:
+    default: break;
+    }
+    
+    
+
+
+    LParticleDesc2D d;
+
+    if (t != eSprite::Fireball && t != eSprite::sword) {
+        d.m_nSpriteIndex = (UINT)eSprite::Spark;
+        d.m_vPos = pos;
+        d.m_vVel = pPlayer->m_fSpeed * vDir;
+        d.m_fLifeSpan = 0.25f;
+        d.m_fScaleInFrac = 0.4f;
+        d.m_fFadeOutFrac = 0.5f;
+        d.m_fMaxScale = 0.5f;
+        d.m_f4Tint = XMFLOAT4(Colors::Yellow);
+        m_pParticleEngine->create(d);
+    }
+
+    if (t == eSprite::Fireball) {
+        d.m_nSpriteIndex = (UINT)eSprite::Smoke;
+        d.m_vPos = pos;
+        d.m_vVel = pPlayer->m_fSpeed * vDir * 0.5f;
+        d.m_fLifeSpan = 0.5f;
+        d.m_fScaleInFrac = 0.4f;
+        d.m_fFadeOutFrac = 0.5f;
+        d.m_fMaxScale = 1.0f;
+        d.m_f4Tint = XMFLOAT4(Colors::Red);
+        m_pParticleEngine->create(d);
+    }
+}

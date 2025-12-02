@@ -40,6 +40,7 @@ protected:
     void UpdateFramenumber(); 
 
 public:
+	int weaponEquipped; // 0 = default, 1 = scattershot, 2 = fireball
     CPlayer(eSprite t, const Vector2& p);
     virtual ~CPlayer(); 
 

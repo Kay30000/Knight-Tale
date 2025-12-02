@@ -25,7 +25,7 @@ CBullet::CBullet(eSprite t, const Vector2& p): CObject(t, p){
 
 void CBullet::CollisionResponse(const Vector2& norm, float d, CObject* pObj){
   if(pObj == nullptr) //collide with edge of world
-    m_pAudio->play(eSound::Ricochet);
+    //m_pAudio->play(eSound::Ricochet);
 
   //bullets die on collision
 
