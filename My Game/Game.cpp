@@ -149,7 +149,10 @@ void CGame::CreateObjects() {
     }
 
     for (const Vector2& pos : zombiepos) {
-        CZombie* pZombie = (CZombie*)m_pObjectManager->create(eSprite::ZombieStandDown, pos);
+        //CZombie* pZombie = (CZombie*)m_pObjectManager->create(eSprite::ZombieStandDown, pos);
+        CZombie* pZombie = new CZombie(pos);
+        m_pObjectManager->Add(pZombie);
+
 
         std::vector<Vector2> patrolPath = {
             pos,
@@ -158,8 +161,6 @@ void CGame::CreateObjects() {
         pZombie->InitializePatrol(patrolPath);
     }
 
-
-    
 
     for (CTileManager::furniture furn : furniturepos)
     {

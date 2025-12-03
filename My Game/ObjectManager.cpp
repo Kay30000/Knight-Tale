@@ -79,6 +79,16 @@ CObject* CObjectManager::createFurniture(eSprite t, const Vector2& pos, char typ
 /// Draw the tiled background and the objects in the object list.
 
 void CObjectManager::draw(){
+    for (CObject* pObj : m_stdObjectList) {
+        std::cout << "[Draw] Obj @" << pObj
+            << " | Sprite: " << pObj->m_nSpriteIndex
+            << " | Dead: " << pObj->m_bDead << std::endl;
+
+        if (!pObj->m_bDead)
+            pObj->draw(); // normal draw call
+    }
+
+
   m_pTileManager->Draw(eSprite::Tile); //draw tiled background
 
   if(m_bDrawAABBs)

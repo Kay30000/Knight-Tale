@@ -26,9 +26,13 @@ class CZombie: public CObject{
     float m_fReturnRadius = 500.0f;
     float m_fReturnSpeed = 2.0f;
     
+    LEventTimer* m_pDirectionCooldown = nullptr;
     LEventTimer* m_pFrameEvent = nullptr;
     Vector2 m_vLastDirection = Vector2(0, 0);
     bool m_bIsMoving = false;
+    Vector2 GetDominantDirection(const Vector2& v);
+    UINT m_nLastAnimatedSprite = (UINT)eSprite::ZombieStandDown;
+    UINT m_nLastSpriteIndex = UINT_MAX;
 
 
 
@@ -39,6 +43,7 @@ class CZombie: public CObject{
     void InitializePatrol(const std::vector<Vector2>& points);
     CZombie(const Vector2& p); 
     ~CZombie();
+    void UpdateFramenumber();
 
 
     virtual void move(); 
