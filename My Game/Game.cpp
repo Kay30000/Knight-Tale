@@ -136,21 +136,20 @@ void CGame::Release(){
 void CGame::CreateObjects() {
 
    
-    const std::vector<Vector2>& movingTurretPos = m_pTileManager->GetTurrets();
+   
 
-    std::vector<Vector2> turretpos; //vector of Turret positions
-    std::vector<CTileManager::furniture> furniturepos; //vector of furniture positions
-    Vector2 playerpos; //player positions
+    
     std::vector<Vector2> zombiepos;
 
-
+    const std::vector<Vector2>& movingTurretPos = m_pTileManager->GetTurrets();
     const std::vector<Vector2>& stationaryTurretPos = m_pTileManager->GetStationaryTurrets();
+
+	const std::vector<CTileManager::furniture>& furniturepos = m_pTileManager->GetFurniture();
+	const Vector2& playerpos = m_pTileManager->GetPlayerPos();
 
 
     //const std::vector<CTileManager::furniture>& furniturepos = m_pTileManager->GetFurniture();
-    playerpos = m_pTileManager->GetPlayerPos(); 
-
-    m_pTileManager->GetObjects(turretpos, furniturepos, playerpos, zombiepos); //get positions
+    
 
 
     for (const Vector2& pos : movingTurretPos) {
@@ -193,7 +192,7 @@ void CGame::CreateObjects() {
     if (m_pPlayer) {
         m_pPlayer->Stop();
     }
-} 
+} //createObjects
 
 
 void CGame::BeginGame(){  

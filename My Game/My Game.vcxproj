@@ -161,6 +161,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BulletEnemy.cpp" />
     <ClCompile Include="Common.cpp" />
     <ClCompile Include="Furniture.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -171,11 +172,13 @@
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="StationaryTurret.cpp" />
     <ClCompile Include="TileManager.cpp" />
     <ClCompile Include="Turret.cpp" />
     <ClCompile Include="Zombie.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BulletEnemy.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="Furniture.h" />
     <ClInclude Include="Game.h" />
@@ -186,6 +189,7 @@
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="StationaryTurret.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="TileManager.h" />
     <ClInclude Include="Turret.h" />

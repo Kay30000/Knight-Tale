@@ -16,6 +16,7 @@
 #include "Enemy.h"
 #include "HealthBar.h"
 #include "BulletEnemy.h"
+#include "StationaryTurret.h"
 
 
 
@@ -292,22 +293,22 @@ void CObjectManager::FireGun(CObject* pObj, eSprite bullet) {
 
     const Vector2 vDir = pObj->GetViewVector();
 
-   
 
-    m_pAudio->play(eSound::Gun); 
 
-    const float w0 = 0.5f * m_pRenderer->GetWidth(pObj->m_nSpriteIndex); 
-    const float w1 = m_pRenderer->GetWidth(bullet); 
-    const Vector2 pos = pObj->m_vPos + (w0 + w1) * vDir; 
+    m_pAudio->play(eSound::Gun);
+
+    const float w0 = 0.5f * m_pRenderer->GetWidth(pObj->m_nSpriteIndex);
+    const float w1 = m_pRenderer->GetWidth(bullet);
+    const Vector2 pos = pObj->m_vPos + (w0 + w1) * vDir;
 
     CObject* pBullet = create(bullet, pos);
 
-    const Vector2 norm = VectorNormalCC(vDir); 
+    const Vector2 norm = VectorNormalCC(vDir);
     const float m = 2.0f * m_pRandom->randf() - 1.0f;
-    const Vector2 deflection = 0.01f * m * norm; 
+    const Vector2 deflection = 0.01f * m * norm;
 
-    float fEnemySpeed = 0.0f; 
-    float fBulletSpeed = 500.0f; 
+    float fEnemySpeed = 0.0f;
+    float fBulletSpeed = 500.0f;
 
     pBullet->m_vVelocity = fEnemySpeed * vDir + fBulletSpeed * (vDir + deflection);
     pBullet->m_fRoll = pObj->m_fRoll;
