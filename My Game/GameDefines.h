@@ -25,6 +25,7 @@ PlayerStandLeft, PlayerStandRight,
 PlayerStandUp, PlayerStandDown, 
 //Player Attack
 PlayerAttackLeft, PlayerAttackLeftSpriteSheet,
+<<<<<<< HEAD
 PlayerAttackRight, PlayerAttackRightSpriteSheet, PlayerAttackUp, PlayerAttackUpSpriteSheet, PlayerAttackDown, PlayerAttackDownSpriteSheet,
 //Enemy Skeleton Stand
 SkeletonStandLeft, SkeletonStandRight,
@@ -37,6 +38,17 @@ SkeletonWalkDown, SkeletonWalkDownSpriteSheet,
 SkeletonAttackLeft, SkeletonAttackLeftSpriteSheet, SkeletonAttackRight, SkeletonAttackRightSpriteSheet,
 SkeletonAttackUp, SkeletonAttackUpSpriteSheet, SkeletonAttackDown, SkeletonAttackDownSpriteSheet, EnemySkeleton,
   
+=======
+PlayerAttackRight, PlayerAttackRightSpriteSheet, PlayerAttackUp, 
+PlayerAttackUpSpriteSheet, PlayerAttackDown, PlayerAttackDownSpriteSheet,
+//Zombie Stand
+ZombieStandDown, ZombieStandLeft, ZombieStandRight, ZombieStandUp,
+//Zombie Walk
+ZombieWalkLeftSpriteSheet, ZombieWalkLeft,
+ZombieWalkRightSpriteSheet, ZombieWalkRight,
+ZombieWalkUpSpriteSheet, ZombieWalkUp,
+ZombieWalkDownSpriteSheet, ZombieWalkDown,
+>>>>>>> Walk-&-Enemy
 Size  //MUST BE LAST
 
 }; //eSprite

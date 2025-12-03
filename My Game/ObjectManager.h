@@ -26,6 +26,9 @@ class CObjectManager:
     void Add(CObject* p); ///< Add an object to the manager.
 
     virtual void draw(); ///< Draw all objects.
+    void Add(CObject* pObj) {
+        m_stdObjectList.push_back(pObj);
+    }
 
     void FireGun(CPlayer*, eSprite, const Vector2& vDir);
     void FireGun(CObject* pObj, eSprite t);

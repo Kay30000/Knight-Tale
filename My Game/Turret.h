@@ -8,11 +8,11 @@
 
 
 
-class CTurret: public CObject{
-  protected:
-    const UINT m_nMaxHealth = 8; 
-    UINT m_nHealth = m_nMaxHealth; 
-    
+class CTurret : public CObject {
+protected:
+    const UINT m_nMaxHealth = 8;
+    UINT m_nHealth = m_nMaxHealth;
+
     void RotateTowards(const Vector2&); ///< Swivel towards position.
     virtual void CollisionResponse(const Vector2&, float, CObject* = nullptr); ///< Collision response.
     virtual void DeathFX(); ///< Death special effects.
@@ -28,11 +28,11 @@ class CTurret: public CObject{
 
     Vector2 m_vHomePos;
 
-  public:
+public:
     void InitializePatrol(const std::vector<Vector2>& points);
-    CTurret(const Vector2& p); 
-    virtual void move(); 
-    virtual void TakeDamage(int damage) ;
+    CTurret(const Vector2& p);
+    virtual void move();
+    virtual void TakeDamage(int damage);
 
 }; //CBullet
 

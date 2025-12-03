@@ -8,8 +8,11 @@
 #include "ComponentIncludes.h"
 #include "ParticleEngine.h"
 #include "TileManager.h"
+#include "Zombie.h"
 #include "Turret.h"
 #include "HealthBar.h"
+#include "Enemy.h"
+#include "ObjectManager.h"
 
 #include "shellapi.h"
 
@@ -88,7 +91,19 @@ void CGame::LoadImages(){
 
   m_pRenderer->Load(eSprite::HealthBar, "healthbar");
   m_pRenderer->Load(eSprite::HealthBar, "healthbar");
-  
+
+  m_pRenderer->Load(eSprite::ZombieStandLeft, "zombiestandleft");
+  m_pRenderer->Load(eSprite::ZombieStandRight, "zombiestandright");
+  m_pRenderer->Load(eSprite::ZombieStandUp, "zombiestandup");
+  m_pRenderer->Load(eSprite::ZombieStandDown, "zombiestanddown");
+  m_pRenderer->Load(eSprite::ZombieWalkLeftSpriteSheet, "zombiewalkleftsheet");
+  m_pRenderer->Load(eSprite::ZombieWalkLeft, "zombiewalkleft");
+  m_pRenderer->Load(eSprite::ZombieWalkRightSpriteSheet, "zombiewalkrightsheet");
+  m_pRenderer->Load(eSprite::ZombieWalkRight, "zombiewalkright");
+  m_pRenderer->Load(eSprite::ZombieWalkUpSpriteSheet, "zombiewalkupsheet");
+  m_pRenderer->Load(eSprite::ZombieWalkUp, "zombiewalkup");
+  m_pRenderer->Load(eSprite::ZombieWalkDownSpriteSheet, "zombiewalkdownsheet");
+  m_pRenderer->Load(eSprite::ZombieWalkDown, "zombiewalkdown");
 
   m_pRenderer->EndResourceUpload();
 } //LoadImages
@@ -113,19 +128,30 @@ void CGame::Release(){
   m_pRenderer = nullptr; //for safety
 } //Release
 
-/// Ask the object manager to create a player object and turrets specified by
+/// Ask the object manager to create a player object and Turrets specified by
 /// the tile manager.
 
 
 
 void CGame::CreateObjects() {
+<<<<<<< HEAD
    
     const std::vector<Vector2>& movingTurretPos = m_pTileManager->GetTurrets();
+=======
+    std::vector<Vector2> turretpos; //vector of Turret positions
+    std::vector<CTileManager::furniture> furniturepos; //vector of furniture positions
+    Vector2 playerpos; //player positions
+    std::vector<Vector2> zombiepos;
+>>>>>>> Walk-&-Enemy
 
     const std::vector<Vector2>& stationaryTurretPos = m_pTileManager->GetStationaryTurrets();
 
+<<<<<<< HEAD
     const std::vector<CTileManager::furniture>& furniturepos = m_pTileManager->GetFurniture();
     const Vector2& playerpos = m_pTileManager->GetPlayerPos(); 
+=======
+    m_pTileManager->GetObjects(turretpos, furniturepos, playerpos, zombiepos); //get positions
+>>>>>>> Walk-&-Enemy
 
     for (const Vector2& pos : movingTurretPos) {
         CTurret* pTurret = (CTurret*)m_pObjectManager->create(eSprite::Turret, pos);
@@ -137,9 +163,25 @@ void CGame::CreateObjects() {
         pTurret->InitializePatrol(patrolPath);
     }
 
+<<<<<<< HEAD
     for (const Vector2& pos : stationaryTurretPos) {
         m_pObjectManager->create(eSprite::stationaryturret, pos);
     }
+=======
+    for (const Vector2& pos : zombiepos) {
+        //CZombie* pZombie = (CZombie*)m_pObjectManager->create(eSprite::ZombieStandDown, pos);
+        CZombie* pZombie = new CZombie(pos);
+        m_pObjectManager->Add(pZombie);
+
+
+        std::vector<Vector2> patrolPath = {
+            pos,
+            pos + Vector2(100.0f, 0.0f)
+        };
+        pZombie->InitializePatrol(patrolPath);
+    }
+
+>>>>>>> Walk-&-Enemy
 
     for (CTileManager::furniture furn : furniturepos) {
         Vector2 pos = furn.location;
@@ -148,6 +190,7 @@ void CGame::CreateObjects() {
 
     m_pPlayer = (CPlayer*)m_pObjectManager->create(eSprite::PlayerStandDown, playerpos);
 
+<<<<<<< HEAD
     if (m_pPlayer) {
         m_pPlayer->Stop();
     }
@@ -166,32 +209,15 @@ void CGame::CreateObjects(){
 
   for(const Vector2& pos: turretpos)
     m_pObjectManager->create(eSprite::Turret, pos);
- 
-  for (const Vector2& pos : turretpos) {
-      auto pTurret = (CTurret*)m_pObjectManager->create(eSprite::Turret, pos);
+=======
 
 
-      std::vector<Vector2> patrolPath = {
-      pos,
-      pos + Vector2(100.0f, 0.0f)
-      };
-      pTurret->InitializePatrol(patrolPath);
-  }
-
-  for (CTileManager::furniture furn : furniturepos)
-  {
-	  Vector2 pos = furn.location;
-      m_pObjectManager->createFurniture(eSprite::Furniture, pos, furn.type);
-  }
-
-  m_pPlayer = (CPlayer*)m_pObjectManager->create(eSprite::PlayerStandDown, playerpos);
-
-  if (m_pPlayer) {
-      m_pPlayer->Stop();
-  }
-
+    if (m_pPlayer) {
+        m_pPlayer->Stop();
+    }
 } //CreateObjects
-*/
+>>>>>>> Walk-&-Enemy
+ 
 /// Call this function to start a new game. This should be re-entrant so that
 /// you can restart a new game without having to shut down and restart the
 /// program. Clear the particle engine to get rid of any existing particles,
@@ -497,7 +523,7 @@ void CGame::ProcessFrame(){
 } //ProcessFrame
 
 /// Take action appropriate to the current game state. If the game is currently
-/// playing, then if the player has been killed or all turrets have been
+/// playing, then if the player has been killed or all Zombies have been
 /// killed, then enter the wait state. If the game has been in the wait
 /// state for longer than 3 seconds, then restart the game.
 
@@ -519,5 +545,5 @@ void CGame::ProcessGameState(){
         BeginGame(); //restart game
       } //if
       break;
-  } //switch
+  } //switcha
 } //CheckForEndOfGame

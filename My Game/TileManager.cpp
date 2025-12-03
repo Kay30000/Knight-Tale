@@ -30,7 +30,11 @@ CTileManager::~CTileManager(){
 void CTileManager::LoadMapFromImageFile(char* filename) {
     m_vecTurrets.clear(); //clear turrets from previous level
 	m_vecFurniture.clear(); //clear furniture from previous level
+<<<<<<< HEAD
     m_vecStationaryTurrets.clear();
+=======
+    m_vecZombies.clear();
+>>>>>>> Walk-&-Enemy
 
     if (m_chMap != nullptr) { //unload any previous maps
         for (int i = 0; i < m_nHeight; i++)
@@ -286,6 +290,13 @@ void CTileManager::LoadMap(char* filename){
         m_vecFurniture.push_back(furn);
       } //else if
 
+      else if (c == 'Z') {
+          m_chMap[i][j] = 'F'; // zombies stand on floor tiles
+          const Vector2 pos = m_fTileSize * Vector2(j + 0.5f, m_nHeight - i - 0.5f);
+          m_vecZombies.push_back(pos);
+      }
+
+
       else m_chMap[i][j] = c; //load character into map
 
       index++; //next index
@@ -304,10 +315,12 @@ void CTileManager::LoadMap(char* filename){
 /// \param turrets [out] Vector of turret positions
 /// \param player [out] Player position.
 
-void CTileManager::GetObjects(std::vector<Vector2>& turrets, std::vector<furniture>& furniture, Vector2& player){
+void CTileManager::GetObjects(std::vector<Vector2>& turrets, std::vector<furniture>& furniture, Vector2& player, std::vector<Vector2>& zombies)
+ const {
   turrets = m_vecTurrets;
   player = m_vPlayer;
   furniture = m_vecFurniture;
+  zombies = m_vecZombies;
 } //GetObjects
 
 /// This is for debug purposes so that you can verify that

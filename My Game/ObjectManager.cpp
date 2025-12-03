@@ -5,6 +5,7 @@
 #include "ComponentIncludes.h"
 
 #include "Player.h"
+#include "Zombie.h"
 #include "Turret.h"
 #include "Bullet.h"
 #include "ParticleEngine.h"
@@ -14,8 +15,12 @@
 #include "Furniture.h"
 #include "Enemy.h"
 #include "HealthBar.h"
+<<<<<<< HEAD
 #include "StationaryTurret.h"
 #include "BulletEnemy.h"
+=======
+#include "Enemy.h"
+>>>>>>> Walk-&-Enemy
 
 /// Create an object and put a pointer to it at the back of the object list
 /// `m_stdObjectList`, which it inherits from `LBaseObjectManager`.
@@ -40,6 +45,7 @@ CObject* CObjectManager::create(eSprite t, const Vector2& pos) {
     else { 
         switch (t) { 
         case eSprite::Turret:  pObj = new CTurret(pos); break;
+<<<<<<< HEAD
         case eSprite::stationaryturret:
         {
             CStationaryTurret* pStatTurret = new CStationaryTurret(pos);
@@ -48,6 +54,9 @@ CObject* CObjectManager::create(eSprite t, const Vector2& pos) {
         }
 
         case eSprite::bulletenemy: pObj = new CBulletEnemy(eSprite::bulletenemy, pos); break;
+=======
+        case eSprite::ZombieStandDown: pObj = new CZombie(pos); break;
+>>>>>>> Walk-&-Enemy
         case eSprite::Bullet:  pObj = new CBullet(eSprite::Bullet, pos); break;
         //case eSprite::Bullet2: pObj = new CBullet(eSprite::Bullet2, pos); break;
         case eSprite::Fireball: pObj = new CBullet(eSprite::Fireball, pos); break;
@@ -63,7 +72,13 @@ CObject* CObjectManager::create(eSprite t, const Vector2& pos) {
             break;
         }
         case eSprite::shield: pObj = new CObject(eSprite::shield, pos); break;
+<<<<<<< HEAD
         default: pObj = new CObject(t, pos); break;
+=======
+
+
+        default: pObj = new CObject(t, pos);
+>>>>>>> Walk-&-Enemy
         } 
     }
 
@@ -95,6 +110,16 @@ CObject* CObjectManager::createFurniture(eSprite t, const Vector2& pos, char typ
 /// Draw the tiled background and the objects in the object list.
 
 void CObjectManager::draw(){
+    for (CObject* pObj : m_stdObjectList) {
+        std::cout << "[Draw] Obj @" << pObj
+            << " | Sprite: " << pObj->m_nSpriteIndex
+            << " | Dead: " << pObj->m_bDead << std::endl;
+
+        if (!pObj->m_bDead)
+            pObj->draw(); // normal draw call
+    }
+
+
   m_pTileManager->Draw(eSprite::Tile); //draw tiled background
 
   if(m_bDrawAABBs)
@@ -283,6 +308,7 @@ void CObjectManager::FireGun(CPlayer* pPlayer, eSprite t, const Vector2& vDir) {
     }
 }
 
+<<<<<<< HEAD
 
 
 // For StationaryTurret
@@ -322,13 +348,17 @@ void CObjectManager::FireGun(CObject* pObj, eSprite bullet) {
     d.m_f4Tint = XMFLOAT4(Colors::Yellow);
     m_pParticleEngine->create(d);
 }
+=======
+/// Reader function for the number of Zombies. 
+/// \return Number of Zombies in the object list.
+>>>>>>> Walk-&-Enemy
 
 const size_t CObjectManager::GetNumTurrets() const{
   size_t n = 0; 
   
-  for(CObject* pObj: m_stdObjectList) 
+  for(CObject* pObj: m_stdObjectList)
     if(pObj->m_nSpriteIndex == (UINT)eSprite::Turret)
       n++;
 
   return n;
-} //GetNumTurrets
+} //GetNumZombies

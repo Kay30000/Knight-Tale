@@ -46,14 +46,30 @@ public:
 
 
     
+<<<<<<< HEAD
+=======
+    virtual void CollisionResponse(const Vector2&, float,
+      CObject* = nullptr);
+    virtual void DeathFX(); 
+
+
+    const Vector2 GetViewVector() const;
+
+  public:
+
+>>>>>>> Walk-&-Enemy
     bool isHealthBar = false;
     bool isFurniture = false; ///< Is furniture
     CObject(eSprite, const Vector2&); ///< Constructor.
     virtual ~CObject(); ///< Destructor.
 
+<<<<<<< HEAD
     virtual void Update(float dt) {}
 
     void move();
+=======
+    virtual void move() override;
+>>>>>>> Walk-&-Enemy
     void draw();
 
     void SetSprite(eSprite t);
