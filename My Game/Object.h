@@ -45,7 +45,7 @@ protected:
 public:
 
 
-    
+	bool isPickup = false;
     bool isHealthBar = false;
     bool isFurniture = false; ///< Is furniture
     CObject(eSprite, const Vector2&); ///< Constructor.

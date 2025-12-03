@@ -14,7 +14,7 @@
 
 enum class eSprite: UINT{
 
-  Background, Bullet, Bullet2, Turret, Smoke, Spark, Tile, Line, Furniture, Fireball, sword, greatsword, dagger, shield, HealthBar,
+	Background, Bullet, Bullet2, Turret, Smoke, Spark, Tile, Line, Furniture, Fireball, sword, greatsword, dagger, shield, HealthBar, Pickup,
   
 //Player Walk 
 PlayerWalkLeft, PlayerWalkLeftSpriteSheet, PlayerWalkRight, 

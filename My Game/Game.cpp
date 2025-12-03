@@ -49,6 +49,7 @@ void CGame::Initialize(){
 void CGame::LoadImages(){  
   m_pRenderer->BeginResourceUpload();
 
+  m_pRenderer->Load(eSprite::Pickup, "pickup");
   m_pRenderer->Load(eSprite::Tile,    "tile"); 
   m_pRenderer->Load(eSprite::Bullet,  "bullet");
   m_pRenderer->Load(eSprite::Bullet2, "bullet2");
