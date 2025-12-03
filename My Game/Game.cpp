@@ -134,24 +134,24 @@ void CGame::Release(){
 
 
 void CGame::CreateObjects() {
-<<<<<<< HEAD
+
    
     const std::vector<Vector2>& movingTurretPos = m_pTileManager->GetTurrets();
-=======
+
     std::vector<Vector2> turretpos; //vector of Turret positions
     std::vector<CTileManager::furniture> furniturepos; //vector of furniture positions
     Vector2 playerpos; //player positions
     std::vector<Vector2> zombiepos;
->>>>>>> Walk-&-Enemy
+
 
     const std::vector<Vector2>& stationaryTurretPos = m_pTileManager->GetStationaryTurrets();
 
-<<<<<<< HEAD
-    const std::vector<CTileManager::furniture>& furniturepos = m_pTileManager->GetFurniture();
-    const Vector2& playerpos = m_pTileManager->GetPlayerPos(); 
-=======
+
+    //const std::vector<CTileManager::furniture>& furniturepos = m_pTileManager->GetFurniture();
+    playerpos = m_pTileManager->GetPlayerPos(); 
+
     m_pTileManager->GetObjects(turretpos, furniturepos, playerpos, zombiepos); //get positions
->>>>>>> Walk-&-Enemy
+
 
     for (const Vector2& pos : movingTurretPos) {
         CTurret* pTurret = (CTurret*)m_pObjectManager->create(eSprite::Turret, pos);
@@ -163,11 +163,10 @@ void CGame::CreateObjects() {
         pTurret->InitializePatrol(patrolPath);
     }
 
-<<<<<<< HEAD
     for (const Vector2& pos : stationaryTurretPos) {
         m_pObjectManager->create(eSprite::stationaryturret, pos);
     }
-=======
+
     for (const Vector2& pos : zombiepos) {
         //CZombie* pZombie = (CZombie*)m_pObjectManager->create(eSprite::ZombieStandDown, pos);
         CZombie* pZombie = new CZombie(pos);
@@ -181,7 +180,7 @@ void CGame::CreateObjects() {
         pZombie->InitializePatrol(patrolPath);
     }
 
->>>>>>> Walk-&-Enemy
+
 
     for (CTileManager::furniture furn : furniturepos) {
         Vector2 pos = furn.location;
@@ -190,38 +189,12 @@ void CGame::CreateObjects() {
 
     m_pPlayer = (CPlayer*)m_pObjectManager->create(eSprite::PlayerStandDown, playerpos);
 
-<<<<<<< HEAD
+
     if (m_pPlayer) {
         m_pPlayer->Stop();
     }
 } 
 
-/*
-void CGame::CreateObjects(){
-  std::vector<Vector2> turretpos; //vector of turret positions
-  std::vector<CTileManager::furniture> furniturepos; //vector of furniture positions
-  Vector2 playerpos; //player positions
-
-  m_pTileManager->GetObjects(turretpos, furniturepos, playerpos); //get positions
-
-  
-  
-
-  for(const Vector2& pos: turretpos)
-    m_pObjectManager->create(eSprite::Turret, pos);
-=======
-
-
-    if (m_pPlayer) {
-        m_pPlayer->Stop();
-    }
-} //CreateObjects
->>>>>>> Walk-&-Enemy
- 
-/// Call this function to start a new game. This should be re-entrant so that
-/// you can restart a new game without having to shut down and restart the
-/// program. Clear the particle engine to get rid of any existing particles,
-/// delete any old objects out of the object manager and create some new ones.
 
 void CGame::BeginGame(){  
   m_pParticleEngine->clear(); //clear old particles

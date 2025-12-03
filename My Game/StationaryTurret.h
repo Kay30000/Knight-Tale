@@ -10,7 +10,7 @@ protected:
 	const UINT m_nMaxHealth = 8;
 	UINT m_nHealth = m_nMaxHealth; 
 
-	virtual void CollisionResponse(const Vector2&, float, CObject* = nullptr); 
+	virtual void CollisionResponse(const Vector2& norm, float d, CObject* pObj = nullptr); 
 	virtual void DeathFX(); 
 
 public:

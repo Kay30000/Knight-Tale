@@ -8,6 +8,7 @@
 #include "Object.h"
 #include "Common.h"
 
+
 class CEnemy;
 
 class CObjectManager: 
@@ -26,12 +27,11 @@ class CObjectManager:
     void Add(CObject* p); ///< Add an object to the manager.
 
     virtual void draw(); ///< Draw all objects.
-    void Add(CObject* pObj) {
-        m_stdObjectList.push_back(pObj);
-    }
+    
+    
 
     void FireGun(CPlayer*, eSprite, const Vector2& vDir);
-    void FireGun(CObject* pObj, eSprite t);
+    void FireGun(CObject* pObj, eSprite bullet);
     const size_t GetNumTurrets() const; 
 }; //CObjectManager
 

@@ -13,7 +13,7 @@ protected:
     const UINT m_nMaxHealth = 8;
     UINT m_nHealth = m_nMaxHealth;
 
-    void RotateTowards(const Vector2&); ///< Swivel towards position.
+    //void RotateTowards(const Vector2&); ///< Swivel towards position.
     virtual void CollisionResponse(const Vector2&, float, CObject* = nullptr); ///< Collision response.
     virtual void DeathFX(); ///< Death special effects.
 

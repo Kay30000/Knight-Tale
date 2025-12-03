@@ -30,11 +30,11 @@ CTileManager::~CTileManager(){
 void CTileManager::LoadMapFromImageFile(char* filename) {
     m_vecTurrets.clear(); //clear turrets from previous level
 	m_vecFurniture.clear(); //clear furniture from previous level
-<<<<<<< HEAD
+
     m_vecStationaryTurrets.clear();
-=======
+
     m_vecZombies.clear();
->>>>>>> Walk-&-Enemy
+
 
     if (m_chMap != nullptr) { //unload any previous maps
         for (int i = 0; i < m_nHeight; i++)

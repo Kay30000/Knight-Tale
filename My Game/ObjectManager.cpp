@@ -15,12 +15,9 @@
 #include "Furniture.h"
 #include "Enemy.h"
 #include "HealthBar.h"
-<<<<<<< HEAD
-#include "StationaryTurret.h"
 #include "BulletEnemy.h"
-=======
-#include "Enemy.h"
->>>>>>> Walk-&-Enemy
+
+
 
 /// Create an object and put a pointer to it at the back of the object list
 /// `m_stdObjectList`, which it inherits from `LBaseObjectManager`.
@@ -45,40 +42,18 @@ CObject* CObjectManager::create(eSprite t, const Vector2& pos) {
     else { 
         switch (t) { 
         case eSprite::Turret:  pObj = new CTurret(pos); break;
-<<<<<<< HEAD
-        case eSprite::stationaryturret:
-        {
-            CStationaryTurret* pStatTurret = new CStationaryTurret(pos);
-            pObj = pStatTurret;
-            break;
-        }
-
+        case eSprite::stationaryturret:pObj = new CStationaryTurret(pos); break;
         case eSprite::bulletenemy: pObj = new CBulletEnemy(eSprite::bulletenemy, pos); break;
-=======
         case eSprite::ZombieStandDown: pObj = new CZombie(pos); break;
->>>>>>> Walk-&-Enemy
         case eSprite::Bullet:  pObj = new CBullet(eSprite::Bullet, pos); break;
         //case eSprite::Bullet2: pObj = new CBullet(eSprite::Bullet2, pos); break;
         case eSprite::Fireball: pObj = new CBullet(eSprite::Fireball, pos); break;
         case eSprite::sword: pObj = new CBullet(eSprite::sword, pos); break;
         case eSprite::greatsword: pObj = new CBullet(eSprite::greatsword, pos); break;
         case eSprite::dagger: pObj = new CBullet(eSprite::dagger, pos); break;
-        
-        case eSprite::EnemySkeleton:
-        {
-            CEnemy* pEnemy = new CEnemy(pos);      // create enemy
-            pObj = pEnemy;                         // assign to base pointer
-            m_enemies.push_back(pEnemy);           // store in enemy list
-            break;
-        }
         case eSprite::shield: pObj = new CObject(eSprite::shield, pos); break;
-<<<<<<< HEAD
         default: pObj = new CObject(t, pos); break;
-=======
 
-
-        default: pObj = new CObject(t, pos);
->>>>>>> Walk-&-Enemy
         } 
     }
 
@@ -308,7 +283,7 @@ void CObjectManager::FireGun(CPlayer* pPlayer, eSprite t, const Vector2& vDir) {
     }
 }
 
-<<<<<<< HEAD
+
 
 
 // For StationaryTurret
@@ -348,10 +323,10 @@ void CObjectManager::FireGun(CObject* pObj, eSprite bullet) {
     d.m_f4Tint = XMFLOAT4(Colors::Yellow);
     m_pParticleEngine->create(d);
 }
-=======
+
 /// Reader function for the number of Zombies. 
 /// \return Number of Zombies in the object list.
->>>>>>> Walk-&-Enemy
+
 
 const size_t CObjectManager::GetNumTurrets() const{
   size_t n = 0; 

@@ -6,8 +6,7 @@
 
 class CBulletEnemy : public CObject {
 protected:
-	virtual void CollisionResponse(const Vector2&, float,
-		CObject* = nullptr); 
+	virtual void CollisionResponse(const Vector2&, float d, CObject* = nullptr); 
 	virtual void DeathFX(); 
 
 public:

@@ -80,16 +80,16 @@ public:
     const Vector2& GetPos() const;
 
     Vector2 GetDirectionVector();
-<<<<<<< HEAD
+
 
     void TakeDamage(int damage); // added: allow others to damage player
 
 private:
 	void SetSprite(eSprite sprite);
-=======
-	float GetRadius() const { return m_fRadius; }
 
->>>>>>> Walk-&-Enemy
+	
+
+
 }; 
 
 #endif 

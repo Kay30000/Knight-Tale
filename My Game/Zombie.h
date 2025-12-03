@@ -13,7 +13,7 @@ class CZombie: public CObject{
     const UINT m_nMaxHealth = 8; 
     UINT m_nHealth = m_nMaxHealth; 
     
-    void RotateTowards(const Vector2&); ///< Swivel towards position.
+    //void RotateTowards(const Vector2&); ///< Swivel towards position.
     virtual void CollisionResponse(const Vector2&, float, CObject* = nullptr); ///< Collision response.
     virtual void DeathFX(); ///< Death special effects.
 
@@ -48,11 +48,11 @@ class CZombie: public CObject{
 
     virtual void move(); 
     virtual void TakeDamage(int damage);
-    void ZombieWalkLeft();
+    /*void ZombieWalkLeft();
     void ZombieWalkRight();
     void ZombieWalkUp();
     void ZombieWalkDown();
-    void ZombieStand();
+    void ZombieStand();*/
 
 
     /*UINT m_nSpriteLeft = 0;
