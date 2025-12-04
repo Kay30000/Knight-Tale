@@ -139,7 +139,7 @@ void CGame::CreateObjects() {
    
 
     
-    std::vector<Vector2> zombiepos;
+    std::vector<Vector2> zombiepos = m_pTileManager->m_vecZombies;
 
     const std::vector<Vector2>& movingTurretPos = m_pTileManager->GetTurrets();
     const std::vector<Vector2>& stationaryTurretPos = m_pTileManager->GetStationaryTurrets();
@@ -167,9 +167,8 @@ void CGame::CreateObjects() {
     }
 
     for (const Vector2& pos : zombiepos) {
-        //CZombie* pZombie = (CZombie*)m_pObjectManager->create(eSprite::ZombieStandDown, pos);
-        CZombie* pZombie = new CZombie(pos);
-        m_pObjectManager->Add(pZombie);
+        CZombie* pZombie = (CZombie*)m_pObjectManager->create(eSprite::ZombieStandDown, pos);
+        
 
 
         std::vector<Vector2> patrolPath = {
