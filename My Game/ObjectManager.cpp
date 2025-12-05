@@ -14,6 +14,7 @@
 #include "Furniture.h"
 #include "Enemy.h"
 #include "HealthBar.h"
+#include "PickUp.h"
 
 /// Create an object and put a pointer to it at the back of the object list
 /// `m_stdObjectList`, which it inherits from `LBaseObjectManager`.
@@ -37,6 +38,7 @@ CObject* CObjectManager::create(eSprite t, const Vector2& pos) {
     
     else { 
         switch (t) { 
+        case eSprite::Pickup:  pObj = new CPickUp(pos); break;
         case eSprite::Turret:  pObj = new CTurret(pos); break;
         case eSprite::Bullet:  pObj = new CBullet(eSprite::Bullet, pos); break;
         case eSprite::Bullet2: pObj = new CBullet(eSprite::Bullet2, pos); break;
@@ -413,4 +415,9 @@ void CObjectManager::FireGun(CPlayer* pPlayer, eSprite t, const Vector2& vDir, i
         d.m_f4Tint = XMFLOAT4(Colors::Red);
         m_pParticleEngine->create(d);
     }
+}
+
+void CObjectManager:: SpawnPickup(const Vector2& pos)
+{
+	CObject* pPickup = create(eSprite::Pickup, pos);
 }

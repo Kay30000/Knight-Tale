@@ -103,6 +103,9 @@ void CTurret::move() {
 void CTurret::CollisionResponse(const Vector2& norm, float d, CObject* pObj) {
     if (m_bDead)return;
 
+    if (pObj && pObj->isPickup)
+        return; //no collision response for pickups
+
     if (pObj && !pObj->isBullet()) {
         const float MAX_PUSH_DISTANCE = 5.0f;
         const float COLLISION_EPSILON = 0.05f;

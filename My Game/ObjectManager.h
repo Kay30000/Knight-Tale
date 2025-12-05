@@ -27,6 +27,8 @@ class CObjectManager:
 
     virtual void draw(); ///< Draw all objects.
 
+	void SpawnPickup(const Vector2& pos); ///< Spawn a pickup at the given position.
+
 	void FireGun(CPlayer*, eSprite, const Vector2& vDir, int weapon);
     void FireGun(CPlayer*, eSprite, const Vector2& vDir);
     const size_t GetNumTurrets() const; 

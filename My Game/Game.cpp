@@ -252,6 +252,12 @@ void CGame::KeyboardHandler(){
           eGameState::Paused;
   }
 
+  if (m_pKeyboard->TriggerDown('O'))
+  {
+	  Vector2 pos = m_pPlayer->m_vPos + Vector2(50.0f, 0.0f);
+      m_pObjectManager->SpawnPickup(pos);
+  }
+
   if (m_eGameState != eGameState::Paused && m_pPlayer) {
       int playerWeapon = m_pPlayer->weaponEquipped;
       m_pPlayer->SetRotSpeed(0.0f);

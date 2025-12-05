@@ -44,7 +44,7 @@ protected:
 
 public:
 
-
+	bool isPlayer = false;
 	bool isPickup = false;
     bool isHealthBar = false;
     bool isFurniture = false; ///< Is furniture
@@ -68,6 +68,8 @@ public:
 
     const Vector2& GetPos() const { return m_vPos; }
     void SetStatic(bool isStatic) { m_bStatic = isStatic; }
+
+    int variant = 0; //For objects with multiple variants
 }; 
 
 #endif

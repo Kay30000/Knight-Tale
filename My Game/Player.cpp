@@ -12,13 +12,14 @@
 CPlayer::CPlayer(eSprite t, const Vector2& p) : CObject(t, p) {
 	
 	m_bIsTarget = true;
-	weaponEquipped = 1; // start with default weapon
+	weaponEquipped = 0; // start with default weapon
 
 	m_fSpeed = 0.0f; 
 	m_bStrafeLeft = false;
 	m_bStrafeRight = false; 
 	m_bStrafeBack = false; 
 	m_bStatic = false;
+    isPlayer = true;
 
 	m_pFrameEvent = new LEventTimer(0.12f);
 	
@@ -192,6 +193,20 @@ void CPlayer::Stop() {
 void CPlayer::CollisionResponse(const Vector2& norm, float d, CObject* pObj) {
 	if (m_bDead)return;
 
+    if (pObj && pObj->isPickup)
+    {
+        switch (pObj->variant)
+        {
+        case 0: //Knifestorm hell yeah 
+        {
+            weaponEquipped = 1;
+            break;
+        }
+        default: break;
+        }
+    }
+
+
 	if (pObj && pObj->isBullet()) {
 
 
@@ -222,7 +237,7 @@ void CPlayer::CollisionResponse(const Vector2& norm, float d, CObject* pObj) {
 			DeathFX();
 			m_pPlayer = nullptr;
 		}
-
+        
 		else {
 
 			m_pAudio->play(eSound::Grunt);
@@ -230,6 +245,7 @@ void CPlayer::CollisionResponse(const Vector2& norm, float d, CObject* pObj) {
 			m_f4Tint = XMFLOAT4(1.0f, f, f, 0);
 		}
 	}
+
 
 	CObject::CollisionResponse(norm, d, pObj);
 } 
