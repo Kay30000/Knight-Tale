@@ -9,4 +9,5 @@ public:
 	
 	eSprite pickupSprite;
 	CPickUp(const Vector2& p);
+	CPickUp(const Vector2& p, int var);
 }; //CPickUp

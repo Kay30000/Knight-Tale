@@ -255,7 +255,7 @@ void CGame::KeyboardHandler(){
   if (m_pKeyboard->TriggerDown('O'))
   {
 	  Vector2 pos = m_pPlayer->m_vPos + Vector2(50.0f, 0.0f);
-      m_pObjectManager->SpawnPickup(pos);
+      m_pObjectManager->SpawnPickup(pos, 1);
   }
 
   if (m_eGameState != eGameState::Paused && m_pPlayer) {

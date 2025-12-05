@@ -83,6 +83,15 @@ CObject* CObjectManager::createFurniture(eSprite t, const Vector2& pos, char typ
 } //create furniture
 
 
+void CObjectManager::createPickup(const Vector2& pos, int var)
+{
+	CObject* pObj = new CPickUp(pos, var);
+    m_stdObjectList.push_back(pObj);
+}
+
+
+
+
 
 /// Draw the tiled background and the objects in the object list.
 
@@ -420,4 +429,9 @@ void CObjectManager::FireGun(CPlayer* pPlayer, eSprite t, const Vector2& vDir, i
 void CObjectManager:: SpawnPickup(const Vector2& pos)
 {
 	CObject* pPickup = create(eSprite::Pickup, pos);
+}
+
+void CObjectManager::SpawnPickup(const Vector2& pos, int var)
+{
+    createPickup(pos, var);
 }

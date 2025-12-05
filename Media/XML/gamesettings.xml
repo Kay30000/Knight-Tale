@@ -12,7 +12,7 @@
   
   <sprites path="Media\Images">
 
-	<sprite name ="pickup" file = "pickup" ext = "png" frames = "1"/>
+	<sprite name ="pickup" file = "pickup" ext = "png" frames = "2"/>
 	<sprite name="tile" file= "tile" ext = "png" frames="5"/>
     <sprite name="turret" file="turret.png"/>
     <sprite name="bullet" file="bullet.png"/>

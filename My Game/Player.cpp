@@ -197,12 +197,18 @@ void CPlayer::CollisionResponse(const Vector2& norm, float d, CObject* pObj) {
     {
         switch (pObj->variant)
         {
-        case 0: //Knifestorm hell yeah 
-        {
-            weaponEquipped = 1;
-            break;
-        }
-        default: break;
+            case 0: //Knifestorm hell yeah 
+            {
+                weaponEquipped = 1;
+                break;
+            }
+            case 1: 
+            {
+                if (m_nHealth < m_nMaxHealth)
+                    m_nHealth += 1;
+                break;
+            }
+            default: break;
         }
     }
 

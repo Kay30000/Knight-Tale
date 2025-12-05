@@ -9,6 +9,14 @@ CPickUp::CPickUp(const Vector2& p)
   m_nCurrentFrame = variant;
 } //constructor
 
+CPickUp::CPickUp(const Vector2& p, int var)
+  : CObject(eSprite::Pickup, p){
+  m_bStatic = true; //pickups are static
+  isPickup = true;
+  variant = var; //set pickup to specified variant
+  m_nCurrentFrame = variant;
+} //constructor with variant parameter
+
 void CPickUp::CollisionResponse(const Vector2& norm, float d, CObject* pObj)
 {
 	if (m_bDead)return;
